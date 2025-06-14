@@ -1,328 +1,744 @@
-// Import Firebase SDKs
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+/* ===================================== */
+/* ✅ Signup Page General Styles */
+/* ===================================== */
+body {
+    background-color: #E0F2F7; /* لون خلفية يتناسق مع تصميمك */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    direction: rtl;
+    text-align: right;
+    min-height: 100vh; /* لجعل الجسم يملأ الشاشة عموديا */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto; /* السماح بالتمرير إذا كان المحتوى أكبر من الشاشة */
+}
 
-// Your web app's Firebase configuration (Please ensure this is correct and secure)
-// قم بتحديث هذا الكائن إذا تغيرت إعدادات Firebase الخاصة بك
-const firebaseConfig = {
-    apiKey: "AIzaSyDh59dAoiUy1p8F4301kUjwzl9VT0nF2-E", // تأكد من أن هذا المفتاح صحيح
-    authDomain: "ahmed-tarek-7beb4.firebaseapp.com",
-    projectId: "ahmed-tarek-7beb4",
-    storageBucket: "ahmed-tarek-7beb4.firebasestorage.app",
-    messagingSenderId: "873531954018",
-    appId: "1:873531954018:web:0f3f29cb2d0232826b923b",
-    measurementId: "G-FZRCD5N87Z"
-};
+body.dark-mode {
+    background-color: #1a2e47; /* خلفية الوضع الداكن */
+}
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app); // خدمة Firebase Authentication
-const db = getFirestore(app); // خدمة Firebase Firestore
+.signup-page-wrapper {
+    display: flex;
+    flex-direction: row; /* الأقسام بجانب بعضها افتراضيًا */
+    min-height: 90vh; /* تحديد ارتفاع للحاوية الرئيسية */
+    width: 100%;
+    max-width: 1200px; /* أقصى عرض للحاوية */
+    background-color: #ffffff;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    overflow: hidden; /* لإخفاء أي جزء يخرج عن الحدود */
+    margin: 20px; /* لإعطاء مسافة من حواف الشاشة الكبيرة */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
 
-document.addEventListener('DOMContentLoaded', () => {
-    // جلب عناصر النموذج والمودال ورسائل الحالة من HTML
-    const signupForm = document.getElementById('signupForm');
-    const usernameInput = document.getElementById('username');
-    const emailInput = document.getElementById('email');
-    const passwordInput = document.getElementById('password');
-    const confirmPasswordInput = document.getElementById('confirmPassword');
-    const gradeSelect = document.getElementById('grade');
-    const governorateSelect = document.getElementById('governorate');
-    const studentIdInput = document.getElementById('studentId');
-    const parentPhoneInput = document.getElementById('parentPhone');
-    const signupButton = document.getElementById('signupButton');
-    let loadingSpinner = document.getElementById('loadingSpinner'); // يستخدم 'let' لأن مرجعيته قد تتغير
-    const generalMessageDiv = document.getElementById('generalMessage'); // لعرض رسائل النجاح/الخطأ العامة
-    const supportContactDiv = document.getElementById('supportContact'); // لرابط الدعم
+body.dark-mode .signup-page-wrapper {
+    background-color: #2c4763;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+}
 
-    // عناصر رسائل الخطأ الخاصة بكل حقل إدخال
-    const usernameError = document.getElementById('usernameError');
-    const emailError = document.getElementById('emailError');
-    const passwordError = document.getElementById('passwordError');
-    const confirmPasswordError = document.getElementById('confirmPasswordError');
-    const gradeError = document.getElementById('gradeError');
-    const governorateError = document.getElementById('governorateError');
-    const studentIdError = document.getElementById('studentIdError');
-    const parentPhoneError = document.getElementById('parentPhoneError');
+/* ===================================== */
+/* ✅ Animation Side (الجانب الأيمن المتحرك) */
+/* ===================================== */
+.animation-side {
+    flex: 1; /* يأخذ مساحة مرنة */
+    background: linear-gradient(135deg, #007bff, #0056b3); /* تدرج ألوان جميل */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    padding: 30px;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    min-width: 300px; /* لضمان ألا يتقلص كثيراً */
+    order: 2; /* يظهر على اليمين في RTL */
+}
 
-    // عناصر المودال (نافذة التعليمات المنبثقة)
-    const instructionsModal = document.getElementById('instructionsModal');
-    const acceptInstructionsButton = document.getElementById('acceptInstructions');
-    const closeModalButton = instructionsModal.querySelector('.close-button'); // زر إغلاق المودال
+body.dark-mode .animation-side {
+    background: linear-gradient(135deg, #64B5F6, #3f51b5);
+}
 
-    /**
-     * تعرض رسالة خطأ محددة لحقل إدخال معين.
-     * @param {HTMLElement} element العنصر الذي سيعرض رسالة الخطأ (مثل div#usernameError).
-     * @param {string} message نص رسالة الخطأ.
-     */
-    function displayInputError(element, message) {
-        element.textContent = message;
-        element.style.display = message ? 'block' : 'none'; // إظهار إذا كانت هناك رسالة، إخفاء بخلاف ذلك
+.animation-side::before,
+.animation-side::after { /* تأثير دوائر خلفية خفيفة */
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    pointer-events: none;
+    z-index: 1;
+}
+.animation-side::before {
+    width: 300px;
+    height: 300px;
+    top: -50px;
+    left: -50px;
+    animation: rotateCircle 20s linear infinite;
+}
+.animation-side::after {
+    width: 200px;
+    height: 200px;
+    bottom: -30px;
+    right: -30px;
+    animation: rotateCircle 25s reverse linear infinite;
+}
+
+@keyframes rotateCircle {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.chemistry-animation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+    position: relative;
+    z-index: 10; /* لجعل الأنميشن فوق الخلفية */
+}
+
+/* Beaker SVG Styles */
+.beaker-svg {
+    width: 180px; /* حجم المخبار */
+    height: 280px; /* ارتفاع المخبار */
+    overflow: hidden;
+}
+
+.beaker-body {
+    fill: #F0F8FF; /* لون جسم المخبار */
+    stroke: #007bff; /* لون حدود المخبار */
+    stroke-width: 4;
+    transition: fill 0.3s ease, stroke 0.3s ease;
+}
+body.dark-mode .beaker-body {
+    fill: #E3F2FD;
+    stroke: #90CAF9;
+}
+
+.beaker-top { /* for the top path, if it exists as a separate element */
+    stroke: #007bff;
+    stroke-width: 4;
+    transition: stroke 0.3s ease;
+}
+body.dark-mode .beaker-top {
+    stroke: #90CAF9;
+}
+
+.liquid-base {
+    /* هذا هو الجزء السفلي الثابت من السائل */
+    fill: url(#beakerGradient); /* يستخدم تدرج الألوان */
+    filter: url(#liquidShadow); /* يضيف الظل */
+}
+
+.liquid-wave {
+    /* الجزء العلوي للسائل الذي يتحرك كموجة */
+    animation: liquidWaveAnimation 4s ease-in-out infinite alternate;
+    transform-origin: center bottom; /* للتحكم في نقطة التحول */
+}
+
+@keyframes liquidWaveAnimation {
+    0% { transform: translateY(0) scaleY(1); }
+    50% { transform: translateY(-5px) scaleY(1.05); } /* حركة لأعلى قليلاً وتمدد طفيف */
+    100% { transform: translateY(0) scaleY(1); }
+}
+
+
+/* liquid-fill animation from previous version. Keep for beaker.svg */
+.liquid-fill {
+    transform-origin: bottom center;
+    animation: fillBeaker 4s ease-out forwards infinite alternate; /* انيميشن التعبئة */
+    filter: url(#liquidShadow); /* تطبيق الظل على السائل */
+}
+
+@keyframes fillBeaker {
+    0% {
+        height: 0;
+        transform: translateY(0); /* السائل يبدأ من أسفل المخبار */
+        fill: #007bff;
+    }
+    50% {
+        height: 200px; /* يصل إلى هذا الارتفاع */
+        transform: translateY(-200px); /* ويتحرك للأعلى 200px */
+        fill: #00bcd4; /* يتغير اللون أثناء التعبئة */
+    }
+    100% {
+        height: 150px; /* يستقر عند هذا الارتفاع */
+        transform: translateY(-150px);
+        fill: #007bff;
+    }
+}
+
+
+.animation-title {
+    font-size: 2.5em;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #fff;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+}
+
+.animation-slogan {
+    font-size: 1.2em;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
+    max-width: 80%;
+}
+
+
+/* ===================================== */
+/* ✅ Signup Form Side (الجانب الأيسر لنموذج التسجيل) */
+/* ===================================== */
+.signup-side {
+    flex: 1.5; /* يأخذ مساحة أكبر لنموذج التسجيل */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    background-color: #ffffff;
+    transition: background-color 0.3s ease;
+    order: 1; /* يظهر على اليسار في RTL */
+}
+
+body.dark-mode .signup-side {
+    background-color: #1a2e47;
+}
+
+.signup-box {
+    width: 100%;
+    max-width: 450px; /* لضمان أن الصندوق لا يكون عريضاً جداً */
+    text-align: right;
+}
+
+.form-title {
+    font-size: 2.2em;
+    color: #003F8A;
+    margin-bottom: 10px;
+    font-weight: bold;
+    text-align: center;
+    transition: color 0.3s ease;
+}
+
+body.dark-mode .form-title {
+    color: #E3F2FD;
+}
+
+.form-subtitle { /* Not directly used in current HTML but kept for consistency if needed */
+    font-size: 1.1em;
+    color: #555;
+    margin-bottom: 30px;
+    text-align: center;
+    transition: color 0.3s ease;
+}
+
+body.dark-mode .form-subtitle {
+    color: #CFD8DC;
+}
+
+.signup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input-group {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    font-size: 1.05em;
+    color: #1A2E47;
+    margin-bottom: 8px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+body.dark-mode .input-group label {
+    color: #F8F9FA;
+}
+
+.input-group label i {
+    margin-left: 8px;
+    color: #007bff;
+    transition: color 0.3s ease;
+}
+
+body.dark-mode .input-group label i {
+    color: #90CAF9;
+}
+
+.input-group input,
+.input-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #B0D7FF;
+    border-radius: 8px;
+    font-size: 1em;
+    color: #333;
+    background-color: #F8FCFF;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+    box-sizing: border-box;
+}
+
+body.dark-mode .input-group input,
+body.dark-mode .input-group select {
+    background-color: #3A5F7B;
+    border-color: #6A8CA9;
+    color: #F8F9FA;
+}
+
+.input-group input::placeholder {
+    color: #999;
+    font-size: 0.95em;
+}
+
+body.dark-mode .input-group input::placeholder {
+    color: #B0C4DE;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+body.dark-mode .input-group input:focus,
+body.dark-mode .input-group select:focus {
+    border-color: #90CAF9;
+    box-shadow: 0 0 0 3px rgba(144, 202, 249, 0.25);
+}
+
+.signup-button {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    border-radius: 30px;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
+    margin-top: 20px;
+    width: 100%;
+}
+
+body.dark-mode .signup-button {
+    background: linear-gradient(45deg, #90CAF9, #64B5F6);
+    box-shadow: 0 8px 20px rgba(144, 202, 249, 0.3);
+}
+
+.signup-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transition: width 0.4s ease-out, height 0.4s ease-out, top 0.4s ease-out, left 0.4s ease-out;
+    transform: translate(-50%, -50%);
+}
+
+.signup-button:hover::before {
+    width: 250%;
+    height: 250%;
+}
+
+.signup-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0, 123, 255, 0.4);
+}
+
+body.dark-mode .signup-button:hover {
+    box-shadow: 0 12px 28px rgba(144, 202, 249, 0.4);
+}
+
+/* Spinner and Messages for button */
+.spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid #fff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 0.8s linear infinite;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 8px; /* Space between text and spinner */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.status-message { /* Used for general messages like success/error feedback */
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+    font-size: 0.95em;
+    font-weight: 500;
+    text-align: center;
+    display: none; /* مخفي افتراضياً */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.status-message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.status-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.support-contact {
+    margin-top: 10px;
+    font-size: 0.9em;
+    color: #555;
+    text-align: center;
+    display: none; /* مخفي افتراضياً */
+}
+
+.support-contact a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.support-contact a:hover {
+    text-decoration: underline;
+}
+
+
+.login-link {
+    margin-top: 30px;
+    font-size: 1em;
+    color: #555;
+    text-align: center;
+    transition: color 0.3s ease;
+}
+
+body.dark-mode .login-link {
+    color: #CFD8DC;
+}
+
+.login-link a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+body.dark-mode .login-link a {
+    color: #90CAF9;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+    color: #0056b3;
+}
+body.dark-mode .login-link a:hover {
+    color: #64B5F6;
+}
+
+/* ===================================== */
+/* ✅ Modal (Instructions Pop-up) Styles */
+/* ===================================== */
+.modal {
+    display: none; /* مخفي افتراضياً */
+    position: fixed; /* يبقى في مكانه حتى عند التمرير */
+    z-index: 1000; /* ليكون فوق كل العناصر الأخرى */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* تمكين التمرير إذا كان محتوى المودال كبيراً */
+    background-color: rgba(0, 0, 0, 0.6); /* خلفية سوداء شبه شفافة */
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 700px;
+    width: 90%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    text-align: right; /* محاذاة النص لليمين */
+    animation: fadeIn 0.3s ease-out;
+    max-height: 90vh; /* لتحديد أقصى ارتفاع للمودال */
+    overflow-y: auto; /* السماح بالتمرير داخل المودال */
+}
+
+body.dark-mode .modal-content {
+    background-color: #3A5F7B;
+    color: #F8F9FA;
+}
+
+.close-button {
+    color: #aaa;
+    float: left; /* لجعله يظهر على اليسار في RTL */
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #000;
+    text-decoration: none;
+}
+body.dark-mode .close-button:hover,
+body.dark-mode .close-button:focus {
+    color: #fff;
+}
+
+.modal-content h2 {
+    color: #003F8A;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+    transition: color 0.3s ease;
+}
+body.dark-mode .modal-content h2 {
+    color: #90CAF9;
+}
+
+.instructions-text {
+    line-height: 1.8;
+    color: #444;
+    font-size: 1.05em;
+    margin-bottom: 25px;
+    text-align: justify; /* لترتيب النصوص بشكل أفضل */
+}
+body.dark-mode .instructions-text {
+    color: #E0E0E0;
+}
+
+.instructions-text ul {
+    list-style: none; /* إزالة النقاط الافتراضية */
+    padding: 0;
+    margin-top: 15px;
+}
+
+.instructions-text ul li {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: flex-start; /* محاذاة البداية للعناصر مع الأيقونات */
+}
+
+.instructions-text ul li i {
+    color: #28a745; /* لون أيقونة الصح */
+    margin-left: 10px; /* مسافة بين الأيقونة والنص */
+    font-size: 1.2em;
+    margin-top: 4px; /* لضبط محاذاة الأيقونة مع النص */
+}
+body.dark-mode .instructions-text ul li i {
+    color: #81C784;
+}
+
+.instructions-text a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+body.dark-mode .instructions-text a {
+    color: #90CAF9;
+}
+
+.instructions-text a:hover {
+    text-decoration: underline;
+    color: #0056b3;
+}
+body.dark-mode .instructions-text a:hover {
+    color: #64B5F6;
+}
+
+.accept-button {
+    display: block;
+    width: fit-content;
+    margin: 25px auto 0 auto; /* توسيط الزر */
+    background: linear-gradient(45deg, #28a745, #218838); /* لون أخضر للزر */
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 30px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+}
+
+body.dark-mode .accept-button {
+    background: linear-gradient(45deg, #81C784, #4CAF50);
+    box-shadow: 0 4px 10px rgba(129, 199, 132, 0.3);
+}
+
+.accept-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(40, 167, 69, 0.4);
+}
+body.dark-mode .accept-button:hover {
+    box-shadow: 0 6px 12px rgba(129, 199, 132, 0.4);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===================================== */
+/* ✅ Responsive Design (Rest of the Signup Page) */
+/* ===================================== */
+@media (max-width: 992px) {
+    .signup-page-wrapper {
+        flex-direction: column; /* جعل الأقسام تتكدس فوق بعضها */
+        margin: 15px;
+        max-width: 500px; /* لتقليل العرض على الشاشات الأصغر */
     }
 
-    /**
-     * تعرض رسالة حالة عامة (نجاح، خطأ، تحميل).
-     * @param {string} message نص الرسالة.
-     * @param {'success'|'error'|''} type نوع الرسالة لتطبيق التنسيق المناسب.
-     */
-    function displayGeneralMessage(message, type) {
-        generalMessageDiv.textContent = message;
-        generalMessageDiv.className = `status-message ${type}`; // تطبيق كلاس 'success' أو 'error' للتصميم
-        generalMessageDiv.style.display = 'block'; // التأكد من أن الرسالة مرئية
+    .animation-side {
+        min-height: 250px; /* تحديد ارتفاع للقسم المتحرك عند التكدس */
+        padding: 20px;
+        border-radius: 15px 15px 0 0; /* حواف دائرية علوية فقط */
+        order: 1; /* يظهر في الأعلى عند التكدس */
     }
 
-    /**
-     * تمسح جميع رسائل الحالة والأخطاء التي تم عرضها مسبقًا.
-     */
-    function clearMessages() {
-        generalMessageDiv.style.display = 'none';
-        supportContactDiv.style.display = 'none'; // إخفاء رابط الدعم افتراضيًا
-        // مسح جميع رسائل الخطأ الخاصة بالحقول
-        displayInputError(usernameError, '');
-        displayInputError(emailError, '');
-        displayInputError(passwordError, '');
-        displayInputError(confirmPasswordError, '');
-        displayInputError(gradeError, '');
-        displayInputError(governorateError, '');
-        displayInputError(studentIdError, '');
-        displayInputError(parentPhoneError, '');
+    .signup-side {
+        padding: 30px 20px;
+        border-radius: 0 0 15px 15px; /* حواف دائرية سفلية فقط */
+        order: 2; /* يظهر في الأسفل عند التكدس */
     }
 
-    /**
-     * تتحكم في حالة التحميل (تعطيل الزر، إظهار/إخفاء السبينر).
-     * @param {boolean} isLoading إذا كانت True، يتم تفعيل وضع التحميل.
-     */
-    function setLoading(isLoading) {
-        signupButton.disabled = isLoading; // تعطيل الزر أثناء التحميل
-        loadingSpinner.style.display = isLoading ? 'inline-block' : 'none'; // إظهار/إخفاء السبينر
-
-        if (isLoading) {
-            signupButton.textContent = 'جارٍ إنشاء الحساب...'; // تغيير نص الزر
-            signupButton.appendChild(loadingSpinner); // إعادة إضافة السبينر بعد تغيير textContent
-        } else {
-            // استعادة نص الزر الأصلي وإعادة جلب مرجعية السبينر (مهم بعد تغيير innerHTML)
-            signupButton.innerHTML = `إنشاء الحساب <span class="spinner" id="loadingSpinner" style="display: none;"></span>`;
-            loadingSpinner = document.getElementById('loadingSpinner'); // إعادة جلب المرجعية
-        }
+    .chemistry-animation .beaker-svg {
+        width: 120px;
+        height: 200px;
+    }
+    .animation-title {
+        font-size: 2em;
+    }
+    .animation-slogan {
+        font-size: 1em;
     }
 
-    // =====================================
-    // منطق نافذة التعليمات المنبثقة (المودال)
-    // =====================================
-
-    // إظهار المودال عند تحميل الصفحة لأول مرة
-    instructionsModal.classList.add('show'); // إضافة الكلاس 'show' لتفعيل ظهور المودال عبر CSS
-    signupForm.style.display = 'none'; // إخفاء نموذج التسجيل في البداية
-
-    // معالج حدث النقر لزر "أوافق وأبدأ التسجيل" داخل المودال
-    acceptInstructionsButton.addEventListener('click', () => {
-        instructionsModal.classList.remove('show'); // إخفاء المودال
-        signupForm.style.display = 'flex'; // إظهار نموذج التسجيل باستخدام flex للتخطيط الصحيح
-    });
-
-    // معالج حدث النقر لزر الإغلاق (X) في المودال
-    if (closeModalButton) {
-        closeModalButton.addEventListener('click', () => {
-            // إذا حاول المستخدم إغلاق المودال دون الموافقة، يعاد إظهاره
-            instructionsModal.classList.add('show');
-        });
+    .modal-content {
+        width: 95%;
+        padding: 25px;
     }
+    .modal-content h2 {
+        font-size: 1.6em;
+    }
+    .instructions-text {
+        font-size: 0.95em;
+    }
+    .accept-button {
+        font-size: 1em;
+        padding: 10px 25px;
+    }
+}
 
-    // معالج حدث النقر خارج محتوى المودال (على الخلفية الشفافة)
-    instructionsModal.addEventListener('click', (event) => {
-        // إذا حدث النقر مباشرة على خلفية المودال (وليس على محتوى المودال)
-        if (event.target === instructionsModal) {
-            instructionsModal.classList.add('show'); // إعادة إظهار المودال
-        }
-    });
+@media (max-width: 600px) {
+    .signup-page-wrapper {
+        margin: 10px;
+    }
+    .animation-side {
+        min-height: 200px;
+        padding: 15px;
+    }
+    .chemistry-animation .beaker-svg {
+        width: 100px;
+        height: 180px;
+    }
+    .animation-title {
+        font-size: 1.8em;
+    }
+    .animation-slogan {
+        font-size: 0.9em;
+    }
+    .signup-side {
+        padding: 25px 15px;
+    }
+    .form-title {
+        font-size: 1.8em;
+    }
+    .form-subtitle {
+        font-size: 1em;
+    }
+    .input-group label {
+        font-size: 1em;
+    }
+    .input-group input,
+    .input-group select {
+        padding: 10px 12px;
+        font-size: 0.95em;
+    }
+    .signup-button {
+        padding: 12px 20px;
+        font-size: 1.1em;
+    }
+    .modal-content {
+        padding: 20px;
+    }
+    .modal-content h2 {
+        font-size: 1.5em;
+    }
+}
 
-    // =====================================
-    // معالجة إرسال النموذج وتكامل Firebase
-    // =====================================
-
-    signupForm.addEventListener('submit', async (e) => {
-        e.preventDefault(); // منع الإرسال الافتراضي للنموذج (إعادة تحميل الصفحة)
-
-        clearMessages(); // مسح أي رسائل أو أخطاء سابقة
-
-        // جلب القيم من جميع حقول الإدخال وإزالة المسافات البيضاء الزائدة
-        const username = usernameInput.value.trim();
-        const email = emailInput.value.trim();
-        const password = passwordInput.value;
-        const confirmPassword = confirmPasswordInput.value;
-        const grade = gradeSelect.value;
-        const governorate = governorateSelect.value;
-        const studentId = studentIdInput.value.trim();
-        const parentPhone = parentPhoneInput.value.trim();
-
-        let isValid = true; // علامة لتتبع حالة التحقق الكلية للنموذج
-
-        // --- التحقق من صحة البيانات من جانب العميل (Client-side Validation) ---
-        // 1. التحقق من اسم المستخدم
-        if (!username) {
-            displayInputError(usernameError, 'الرجاء إدخال اسم المستخدم الكامل.');
-            isValid = false;
-        }
-
-        // 2. التحقق من البريد الإلكتروني
-        if (!email) {
-            displayInputError(emailError, 'الرجاء إدخال البريد الإلكتروني.');
-            isValid = false;
-        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { // تحقق أساسي من صيغة البريد الإلكتروني
-            displayInputError(emailError, 'الرجاء إدخال بريد إلكتروني صالح.');
-            isValid = false;
-        }
-
-        // 3. التحقق من كلمة المرور
-        if (!password) {
-            displayInputError(passwordError, 'الرجاء إدخال كلمة المرور.');
-            isValid = false;
-        } else if (password.length < 6) {
-            displayInputError(passwordError, 'كلمة المرور يجب أن تتكون من 6 أحرف على الأقل.');
-            isValid = false;
-        } else if (!/[0-9]/.test(password) || !/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(password)) {
-            // التحقق من وجود رقم واحد على الأقل ورمز خاص واحد على الأقل
-            displayInputError(passwordError, 'كلمة المرور يجب أن تحتوي على أرقام ورموز.');
-            isValid = false;
-        }
-
-        // 4. التحقق من تأكيد كلمة المرور
-        if (!confirmPassword) {
-            displayInputError(confirmPasswordError, 'الرجاء تأكيد كلمة المرور.');
-            isValid = false;
-        } else if (password !== confirmPassword) {
-            displayInputError(confirmPasswordError, 'كلمتا المرور غير متطابقتين.');
-            isValid = false;
-        }
-
-        // 5. التحقق من اختيار الصف الدراسي
-        if (!grade) { // إذا كان الخيار الافتراضي الفارغ لا يزال محدداً
-            displayInputError(gradeError, 'الرجاء اختيار الصف الدراسي.');
-            isValid = false;
-        }
-
-        // 6. التحقق من اختيار المحافظة
-        if (!governorate) { // إذا كان الخيار الافتراضي الفارغ لا يزال محدداً
-            displayInputError(governorateError, 'الرجاء اختيار المحافظة.');
-            isValid = false;
-        }
-
-        // 7. التحقق من رقم الطالب (أرقام فقط)
-        if (!studentId) {
-            displayInputError(studentIdError, 'الرجاء إدخال رقم الطالب.');
-            isValid = false;
-        } else if (!/^\d+$/.test(studentId)) { // التأكد من أنها أرقام فقط
-            displayInputError(studentIdError, 'رقم الطالب يجب أن يحتوي على أرقام فقط.');
-            isValid = false;
-        }
-
-        // 8. التحقق من رقم هاتف ولي الأمر (صيغة مصرية أساسية)
-        if (!parentPhone) {
-            displayInputError(parentPhoneError, 'الرجاء إدخال رقم ولي الأمر.');
-            isValid = false;
-        } else if (!/^01[0-2,5]\d{8}$/.test(parentPhone)) { // أرقام الهواتف المصرية تبدأ بـ 010, 011, 012, 015 وتتكون من 11 رقمًا
-            displayInputError(parentPhoneError, 'الرجاء إدخال رقم هاتف ولي أمر مصري صحيح (11 رقم يبدأ بـ 01).');
-            isValid = false;
-        }
-
-        // إذا فشل أي تحقق من جانب العميل، يتم إيقاف العملية
-        if (!isValid) {
-            displayGeneralMessage('الرجاء تصحيح الأخطاء في النموذج لإكمال التسجيل.', 'error');
-            return;
-        }
-
-        setLoading(true); // إظهار سبينر التحميل وتعطيل الزر
-
-        try {
-            // Firebase Authentication: إنشاء مستخدم بالبريد الإلكتروني وكلمة المرور
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            const user = userCredential.user;
-
-            // إعداد البيانات الأولية لـ Firestore (تقدم الامتحانات والدورات)
-            // يمكن توسيع هذا الهيكل حسب الحاجة لمنصتك
-            const initialExams = {};
-            for (let i = 1; i <= 10; i++) { // مثال: تهيئة لـ 10 امتحانات
-                initialExams[`exam${i}`] = {
-                    score: 0,
-                    date: null,
-                    status: "pending", // أمثلة: "pending", "completed", "failed"
-                    questionsAnswered: 0,
-                    correctAnswers: 0
-                };
-            }
-
-            const initialCourses = {};
-            for (let i = 1; i <= 10; i++) { // مثال: تهيئة لـ 10 دورات
-                initialCourses[`course${i}`] = {
-                    progress: "0%",
-                    status: "locked", // أمثلة: "locked", "unlocked", "completed"
-                    lastAccessed: null,
-                    totalLessons: 5, // مثال: عدد الدروس في هذه الدورة
-                    completedLessons: 0
-                };
-            }
-
-            // حفظ جميع بيانات المستخدم في Firestore ضمن مجموعة "userdata"
-            // معرف المستند سيكون هو User UID لسهولة الاسترجاع
-            await setDoc(doc(db, "userdata", user.uid), { // اسم المجموعة هو "userdata" كما هو مطلوب
-                username: username,
-                email: email,
-                grade: grade,
-                governorate: governorate,
-                studentId: studentId,
-                parentPhone: parentPhone,
-                createdAt: new Date(), // تاريخ إنشاء الحساب
-                lastLogin: new Date(), // تعيين وقت تسجيل الدخول الأولي
-                userRole: "student", // تعيين دور افتراضي
-                isActive: true, // حالة الحساب
-                profilePicUrl: "https://cdn-icons-png.flaticon.com/512/9131/9131529.png", // رابط صورة الملف الشخصي الافتراضية
-                exams: initialExams, // تقدم/حالة الامتحانات الأولية
-                courses: initialCourses // تقدم/حالة الدورات الأولية
-            });
-
-            setLoading(false); // إخفاء سبينر التحميل وتمكين الزر
-
-            // عرض رسالة نجاح للمستخدم باسم المستخدم الذي اختاره
-            const successMessageText = `🎉 تم إنشاء الحساب بنجاح! أنت الآن يا ${username} بقيت ضمن كتيّبة القائد. سيتم توجيهك للصفحة الرئيسية...`;
-            displayGeneralMessage(successMessageText, 'success');
-
-            // إعادة التوجيه إلى index.html بعد تأخير مع معامل رسالة نجاح في الرابط
-            setTimeout(() => {
-                const encodedUsername = encodeURIComponent(username); // ترميز اسم المستخدم لأمان الرابط
-                window.location.href = `index.html?signupSuccess=true&message=${encodedUsername}`; // إعادة التوجيه
-            }, 4000); // إعادة التوجيه بعد 4 ثوانٍ للسماح للمستخدم بقراءة الرسالة
-
-        } catch (error) {
-            setLoading(false); // إخفاء سبينر التحميل وتمكين الزر
-
-            let errorMessage = "حدث خطأ أثناء إنشاء الحساب. الرجاء المحاولة مرة أخرى.";
-            // معالجة أخطاء Firebase authentication المحددة برسائل سهلة للمستخدم
-            switch (error.code) {
-                case 'auth/email-already-in-use':
-                    errorMessage = '⚠️ هذا البريد الإلكتروني مستخدم بالفعل. الرجاء تسجيل الدخول أو استخدام بريد إلكتروني آخر.';
-                    displayInputError(emailError, errorMessage);
-                    break;
-                case 'auth/weak-password':
-                    errorMessage = '🔒 كلمة المرور ضعيفة جداً. الرجاء استخدام كلمة مرور أقوى (أرقام وحروف ورموز).';
-                    displayInputError(passwordError, errorMessage);
-                    break;
-                case 'auth/invalid-email':
-                    errorMessage = '✉️ صيغة البريد الإلكتروني غير صالحة. الرجاء التحقق من البريد المدخل.';
-                    displayInputError(emailError, errorMessage);
-                    break;
-                case 'auth/operation-not-allowed':
-                    // هذا الخطأ يعني أن تسجيل الدخول بالبريد الإلكتروني/كلمة المرور غير مفعل في إعدادات مشروع Firebase
-                    errorMessage = '🚫 تم تعطيل التسجيل بالبريد الإلكتروني/كلمة المرور. يرجى الاتصال بالدعم.';
-                    break;
-                default:
-                    // رسالة خطأ عامة للأخطاء غير المعالجة
-                    errorMessage = `❌ خطأ غير معروف: ${error.message}.`;
-                    break;
-            }
-            displayGeneralMessage(errorMessage, 'error'); // عرض رسالة الخطأ
-            supportContactDiv.style.display = 'block'; // إظهار رابط الدعم الفني
-            console.error("Firebase Auth Error:", error); // تسجيل الخطأ الكامل للتصحيح
-        }
-    });
-});
+@media (max-width: 400px) {
+    .signup-page-wrapper {
+        margin: 5px;
+    }
+    .animation-side {
+        min-height: 180px;
+    }
+    .chemistry-animation .beaker-svg {
+        width: 80px;
+        height: 150px;
+    }
+    .signup-side {
+        padding: 20px 10px;
+    }
+    .form-title {
+        font-size: 1.6em;
+    }
+    .form-subtitle {
+        font-size: 0.9em;
+    }
+    .input-group input,
+    .input-group select {
+        padding: 8px 10px;
+        font-size: 0.9em;
+    }
+    .signup-button {
+        font-size: 1em;
+        padding: 10px 15px;
+    }
+    .login-link {
+        font-size: 0.9em;
+    }
+}
