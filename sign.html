@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء حساب جديد - منصة القائد</title>
+    <link rel="stylesheet" href="home.css"> <!-- استدعاء ملف التصميم الأساسي -->
+    <link rel="stylesheet" href="signup.css"> <!-- ملف التصميم الخاص بصفحة التسجيل -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="signup-page-wrapper">
+        <!-- قسم نموذج التسجيل (سيكون على اليسار) -->
+        <div class="signup-side">
+            <div class="signup-box">
+                <h2 class="form-title">إنشاء حساب جديد</h2>
+                <p class="form-subtitle">انضم إلينا وابدأ رحلتك التعليمية!</p>
+
+                <form id="signupForm" class="signup-form">
+                    <div class="input-group">
+                        <label for="username"><i class="fas fa-user"></i> اسم المستخدم</label>
+                        <input type="text" id="username" name="username" placeholder="ادخل اسم المستخدم الخاص بك" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="email"><i class="fas fa-envelope"></i> البريد الإلكتروني</label>
+                        <input type="email" id="email" name="email" placeholder="ادخل بريدك الإلكتروني" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="password"><i class="fas fa-lock"></i> كلمة المرور</label>
+                        <input type="password" id="password" name="password" placeholder="ادخل كلمة مرور قوية" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="confirm-password"><i class="fas fa-lock"></i> تأكيد كلمة المرور</label>
+                        <input type="password" id="confirm-password" name="confirm-password" placeholder="أعد إدخال كلمة المرور" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="grade"><i class="fas fa-graduation-cap"></i> الصف الدراسي</label>
+                        <select id="grade" name="grade" required>
+                            <option value="">اختر صفك الدراسي</option>
+                            <option value="first-secondary">الصف الأول الثانوي</option>
+                            <option value="second-secondary">الصف الثاني الثانوي</option>
+                            <option value="third-secondary">الصف الثالث الثانوي</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="governorate"><i class="fas fa-map-marker-alt"></i> المحافظة</label>
+                        <select id="governorate" name="governorate" required>
+                            <option value="">اختر محافظتك</option>
+                            <option value="القاهرة">القاهرة</option>
+                            <option value="الإسكندرية">الإسكندرية</option>
+                            <option value="الجيزة">الجيزة</option>
+                            <option value="القليوبية">القليوبية</option>
+                            <option value="الشرقية">الشرقية</option>
+                            <option value="المنوفية">المنوفية</option>
+                            <option value="البحيرة">البحيرة</option>
+                            <option value="كفر الشيخ">كفر الشيخ</option>
+                            <option value="الغربية">الغربية</option>
+                            <option value="الدقهلية">الدقهلية</option>
+                            <option value="دمياط">دمياط</option>
+                            <option value="بورسعيد">بورسعيد</option>
+                            <option value="الإسماعيلية">الإسماعيلية</option>
+                            <option value="السويس">السويس</option>
+                            <option value="شمال سيناء">شمال سيناء</option>
+                            <option value="جنوب سيناء">جنوب سيناء</option>
+                            <option value="مطروح">مطروح</option>
+                            <option value="الوادي الجديد">الوادي الجديد</option>
+                            <option value="الفيوم">الفيوم</option>
+                            <option value="بني سويف">بني سويف</option>
+                            <option value="المنيا">المنيا</option>
+                            <option value="أسيوط">أسيوط</option>
+                            <option value="سوهاج">سوهاج</option>
+                            <option value="قنا">قنا</option>
+                            <option value="الأقصر">الأقصر</option>
+                            <option value="أسوان">أسوان</option>
+                            <option value="البحر الأحمر">البحر الأحمر</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="student-id"><i class="fas fa-id-card"></i> رقم الطالب</label>
+                        <!-- تم جعل حقل رقم الطالب إجباريًا -->
+                        <input type="text" id="student-id" name="student-id" placeholder="ادخل رقم الطالب الخاص بك" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="parent-phone"><i class="fas fa-phone"></i> رقم ولي الأمر</label>
+                        <input type="tel" id="parent-phone" name="parent-phone" placeholder="ادخل رقم هاتف ولي الأمر" required>
+                    </div>
+
+                    <button type="submit" class="signup-button">إنشاء الحساب</button>
+                    <div id="message" class="form-message"></div>
+                </form>
+
+                <p class="login-link">
+                    لديك حساب بالفعل؟ <a href="login.html">تسجيل الدخول</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- قسم الأنيميشن (سيكون على اليمين) -->
+        <div class="animation-side">
+            <div class="chemistry-animation">
+                <!-- Beaker SVG بتحسينات -->
+                <svg viewBox="0 0 250 350" class="beaker-svg">
+                    <defs>
+                        <linearGradient id="beakerGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#0056b3;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#007bff;stop-opacity:1" />
+                        </linearGradient>
+                        <filter id="liquidShadow">
+                            <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#000000" flood-opacity="0.3"/>
+                        </filter>
+                        <!-- موجة السائل -->
+                        <path id="liquidWave" d="M0,10 C30,0 70,20 100,10 S170,0 200,10 V30 H0 Z" />
+                    </defs>
+                    <!-- Beaker Body -->
+                    <path class="beaker-body" d="M50 20 C45 10 50 0 60 0 L190 0 C200 0 205 10 200 20 L180 320 C175 340 160 350 140 350 L110 350 C90 350 75 340 70 320 L50 20 Z" stroke="#007bff" stroke-width="4" fill="#F0F8FF"/>
+                    <!-- Liquid Fill -->
+                    <!-- ارتفاع ثابت للجزء السفلي من السائل -->
+                    <rect class="liquid-base" x="60" y="220" width="130" height="100" fill="url(#beakerGradient)" rx="10" ry="10" filter="url(#liquidShadow)"/>
+                    <!-- Wave at the top of the liquid -->
+                    <use href="#liquidWave" class="liquid-wave" x="60" y="210" fill="url(#beakerGradient)" filter="url(#liquidShadow)"/>
+                    <!-- Top Rim -->
+                    <path d="M50 20 L200 20" stroke="#007bff" stroke-width="4" fill="none"/>
+                    <!-- Measurement Marks -->
+                    <line x1="195" y1="280" x2="205" y2="280" stroke="#555" stroke-width="2"/>
+                    <text x="210" y="285" fill="#555" font-size="16">100ml</text>
+                    <line x1="195" y1="230" x2="205" y2="230" stroke="#555" stroke-width="2"/>
+                    <text x="210" y="235" fill="#555" font-size="16">75ml</text>
+                    <line x1="195" y1="180" x2="205" y2="180" stroke="#555" stroke-width="2"/>
+                    <text x="210" y="185" fill="#555" font-size="16">50ml</text>
+                    <line x1="195" y1="130" x2="205" y2="130" stroke="#555" stroke-width="2"/>
+                    <text x="210" y="135" fill="#555" font-size="16">25ml</text>
+                </svg>
+                <h3 class="animation-title">الكيمياء أصبحت أسهل!</h3>
+                <p class="animation-slogan">مع منصة القائد، استكشف عالم الكيمياء بطريقة جديدة ومبتكرة.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة التعليمات المنبثقة (المودال) -->
+    <div id="instructionsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>تعليمات منصة القائد</h2>
+            <div class="instructions-text">
+                <p>مرحباً بك في منصة القائد التعليمية. قبل إنشاء حسابك، يرجى قراءة التعليمات التالية بعناية لضمان أفضل تجربة تعليمية:</p>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> **التسجيل الدقيق:** يرجى التأكد من إدخال جميع بياناتك بشكل صحيح ودقيق لتجنب أي مشاكل في المستقبل.</li>
+                    <li><i class="fas fa-check-circle"></i> **كلمة المرور:** اختر كلمة مرور قوية تحتوي على أحرف كبيرة وصغيرة وأرقام ورموز لزيادة أمان حسابك.</li>
+                    <li><i class="fas fa-check-circle"></i> **رقم الطالب ورقم ولي الأمر:** هذه البيانات ضرورية للتواصل ومتابعة تقدمك التعليمي. يرجى إدخالها بشكل صحيح.</li>
+                    <li><i class="fas fa-check-circle"></i> **المحافظة:** اختيار محافظتك يساعدنا في تقديم محتوى تعليمي يتناسب مع احتياجات منطقتك.</li>
+                    <li><i class="fas fa-check-circle"></i> **حماية البيانات:** نحن نلتزم بحماية بياناتك الشخصية وسريتها وفقاً لسياسات الخصوصية الخاصة بنا.</li>
+                    <li><i class="fas fa-check-circle"></i> **الأمان:** لا تشارك بيانات تسجيل الدخول الخاصة بك مع أي شخص للحفاظ على أمان حسابك.</li>
+                    <li><i class="fas fa-check-circle"></i> **الدعم الفني:** في حال واجهت أي مشكلة، لا تتردد في التواصل مع فريق الدعم الفني.</li>
+                </ul>
+                <p>باستمرارك في عملية التسجيل، فإنك توافق على هذه التعليمات وعلى <a href="#" target="_blank">شروط الاستخدام</a> و <a href="#" target="_blank">سياسة الخصوصية</a> الخاصة بالمنصة.</p>
+            </div>
+            <button id="acceptInstructions" class="accept-button">أوافق وأبدأ التسجيل</button>
+        </div>
+    </div>
+
+    <!-- ملف JavaScript الخاص بصفحة التسجيل -->
+    <script type="module" src="signup.js"></script>
+</body>
+</html>
