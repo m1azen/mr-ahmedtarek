@@ -1,744 +1,184 @@
-/* ===================================== */
-/* ✅ Signup Page General Styles */
-/* ===================================== */
-body {
-    background-color: #E0F2F7; /* لون خلفية يتناسق مع تصميمك */
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    direction: rtl;
-    text-align: right;
-    min-height: 100vh; /* لجعل الجسم يملأ الشاشة عموديا */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow-y: auto; /* السماح بالتمرير إذا كان المحتوى أكبر من الشاشة */
-}
-
-body.dark-mode {
-    background-color: #1a2e47; /* خلفية الوضع الداكن */
-}
-
-.signup-page-wrapper {
-    display: flex;
-    flex-direction: row; /* الأقسام بجانب بعضها افتراضيًا */
-    min-height: 90vh; /* تحديد ارتفاع للحاوية الرئيسية */
-    width: 100%;
-    max-width: 1200px; /* أقصى عرض للحاوية */
-    background-color: #ffffff;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
-    border-radius: 15px;
-    overflow: hidden; /* لإخفاء أي جزء يخرج عن الحدود */
-    margin: 20px; /* لإعطاء مسافة من حواف الشاشة الكبيرة */
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-body.dark-mode .signup-page-wrapper {
-    background-color: #2c4763;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
-}
-
-/* ===================================== */
-/* ✅ Animation Side (الجانب الأيمن المتحرك) */
-/* ===================================== */
-.animation-side {
-    flex: 1; /* يأخذ مساحة مرنة */
-    background: linear-gradient(135deg, #007bff, #0056b3); /* تدرج ألوان جميل */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    padding: 30px;
-    position: relative;
-    overflow: hidden;
-    text-align: center;
-    min-width: 300px; /* لضمان ألا يتقلص كثيراً */
-    order: 2; /* يظهر على اليمين في RTL */
-}
-
-body.dark-mode .animation-side {
-    background: linear-gradient(135deg, #64B5F6, #3f51b5);
-}
-
-.animation-side::before,
-.animation-side::after { /* تأثير دوائر خلفية خفيفة */
-    content: '';
-    position: absolute;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.1);
-    pointer-events: none;
-    z-index: 1;
-}
-.animation-side::before {
-    width: 300px;
-    height: 300px;
-    top: -50px;
-    left: -50px;
-    animation: rotateCircle 20s linear infinite;
-}
-.animation-side::after {
-    width: 200px;
-    height: 200px;
-    bottom: -30px;
-    right: -30px;
-    animation: rotateCircle 25s reverse linear infinite;
-}
-
-@keyframes rotateCircle {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-.chemistry-animation {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 30px;
-    position: relative;
-    z-index: 10; /* لجعل الأنميشن فوق الخلفية */
-}
-
-/* Beaker SVG Styles */
-.beaker-svg {
-    width: 180px; /* حجم المخبار */
-    height: 280px; /* ارتفاع المخبار */
-    overflow: hidden;
-}
-
-.beaker-body {
-    fill: #F0F8FF; /* لون جسم المخبار */
-    stroke: #007bff; /* لون حدود المخبار */
-    stroke-width: 4;
-    transition: fill 0.3s ease, stroke 0.3s ease;
-}
-body.dark-mode .beaker-body {
-    fill: #E3F2FD;
-    stroke: #90CAF9;
-}
-
-.beaker-top { /* for the top path, if it exists as a separate element */
-    stroke: #007bff;
-    stroke-width: 4;
-    transition: stroke 0.3s ease;
-}
-body.dark-mode .beaker-top {
-    stroke: #90CAF9;
-}
-
-.liquid-base {
-    /* هذا هو الجزء السفلي الثابت من السائل */
-    fill: url(#beakerGradient); /* يستخدم تدرج الألوان */
-    filter: url(#liquidShadow); /* يضيف الظل */
-}
-
-.liquid-wave {
-    /* الجزء العلوي للسائل الذي يتحرك كموجة */
-    animation: liquidWaveAnimation 4s ease-in-out infinite alternate;
-    transform-origin: center bottom; /* للتحكم في نقطة التحول */
-}
-
-@keyframes liquidWaveAnimation {
-    0% { transform: translateY(0) scaleY(1); }
-    50% { transform: translateY(-5px) scaleY(1.05); } /* حركة لأعلى قليلاً وتمدد طفيف */
-    100% { transform: translateY(0) scaleY(1); }
-}
-
-
-/* liquid-fill animation from previous version. Keep for beaker.svg */
-.liquid-fill {
-    transform-origin: bottom center;
-    animation: fillBeaker 4s ease-out forwards infinite alternate; /* انيميشن التعبئة */
-    filter: url(#liquidShadow); /* تطبيق الظل على السائل */
-}
-
-@keyframes fillBeaker {
-    0% {
-        height: 0;
-        transform: translateY(0); /* السائل يبدأ من أسفل المخبار */
-        fill: #007bff;
-    }
-    50% {
-        height: 200px; /* يصل إلى هذا الارتفاع */
-        transform: translateY(-200px); /* ويتحرك للأعلى 200px */
-        fill: #00bcd4; /* يتغير اللون أثناء التعبئة */
-    }
-    100% {
-        height: 150px; /* يستقر عند هذا الارتفاع */
-        transform: translateY(-150px);
-        fill: #007bff;
-    }
-}
-
-
-.animation-title {
-    font-size: 2.5em;
-    font-weight: bold;
-    margin-top: 20px;
-    margin-bottom: 10px;
-    color: #fff;
-    text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-}
-
-.animation-slogan {
-    font-size: 1.2em;
-    line-height: 1.6;
-    color: rgba(255, 255, 255, 0.9);
-    max-width: 80%;
-}
-
-
-/* ===================================== */
-/* ✅ Signup Form Side (الجانب الأيسر لنموذج التسجيل) */
-/* ===================================== */
-.signup-side {
-    flex: 1.5; /* يأخذ مساحة أكبر لنموذج التسجيل */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 40px;
-    background-color: #ffffff;
-    transition: background-color 0.3s ease;
-    order: 1; /* يظهر على اليسار في RTL */
-}
-
-body.dark-mode .signup-side {
-    background-color: #1a2e47;
-}
-
-.signup-box {
-    width: 100%;
-    max-width: 450px; /* لضمان أن الصندوق لا يكون عريضاً جداً */
-    text-align: right;
-}
-
-.form-title {
-    font-size: 2.2em;
-    color: #003F8A;
-    margin-bottom: 10px;
-    font-weight: bold;
-    text-align: center;
-    transition: color 0.3s ease;
-}
-
-body.dark-mode .form-title {
-    color: #E3F2FD;
-}
-
-.form-subtitle { /* Not directly used in current HTML but kept for consistency if needed */
-    font-size: 1.1em;
-    color: #555;
-    margin-bottom: 30px;
-    text-align: center;
-    transition: color 0.3s ease;
-}
-
-body.dark-mode .form-subtitle {
-    color: #CFD8DC;
-}
-
-.signup-form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.input-group {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-}
-
-.input-group label {
-    font-size: 1.05em;
-    color: #1A2E47;
-    margin-bottom: 8px;
-    font-weight: 500;
-    transition: color 0.3s ease;
-}
-
-body.dark-mode .input-group label {
-    color: #F8F9FA;
-}
-
-.input-group label i {
-    margin-left: 8px;
-    color: #007bff;
-    transition: color 0.3s ease;
-}
-
-body.dark-mode .input-group label i {
-    color: #90CAF9;
-}
-
-.input-group input,
-.input-group select {
-    width: 100%;
-    padding: 12px 15px;
-    border: 1px solid #B0D7FF;
-    border-radius: 8px;
-    font-size: 1em;
-    color: #333;
-    background-color: #F8FCFF;
-    outline: none;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
-    box-sizing: border-box;
-}
-
-body.dark-mode .input-group input,
-body.dark-mode .input-group select {
-    background-color: #3A5F7B;
-    border-color: #6A8CA9;
-    color: #F8F9FA;
-}
-
-.input-group input::placeholder {
-    color: #999;
-    font-size: 0.95em;
-}
-
-body.dark-mode .input-group input::placeholder {
-    color: #B0C4DE;
-}
-
-.input-group input:focus,
-.input-group select:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
-}
-
-body.dark-mode .input-group input:focus,
-body.dark-mode .input-group select:focus {
-    border-color: #90CAF9;
-    box-shadow: 0 0 0 3px rgba(144, 202, 249, 0.25);
-}
-
-.signup-button {
-    background: linear-gradient(45deg, #007bff, #0056b3);
-    color: white;
-    border: none;
-    padding: 15px 25px;
-    border-radius: 30px;
-    font-size: 1.2em;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    display: inline-block;
-    white-space: nowrap;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
-    margin-top: 20px;
-    width: 100%;
-}
-
-body.dark-mode .signup-button {
-    background: linear-gradient(45deg, #90CAF9, #64B5F6);
-    box-shadow: 0 8px 20px rgba(144, 202, 249, 0.3);
-}
-
-.signup-button::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    transition: width 0.4s ease-out, height 0.4s ease-out, top 0.4s ease-out, left 0.4s ease-out;
-    transform: translate(-50%, -50%);
-}
-
-.signup-button:hover::before {
-    width: 250%;
-    height: 250%;
-}
-
-.signup-button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 28px rgba(0, 123, 255, 0.4);
-}
-
-body.dark-mode .signup-button:hover {
-    box-shadow: 0 12px 28px rgba(144, 202, 249, 0.4);
-}
-
-/* Spinner and Messages for button */
-.spinner {
-    border: 4px solid rgba(255, 255, 255, 0.3);
-    border-top: 4px solid #fff;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    animation: spin 0.8s linear infinite;
-    display: inline-block;
-    vertical-align: middle;
-    margin-right: 8px; /* Space between text and spinner */
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.status-message { /* Used for general messages like success/error feedback */
-    padding: 15px;
-    border-radius: 8px;
-    margin-top: 15px;
-    font-size: 0.95em;
-    font-weight: 500;
-    text-align: center;
-    display: none; /* مخفي افتراضياً */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.status-message.success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-}
-
-.status-message.error {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-}
-
-.support-contact {
-    margin-top: 10px;
-    font-size: 0.9em;
-    color: #555;
-    text-align: center;
-    display: none; /* مخفي افتراضياً */
-}
-
-.support-contact a {
-    color: #007bff;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.support-contact a:hover {
-    text-decoration: underline;
-}
-
-
-.login-link {
-    margin-top: 30px;
-    font-size: 1em;
-    color: #555;
-    text-align: center;
-    transition: color 0.3s ease;
-}
-
-body.dark-mode .login-link {
-    color: #CFD8DC;
-}
-
-.login-link a {
-    color: #007bff;
-    text-decoration: none;
-    font-weight: bold;
-    transition: color 0.3s ease;
-}
-
-body.dark-mode .login-link a {
-    color: #90CAF9;
-}
-
-.login-link a:hover {
-    text-decoration: underline;
-    color: #0056b3;
-}
-body.dark-mode .login-link a:hover {
-    color: #64B5F6;
-}
-
-/* ===================================== */
-/* ✅ Modal (Instructions Pop-up) Styles */
-/* ===================================== */
-.modal {
-    display: none; /* مخفي افتراضياً */
-    position: fixed; /* يبقى في مكانه حتى عند التمرير */
-    z-index: 1000; /* ليكون فوق كل العناصر الأخرى */
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto; /* تمكين التمرير إذا كان محتوى المودال كبيراً */
-    background-color: rgba(0, 0, 0, 0.6); /* خلفية سوداء شبه شفافة */
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: auto;
-    padding: 30px;
-    border-radius: 10px;
-    max-width: 700px;
-    width: 90%;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    position: relative;
-    text-align: right; /* محاذاة النص لليمين */
-    animation: fadeIn 0.3s ease-out;
-    max-height: 90vh; /* لتحديد أقصى ارتفاع للمودال */
-    overflow-y: auto; /* السماح بالتمرير داخل المودال */
-}
-
-body.dark-mode .modal-content {
-    background-color: #3A5F7B;
-    color: #F8F9FA;
-}
-
-.close-button {
-    color: #aaa;
-    float: left; /* لجعله يظهر على اليسار في RTL */
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-
-.close-button:hover,
-.close-button:focus {
-    color: #000;
-    text-decoration: none;
-}
-body.dark-mode .close-button:hover,
-body.dark-mode .close-button:focus {
-    color: #fff;
-}
-
-.modal-content h2 {
-    color: #003F8A;
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 1.8em;
-    transition: color 0.3s ease;
-}
-body.dark-mode .modal-content h2 {
-    color: #90CAF9;
-}
-
-.instructions-text {
-    line-height: 1.8;
-    color: #444;
-    font-size: 1.05em;
-    margin-bottom: 25px;
-    text-align: justify; /* لترتيب النصوص بشكل أفضل */
-}
-body.dark-mode .instructions-text {
-    color: #E0E0E0;
-}
-
-.instructions-text ul {
-    list-style: none; /* إزالة النقاط الافتراضية */
-    padding: 0;
-    margin-top: 15px;
-}
-
-.instructions-text ul li {
-    margin-bottom: 10px;
-    display: flex;
-    align-items: flex-start; /* محاذاة البداية للعناصر مع الأيقونات */
-}
-
-.instructions-text ul li i {
-    color: #28a745; /* لون أيقونة الصح */
-    margin-left: 10px; /* مسافة بين الأيقونة والنص */
-    font-size: 1.2em;
-    margin-top: 4px; /* لضبط محاذاة الأيقونة مع النص */
-}
-body.dark-mode .instructions-text ul li i {
-    color: #81C784;
-}
-
-.instructions-text a {
-    color: #007bff;
-    text-decoration: none;
-    font-weight: bold;
-    transition: color 0.3s ease;
-}
-body.dark-mode .instructions-text a {
-    color: #90CAF9;
-}
-
-.instructions-text a:hover {
-    text-decoration: underline;
-    color: #0056b3;
-}
-body.dark-mode .instructions-text a:hover {
-    color: #64B5F6;
-}
-
-.accept-button {
-    display: block;
-    width: fit-content;
-    margin: 25px auto 0 auto; /* توسيط الزر */
-    background: linear-gradient(45deg, #28a745, #218838); /* لون أخضر للزر */
-    color: white;
-    border: none;
-    padding: 12px 30px;
-    border-radius: 30px;
-    font-size: 1.1em;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
-}
-
-body.dark-mode .accept-button {
-    background: linear-gradient(45deg, #81C784, #4CAF50);
-    box-shadow: 0 4px 10px rgba(129, 199, 132, 0.3);
-}
-
-.accept-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(40, 167, 69, 0.4);
-}
-body.dark-mode .accept-button:hover {
-    box-shadow: 0 6px 12px rgba(129, 199, 132, 0.4);
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* ===================================== */
-/* ✅ Responsive Design (Rest of the Signup Page) */
-/* ===================================== */
-@media (max-width: 992px) {
-    .signup-page-wrapper {
-        flex-direction: column; /* جعل الأقسام تتكدس فوق بعضها */
-        margin: 15px;
-        max-width: 500px; /* لتقليل العرض على الشاشات الأصغر */
-    }
-
-    .animation-side {
-        min-height: 250px; /* تحديد ارتفاع للقسم المتحرك عند التكدس */
-        padding: 20px;
-        border-radius: 15px 15px 0 0; /* حواف دائرية علوية فقط */
-        order: 1; /* يظهر في الأعلى عند التكدس */
-    }
-
-    .signup-side {
-        padding: 30px 20px;
-        border-radius: 0 0 15px 15px; /* حواف دائرية سفلية فقط */
-        order: 2; /* يظهر في الأسفل عند التكدس */
-    }
-
-    .chemistry-animation .beaker-svg {
-        width: 120px;
-        height: 200px;
-    }
-    .animation-title {
-        font-size: 2em;
-    }
-    .animation-slogan {
-        font-size: 1em;
-    }
-
-    .modal-content {
-        width: 95%;
-        padding: 25px;
-    }
-    .modal-content h2 {
-        font-size: 1.6em;
-    }
-    .instructions-text {
-        font-size: 0.95em;
-    }
-    .accept-button {
-        font-size: 1em;
-        padding: 10px 25px;
-    }
-}
-
-@media (max-width: 600px) {
-    .signup-page-wrapper {
-        margin: 10px;
-    }
-    .animation-side {
-        min-height: 200px;
-        padding: 15px;
-    }
-    .chemistry-animation .beaker-svg {
-        width: 100px;
-        height: 180px;
-    }
-    .animation-title {
-        font-size: 1.8em;
-    }
-    .animation-slogan {
-        font-size: 0.9em;
-    }
-    .signup-side {
-        padding: 25px 15px;
-    }
-    .form-title {
-        font-size: 1.8em;
-    }
-    .form-subtitle {
-        font-size: 1em;
-    }
-    .input-group label {
-        font-size: 1em;
-    }
-    .input-group input,
-    .input-group select {
-        padding: 10px 12px;
-        font-size: 0.95em;
-    }
-    .signup-button {
-        padding: 12px 20px;
-        font-size: 1.1em;
-    }
-    .modal-content {
-        padding: 20px;
-    }
-    .modal-content h2 {
-        font-size: 1.5em;
-    }
-}
-
-@media (max-width: 400px) {
-    .signup-page-wrapper {
-        margin: 5px;
-    }
-    .animation-side {
-        min-height: 180px;
-    }
-    .chemistry-animation .beaker-svg {
-        width: 80px;
-        height: 150px;
-    }
-    .signup-side {
-        padding: 20px 10px;
-    }
-    .form-title {
-        font-size: 1.6em;
-    }
-    .form-subtitle {
-        font-size: 0.9em;
-    }
-    .input-group input,
-    .input-group select {
-        padding: 8px 10px;
-        font-size: 0.9em;
-    }
-    .signup-button {
-        font-size: 1em;
-        padding: 10px 15px;
-    }
-    .login-link {
-        font-size: 0.9em;
-    }
-}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء حساب جديد - منصة القائد التعليمية</title>
+    <!-- تأكد من أن هذا المسار لملف الأيقونة صحيح وموجود في نفس المجلد -->
+    <link rel="icon" type="image/png" sizes="2000" href="5926948237783189215.png">
+    <!-- تأكد أن ملف CSS اسمه sign.css وموجود في نفس مجلد HTML -->
+    <link rel="stylesheet" href="sign.css">
+    <!-- Font Awesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="signup-page-wrapper">
+        <!-- الجانب الأيمن: الرسوم المتحركة والرسالة الترحيبية -->
+        <div class="animation-side">
+            <div class="chemistry-animation">
+                <svg class="beaker-svg" viewBox="0 0 200 300">
+                    <defs>
+                        <linearGradient id="beakerGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#00bcd4" />
+                            <stop offset="100%" stop-color="#007bff" />
+                        </linearGradient>
+                        <filter id="liquidShadow">
+                            <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#000" flood-opacity="0.3" />
+                        </filter>
+                    </defs>
+                    <!-- جسم المخبار -->
+                    <path class="beaker-body" d="M30,0 L30,250 C30,280 45,300 100,300 C155,300 170,280 170,250 L170,0 Z" />
+                    <!-- السائل المتحرك -->
+                    <path class="liquid-base" d="M30,250 C30,280 45,300 100,300 C155,300 170,280 170,250 L170,150 C170,135 155,120 100,120 C45,120 30,135 30,150 Z" />
+                    <path class="liquid-wave" fill="url(#beakerGradient)" d="M30,150 Q65,140 100,150 T170,150 V250 C170,280 155,300 100,300 C45,300 30,280 30,250 Z" />
+
+                    <!-- علامات القياس (للتصميم فقط) -->
+                    <text x="180" y="50" fill="#fff" font-size="16px" text-anchor="middle">50ml</text>
+                    <line x1="170" y1="50" x2="160" y2="50" stroke="#fff" stroke-width="2"/>
+                    <text x="180" y="100" fill="#fff" font-size="16px" text-anchor="middle">100ml</text>
+                    <line x1="170" y1="100" x2="160" y2="100" stroke="#fff" stroke-width="2"/>
+                    <text x="180" y="150" fill="#fff" font-size="16px" text-anchor="middle">150ml</text>
+                    <line x1="170" y1="150" x2="160" y2="150" stroke="#fff" stroke-width="2"/>
+                </svg>
+            </div>
+            <h1 class="animation-title">الكيمياء أصبحت أسهل!</h1>
+            <p class="animation-slogan">مع منصة القائد، استكشف عالم الكيمياء بطريقة جديدة ومبتكرة.</p>
+        </div>
+
+        <!-- الجانب الأيسر: نموذج التسجيل نفسه -->
+        <div class="signup-side">
+            <div class="signup-box">
+                <div class="header">
+                    <!-- زر الرجوع للصفحة الرئيسية -->
+                    <a href="index.html" class="back-link"><i class="fas fa-arrow-right"></i> الرئيسية</a>
+                    <h2 class="form-title">إنشاء حساب جديد</h2>
+                </div>
+                <!-- النموذج مخفي في البداية بواسطة JS ويظهر بعد قبول شروط المودال -->
+                <form id="signupForm" style="display: none;"> 
+                    <div class="input-group">
+                        <label for="username"><i class="fas fa-user"></i> اسم المستخدم الكامل:</label>
+                        <input type="text" id="username" placeholder="مثال: أحمد محمد علي" required>
+                        <div class="error-message" id="usernameError"></div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="email"><i class="fas fa-envelope"></i> البريد الإلكتروني:</label>
+                        <input type="email" id="email" placeholder="example@domain.com" required>
+                        <div class="error-message" id="emailError"></div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="password"><i class="fas fa-lock"></i> كلمة المرور:</label>
+                        <input type="password" id="password" placeholder="6+ أحرف، رقم، رمز" required>
+                        <div class="error-message" id="passwordError"></div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="confirmPassword"><i class="fas fa-key"></i> تأكيد كلمة المرور:</label>
+                        <input type="password" id="confirmPassword" placeholder="أعد إدخال كلمة المرور" required>
+                        <div class="error-message" id="confirmPasswordError"></div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="grade"><i class="fas fa-graduation-cap"></i> الصف الدراسي:</label>
+                        <select id="grade" required>
+                            <option value="">اختر صفك الدراسي</option>
+                            <option value="first-secondary">الصف الأول الثانوي</option>
+                            <option value="second-secondary">الصف الثاني الثانوي</option>
+                            <option value="third-secondary">الصف الثالث الثانوي</option>
+                        </select>
+                        <div class="error-message" id="gradeError"></div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="governorate"><i class="fas fa-city"></i> المحافظة:</label>
+                        <select id="governorate" required>
+                            <option value="">اختر محافظتك</option>
+                            <option value="القاهرة">القاهرة</option>
+                            <option value="الإسكندرية">الإسكندرية</option>
+                            <option value="الجيزة">الجيزة</option>
+                            <option value="القليوبية">القليوبية</option>
+                            <option value="الشرقية">الشرقية</option>
+                            <option value="المنوفية">المنوفية</option>
+                            <option value="البحيرة">البحيرة</option>
+                            <option value="كفر الشيخ">كفر الشيخ</option>
+                            <option value="الغربية">الغربية</option>
+                            <option value="الدقهلية">الدقهلية</option>
+                            <option value="دمياط">دمياط</option>
+                            <option value="بورسعيد">بورسعيد</option>
+                            <option value="الإسماعيلية">الإسماعيلية</option>
+                            <option value="السويس">السويس</option>
+                            <option value="شمال سيناء">شمال سيناء</option>
+                            <option value="جنوب سيناء">جنوب سيناء</option>
+                            <option value="مطروح">مطروح</option>
+                            <option value="الوادي الجديد">الوادي الجديد</option>
+                            <option value="الفيوم">الفيوم</option>
+                            <option value="بني سويف">بني سويف</option>
+                            <option value="المنيا">المنيا</option>
+                            <option value="أسيوط">أسيوط</option>
+                            <option value="سوهاج">سوهاج</option>
+                            <option value="قنا">قنا</option>
+                            <option value="الأقصر">الأقصر</option>
+                            <option value="أسوان">أسوان</option>
+                            <option value="البحر الأحمر">البحر الأحمر</option>
+                        </select>
+                        <div class="error-message" id="governorateError"></div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="studentId"><i class="fas fa-id-badge"></i> رقم الطالب:</label>
+                        <input type="text" id="studentId" placeholder="ادخل رقم الطالب الخاص بك (مثال: 12345)" required>
+                        <div class="error-message" id="studentIdError"></div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="parentPhone"><i class="fas fa-phone-alt"></i> رقم ولي الأمر:</label>
+                        <input type="tel" id="parentPhone" placeholder="ادخل رقم هاتف ولي الأمر (مثال: 01xxxxxxxx)" required>
+                        <div class="error-message" id="parentPhoneError"></div>
+                    </div>
+
+                    <button type="submit" id="signupButton">
+                        إنشاء الحساب
+                        <span class="spinner" id="loadingSpinner" style="display: none;"></span>
+                    </button>
+
+                    <!-- هذه الرسائل يتم التحكم بظهورها من JavaScript -->
+                    <div class="status-message" id="generalMessage" style="display: none;"></div>
+                    <div class="support-contact" id="supportContact" style="display: none;">
+                        في حال واجهتك مشكلة، تواصل مع دعم <a href="https://wa.me/201006473018" target="_blank">Mazen</a>.
+                    </div>
+                </form>
+                <div class="login-link">
+                    لديك حساب بالفعل؟ <a href="login.html">تسجيل الدخول</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Instructions Modal (النافذة المنبثقة للتعليمات) -->
+    <!-- تأكد أن الـ ID هنا هي instructionsModal كما في JavaScript -->
+    <div id="instructionsModal" class="modal">
+        <div class="modal-content">
+            <!-- تأكد أن الـ class هنا هي close-button كما في JavaScript -->
+            <span class="close-button">&times;</span>
+            <h2>تعليمات منصة القائد</h2>
+            <div class="instructions-text">
+                <p>مرحباً بك في منصة القائد التعليمية. لضمان أفضل تجربة، يرجى قراءة التعليمات التالية قبل إنشاء حسابك:</p>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> **دقة البيانات:** تأكد من إدخال جميع معلوماتك بشكل صحيح ودقيق.</li>
+                    <li><i class="fas fa-check-circle"></i> **قوة كلمة المرور:** اختر كلمة مرور قوية (أكثر من 6 أحرف، أرقام، رموز).</li>
+                    <li><i class="fas fa-check-circle"></i> **أرقام التواصل:** رقم الطالب وولي الأمر ضروريان للمتابعة والدعم.</li>
+                    <li><i class="fas fa-check-circle"></i> **أمان حسابك:** لا تشارك بياناتك مع أي شخص.</li>
+                    <li><i class="fas fa-check-circle"></i> **الدعم الفني:** فريق الدعم متاح لمساعدتك في أي وقت.</li>
+                </ul>
+                <p>باستمرارك، فإنك توافق على <a href="#" target="_blank">شروط الاستخدام</a> و <a href="#" target="_blank">سياسة الخصوصية</a>.</p>
+            </div>
+            <!-- تأكد أن الـ ID هنا هي acceptInstructions كما في JavaScript -->
+            <button id="acceptInstructions" class="accept-button">أوافق وأبدأ التسجيل</button>
+        </div>
+    </div>
+
+    <!-- تأكد أن ملف JavaScript اسمه sign.js وموجود في نفس مجلد HTML -->
+    <script type="module" src="sign.js"></script>
+</body>
+</html>
