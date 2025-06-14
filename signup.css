@@ -2,24 +2,32 @@
 /* ✅ Signup Page General Styles */
 /* ===================================== */
 body {
-    background-color: #E0F2F7; /* لون خلفية يتناسق مع تصميمك */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    direction: rtl;
-    text-align: right;
-    min-height: 100vh; /* لجعل الجسم يملأ الشاشة عموديا */
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow-y: auto; /* السماح بالتمرير إذا كان المحتوى أكبر من الشاشة */
+    min-height: 100vh;
+    background: linear-gradient(135deg, #e0f7fa 0%, #bbdefb 100%); /* Soft, inviting gradient */
+    color: #333;
+    direction: rtl; /* Right-to-left for Arabic */
+    text-align: right;
+    font-size: 16px;
+    overflow-y: auto; /* Allow scrolling if content overflows */
+    padding-top: 20px; /* Space from top */
+    padding-bottom: 20px; /* Space from bottom */
+    box-sizing: border-box;
 }
 
 body.dark-mode {
     background-color: #1a2e47; /* خلفية الوضع الداكن */
 }
 
+/* Note: The signup-page-wrapper is commented out in sign.html,
+   but these styles are kept here in case you re-introduce it
+   or use it for a larger layout.
+*/
 .signup-page-wrapper {
     display: flex;
     flex-direction: row; /* الأقسام بجانب بعضها افتراضيًا */
@@ -41,6 +49,8 @@ body.dark-mode .signup-page-wrapper {
 
 /* ===================================== */
 /* ✅ Animation Side (الجانب الأيمن المتحرك) */
+/* (These styles are for a split layout not present in current sign.html,
+   but kept for potential future use or if included in another section) */
 /* ===================================== */
 .animation-side {
     flex: 1; /* يأخذ مساحة مرنة */
@@ -128,28 +138,10 @@ body.dark-mode .beaker-top {
     stroke: #90CAF9;
 }
 
-.liquid-base {
-    /* هذا هو الجزء السفلي الثابت من السائل */
-    fill: url(#beakerGradient); /* يستخدم تدرج الألوان */
-    filter: url(#liquidShadow); /* يضيف الظل */
-}
-
-.liquid-wave {
-    /* الجزء العلوي للسائل الذي يتحرك كموجة */
-    animation: liquidWaveAnimation 4s ease-in-out infinite alternate;
-    transform-origin: center bottom; /* للتحكم في نقطة التحول */
-}
-
-@keyframes liquidWaveAnimation {
-    0% { transform: translateY(0) scaleY(1); }
-    50% { transform: translateY(-5px) scaleY(1.05); } /* حركة لأعلى قليلاً وتمدد طفيف */
-    100% { transform: translateY(0) scaleY(1); }
-}
-
-
 .liquid-fill {
-    /* تم إزالة هذا الأنميشن القديم لأنه تم استبداله بـ liquid-base و liquid-wave */
-    /* للحفاظ على الكود القديم في حال كان هناك أي استخدامات أخرى */
+    /* Note: This animation is for the beaker liquid if you were to
+       re-introduce the .signup-page-wrapper with .animation-side.
+       It's not used in the current standalone form layout. */
     transform-origin: bottom center;
     animation: fillBeaker 4s ease-out forwards infinite alternate; /* انيميشن التعبئة */
     filter: url(#liquidShadow); /* تطبيق الظل على السائل */
@@ -173,7 +165,6 @@ body.dark-mode .beaker-top {
     }
 }
 
-
 .animation-title {
     font-size: 2.5em;
     font-weight: bold;
@@ -193,7 +184,11 @@ body.dark-mode .beaker-top {
 
 /* ===================================== */
 /* ✅ Signup Form Side (الجانب الأيسر لنموذج التسجيل) */
+/* These styles apply to the form container itself */
 /* ===================================== */
+/* Note: In sign.html, the form is directly inside .signup-box,
+   so .signup-side is not directly applied.
+   The .container and .signup-box classes handle the main layout. */
 .signup-side {
     flex: 1.5; /* يأخذ مساحة أكبر لنموذج التسجيل */
     display: flex;
@@ -213,22 +208,33 @@ body.dark-mode .signup-side {
     width: 100%;
     max-width: 450px; /* لضمان أن الصندوق لا يكون عريضاً جداً */
     text-align: right;
+    /* Styles previously on .container, now potentially applied here or .container */
+    background-color: #fff;
+    padding: 40px; /* Adjust as needed, already done by .container */
+    border-radius: 20px; /* Matches .container */
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15); /* Matches .container */
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    animation: fadeInScale 0.6s ease-out;
 }
 
-.form-title {
-    font-size: 2.2em;
-    color: #003F8A;
-    margin-bottom: 10px;
-    font-weight: bold;
-    text-align: center;
-    transition: color 0.3s ease;
+.form-title { /* Changed to match h2 in the HTML, if you use h2 directly */
+    color: #007bff; /* Primary color */
+    font-size: 2.5em; /* Larger title */
+    margin: 0;
+    font-weight: 800; /* Bolder font */
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+    text-align: center; /* Centered in header */
+    margin-bottom: 30px; /* Space below title */
 }
+
 
 body.dark-mode .form-title {
     color: #E3F2FD;
 }
 
-.form-subtitle {
+.form-subtitle { /* Not used in current sign.html, but kept for reference */
     font-size: 1.1em;
     color: #555;
     margin-bottom: 30px;
@@ -240,7 +246,7 @@ body.dark-mode .form-subtitle {
     color: #CFD8DC;
 }
 
-.signup-form {
+.signup-form { /* This is the form itself */
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -264,7 +270,7 @@ body.dark-mode .input-group label {
     color: #F8F9FA;
 }
 
-.input-group label i {
+.input-group label i { /* Icon for labels, like in signup-html-full */
     margin-left: 8px;
     color: #007bff;
     transition: color 0.3s ease;
@@ -274,18 +280,19 @@ body.dark-mode .input-group label i {
     color: #90CAF9;
 }
 
-.input-group input,
-.input-group select {
+.input-group input[type="text"],
+.input-group input[type="email"],
+.input-group input[type="password"],
+.input-group input[type="tel"],
+.input-group select { /* Apply to select as well */
     width: 100%;
-    padding: 12px 15px;
-    border: 1px solid #B0D7FF;
-    border-radius: 8px;
-    font-size: 1em;
-    color: #333;
-    background-color: #F8FCFF;
-    outline: none;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+    padding: 14px 18px; /* More padding */
+    border: 1px solid #cceeff; /* Lighter border */
+    border-radius: 10px; /* More rounded */
+    font-size: 1.05em;
     box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+    background-color: #f8fcfc; /* Very light background */
 }
 
 body.dark-mode .input-group input,
@@ -307,220 +314,229 @@ body.dark-mode .input-group input::placeholder {
 .input-group input:focus,
 .input-group select:focus {
     border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.25); /* Stronger focus halo */
+    outline: none;
+    background-color: #fff;
 }
 
 body.dark-mode .input-group input:focus,
 body.dark-mode .input-group select:focus {
     border-color: #90CAF9;
-    box-shadow: 0 0 0 3px rgba(144, 202, 249, 0.25);
+    box-shadow: 0 0 0 4px rgba(144, 202, 249, 0.25);
 }
 
-.signup-button {
-    background: linear-gradient(45deg, #007bff, #0056b3);
+button[type="submit"] {
+    width: 100%;
+    padding: 16px; /* More generous padding */
+    background: linear-gradient(45deg, #2ecc71, #27ae60); /* Green gradient */
     color: white;
     border: none;
-    padding: 15px 25px;
-    border-radius: 30px;
-    font-size: 1.2em;
-    font-weight: bold;
+    border-radius: 10px;
+    font-size: 1.2em; /* Larger font */
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    display: inline-block;
-    white-space: nowrap;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
-    margin-top: 20px;
-    width: 100%;
+    transition: all 0.3s ease; /* Smooth transition for all properties */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-top: 30px; /* More space above button */
+    box-shadow: 0 8px 20px rgba(46, 204, 113, 0.3); /* Subtle green shadow */
 }
 
-body.dark-mode .signup-button {
-    background: linear-gradient(45deg, #90CAF9, #64B5F6);
-    box-shadow: 0 8px 20px rgba(144, 202, 249, 0.3);
+button[type="submit"]:hover:not(:disabled) {
+    background: linear-gradient(45deg, #27ae60, #2ecc71); /* Reverse gradient on hover */
+    transform: translateY(-3px); /* Lift effect */
+    box-shadow: 0 12px 28px rgba(46, 204, 113, 0.45); /* Enhanced shadow */
 }
 
-.signup-button::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: rgba(255, 255, 255, 0.2);
+button[type="submit"]:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* Loading Spinner */
+.spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid #fff;
     border-radius: 50%;
-    transition: width 0.4s ease-out, height 0.4s ease-out, top 0.4s ease-out, left 0.4s ease-out;
-    transform: translate(-50%, -50%);
+    width: 25px; /* Larger spinner */
+    height: 25px;
+    animation: spin 0.8s linear infinite; /* Faster spin */
+    display: inline-block;
+    vertical-align: middle;
 }
 
-.signup-button:hover::before {
-    width: 250%;
-    height: 250%;
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
-.signup-button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 28px rgba(0, 123, 255, 0.4);
-}
-
-body.dark-mode .signup-button:hover {
-    box-shadow: 0 12px 28px rgba(144, 202, 249, 0.4);
-}
-
-.form-message {
-    margin-top: 15px;
-    padding: 10px;
-    border-radius: 8px;
-    font-size: 0.95em;
-    font-weight: 500;
+/* Status Messages (General) */
+.status-message { /* Used for general messages like success/error feedback */
+    padding: 18px; /* More padding */
+    border-radius: 10px; /* More rounded */
+    margin-top: 25px;
     text-align: center;
-    display: none; /* مخفي افتراضياً */
+    font-weight: 600;
+    line-height: 1.6;
+    word-wrap: break-word;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for messages */
+    animation: fadeIn 0.5s ease-out; /* Fade in animation for messages */
 }
 
-.form-message.success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+.status-message.success {
+    background-color: #e6ffe6; /* Very light green */
+    color: #27ae60; /* Stronger green text */
+    border: 1px solid #b3e6b3;
 }
 
-.form-message.error {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+.status-message.error {
+    background-color: #ffe6e6; /* Very light red */
+    color: #e74c3c; /* Stronger red text */
+    border: 1px solid #e6b3b3;
 }
 
-.login-link {
-    margin-top: 30px;
+/* Support Contact Link */
+.support-contact {
+    margin-top: 25px;
+    text-align: center;
     font-size: 1em;
     color: #555;
-    text-align: center;
+    font-weight: 500;
+}
+
+.support-contact a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 700;
     transition: color 0.3s ease;
 }
 
-body.dark-mode .login-link {
-    color: #CFD8DC;
+.support-contact a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* Login link at the bottom */
+.login-link {
+    text-align: center;
+    margin-top: 40px; /* More space */
+    font-size: 1.05em;
+    color: #666;
 }
 
 .login-link a {
     color: #007bff;
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 600;
     transition: color 0.3s ease;
 }
 
-body.dark-mode .login-link a {
-    color: #90CAF9;
-}
-
 .login-link a:hover {
-    text-decoration: underline;
     color: #0056b3;
-}
-body.dark-mode .login-link a:hover {
-    color: #64B5F6;
+    text-decoration: underline;
 }
 
 /* ===================================== */
-/* ✅ Modal (Instructions Pop-up) Styles */
+/* Instructions Modal Styles */
 /* ===================================== */
 .modal {
-    display: none; /* مخفي افتراضياً */
-    position: fixed; /* يبقى في مكانه حتى عند التمرير */
-    z-index: 1000; /* ليكون فوق كل العناصر الأخرى */
+    display: flex; /* Changed to flex to center content */
+    position: fixed;
+    z-index: 1000;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto; /* تمكين التمرير إذا كان محتوى المودال كبيراً */
-    background-color: rgba(0, 0, 0, 0.6); /* خلفية سوداء شبه شفافة */
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.7); /* Darker overlay */
     justify-content: center;
     align-items: center;
     padding: 20px;
     box-sizing: border-box;
+    opacity: 0; /* Hidden by default */
+    visibility: hidden; /* Hidden by default */
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal.show {
+    opacity: 1; /* Visible when 'show' class is added */
+    visibility: visible; /* Visible when 'show' class is added */
 }
 
 .modal-content {
     background-color: #fefefe;
-    margin: auto;
-    padding: 30px;
-    border-radius: 10px;
-    max-width: 700px;
-    width: 90%;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    padding: 35px; /* More padding */
+    border-radius: 15px;
+    max-width: 750px; /* Wider for better text flow */
+    width: 95%;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
     position: relative;
-    text-align: right; /* محاذاة النص لليمين */
-    animation: fadeIn 0.3s ease-out;
-    max-height: 90vh; /* لتحديد أقصى ارتفاع للمودال */
-    overflow-y: auto; /* السماح بالتمرير داخل المودال */
+    text-align: right;
+    animation: modalSlideIn 0.5s ease-out; /* Slide in animation */
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
-body.dark-mode .modal-content {
-    background-color: #3A5F7B;
-    color: #F8F9FA;
+@keyframes modalSlideIn {
+    from { opacity: 0; transform: translateY(-50px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .close-button {
     color: #aaa;
-    float: left; /* لجعله يظهر على اليسار في RTL */
-    font-size: 28px;
+    float: left; /* Position to the left */
+    font-size: 32px; /* Larger close button */
     font-weight: bold;
     cursor: pointer;
     transition: color 0.3s ease;
+    position: absolute; /* Absolute positioning for precise placement */
+    top: 15px;
+    left: 20px; /* Left side for RTL */
 }
 
 .close-button:hover,
 .close-button:focus {
-    color: #000;
+    color: #555;
     text-decoration: none;
-}
-body.dark-mode .close-button:hover,
-body.dark-mode .close-button:focus {
-    color: #fff;
 }
 
 .modal-content h2 {
-    color: #003F8A;
+    color: #007bff;
     text-align: center;
-    margin-bottom: 20px;
-    font-size: 1.8em;
-    transition: color 0.3s ease;
-}
-body.dark-mode .modal-content h2 {
-    color: #90CAF9;
+    margin-bottom: 25px;
+    font-size: 2em;
+    font-weight: 800;
 }
 
 .instructions-text {
-    line-height: 1.8;
+    line-height: 1.9; /* More spacious line height */
     color: #444;
     font-size: 1.05em;
-    margin-bottom: 25px;
-    text-align: justify; /* لترتيب النصوص بشكل أفضل */
-}
-body.dark-mode .instructions-text {
-    color: #E0E0E0;
+    margin-bottom: 30px;
+    text-align: justify; /* Justify text for clean look */
 }
 
 .instructions-text ul {
-    list-style: none; /* إزالة النقاط الافتراضية */
+    list-style: none;
     padding: 0;
-    margin-top: 15px;
+    margin-top: 20px;
 }
 
 .instructions-text ul li {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     display: flex;
-    align-items: flex-start; /* محاذاة البداية للعناصر مع الأيقونات */
+    align-items: flex-start;
+    gap: 10px; /* Space between icon and text */
 }
 
 .instructions-text ul li i {
-    color: #28a745; /* لون أيقونة الصح */
-    margin-left: 10px; /* مسافة بين الأيقونة والنص */
-    font-size: 1.2em;
-    margin-top: 4px; /* لضبط محاذاة الأيقونة مع النص */
-}
-body.dark-mode .instructions-text ul li i {
-    color: #81C784;
+    color: #2ecc71; /* Green checkmark */
+    font-size: 1.3em;
+    flex-shrink: 0; /* Prevent icon from shrinking */
+    margin-top: 2px;
 }
 
 .instructions-text a {
@@ -529,89 +545,105 @@ body.dark-mode .instructions-text ul li i {
     font-weight: bold;
     transition: color 0.3s ease;
 }
-body.dark-mode .instructions-text a {
-    color: #90CAF9;
-}
 
 .instructions-text a:hover {
-    text-decoration: underline;
     color: #0056b3;
-}
-body.dark-mode .instructions-text a:hover {
-    color: #64B5F6;
+    text-decoration: underline;
 }
 
 .accept-button {
     display: block;
     width: fit-content;
-    margin: 25px auto 0 auto; /* توسيط الزر */
-    background: linear-gradient(45deg, #28a745, #218838); /* لون أخضر للزر */
+    margin: 30px auto 0 auto;
+    background: linear-gradient(45deg, #007bff, #0056b3); /* Blue gradient for accept button */
     color: white;
     border: none;
-    padding: 12px 30px;
+    padding: 15px 40px;
     border-radius: 30px;
-    font-size: 1.1em;
+    font-size: 1.15em;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
-}
-
-body.dark-mode .accept-button {
-    background: linear-gradient(45deg, #81C784, #4CAF50);
-    box-shadow: 0 4px 10px rgba(129, 199, 132, 0.3);
+    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3);
 }
 
 .accept-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(40, 167, 69, 0.4);
-}
-body.dark-mode .accept-button:hover {
-    box-shadow: 0 6px 12px rgba(129, 199, 132, 0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 9px 20px rgba(0, 123, 255, 0.4);
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* ===================================== */
-/* ✅ Responsive Design (Rest of the Signup Page) */
-/* ===================================== */
-@media (max-width: 992px) {
-    .signup-page-wrapper {
-        flex-direction: column; /* جعل الأقسام تتكدس فوق بعضها */
-        margin: 15px;
-        max-width: 500px; /* لتقليل العرض على الشاشات الأصغر */
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 30px;
+        margin: 20px;
     }
-
-    .animation-side {
-        min-height: 250px; /* تحديد ارتفاع للقسم المتحرك عند التكدس */
-        padding: 20px;
-        border-radius: 15px 15px 0 0; /* حواف دائرية علوية فقط */
-        order: 1; /* يظهر في الأعلى عند التكدس */
-    }
-
-    .signup-side {
-        padding: 30px 20px;
-        border-radius: 0 0 15px 15px; /* حواف دائرية سفلية فقط */
-        order: 2; /* يظهر في الأسفل عند التكدس */
-    }
-
-    .chemistry-animation .beaker-svg {
-        width: 120px;
-        height: 200px;
-    }
-    .animation-title {
+    .header h2 {
         font-size: 2em;
     }
-    .animation-slogan {
+    .back-link {
+        font-size: 1em;
+        top: 20px;
+        right: 20px;
+    }
+    .input-group input,
+    .input-group select {
+        padding: 10px 12px;
         font-size: 1em;
     }
-
+    button[type="submit"] {
+        padding: 12px;
+        font-size: 1.1em;
+    }
     .modal-content {
-        width: 95%;
         padding: 25px;
+    }
+    .modal-content h2 {
+        font-size: 1.8em;
+    }
+    .instructions-text {
+        font-size: 1em;
+    }
+    .accept-button {
+        font-size: 1em;
+        padding: 12px 30px;
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 20px; /* Adjust padding for smaller screens */
+        margin: 10px;
+    }
+    .header h2 {
+        font-size: 1.8em;
+    }
+    .back-link {
+        font-size: 0.9em;
+        top: 15px;
+        right: 15px;
+    }
+    .input-group label {
+        font-size: 0.95em;
+    }
+    .input-group input,
+    .input-group select {
+        padding: 8px 10px;
+        font-size: 0.95em;
+    }
+    button[type="submit"] {
+        padding: 10px;
+        font-size: 1em;
+    }
+    .status-message {
+        padding: 12px;
+        font-size: 0.9em;
+    }
+    .login-link {
+        font-size: 0.95em;
+    }
+    .modal-content {
+        padding: 20px;
     }
     .modal-content h2 {
         font-size: 1.6em;
@@ -619,89 +651,14 @@ body.dark-mode .accept-button:hover {
     .instructions-text {
         font-size: 0.95em;
     }
+    .instructions-text ul li {
+        gap: 8px;
+    }
+    .instructions-text ul li i {
+        font-size: 1.2em;
+    }
     .accept-button {
-        font-size: 1em;
         padding: 10px 25px;
-    }
-}
-
-@media (max-width: 600px) {
-    .signup-page-wrapper {
-        margin: 10px;
-    }
-    .animation-side {
-        min-height: 200px;
-        padding: 15px;
-    }
-    .chemistry-animation .beaker-svg {
-        width: 100px;
-        height: 180px;
-    }
-    .animation-title {
-        font-size: 1.8em;
-    }
-    .animation-slogan {
-        font-size: 0.9em;
-    }
-    .signup-side {
-        padding: 25px 15px;
-    }
-    .form-title {
-        font-size: 1.8em;
-    }
-    .form-subtitle {
         font-size: 1em;
-    }
-    .input-group label {
-        font-size: 1em;
-    }
-    .input-group input,
-    .input-group select {
-        padding: 10px 12px;
-        font-size: 0.95em;
-    }
-    .signup-button {
-        padding: 12px 20px;
-        font-size: 1.1em;
-    }
-    .modal-content {
-        padding: 20px;
-    }
-    .modal-content h2 {
-        font-size: 1.5em;
-    }
-}
-
-@media (max-width: 400px) {
-    .signup-page-wrapper {
-        margin: 5px;
-    }
-    .animation-side {
-        min-height: 180px;
-    }
-    .chemistry-animation .beaker-svg {
-        width: 80px;
-        height: 150px;
-    }
-    .signup-side {
-        padding: 20px 10px;
-    }
-    .form-title {
-        font-size: 1.6em;
-    }
-    .form-subtitle {
-        font-size: 0.9em;
-    }
-    .input-group input,
-    .input-group select {
-        padding: 8px 10px;
-        font-size: 0.9em;
-    }
-    .signup-button {
-        font-size: 1em;
-        padding: 10px 15px;
-    }
-    .login-link {
-        font-size: 0.9em;
     }
 }
