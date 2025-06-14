@@ -148,6 +148,7 @@ body.dark-mode .beaker-top {
 
 
 /* liquid-fill animation from previous version. Keep for beaker.svg */
+/* هذا الكود يمكن حذفه إذا لم يتم استخدام الأنميشن القديم */
 .liquid-fill {
     transform-origin: bottom center;
     animation: fillBeaker 4s ease-out forwards infinite alternate; /* انيميشن التعبئة */
@@ -239,6 +240,11 @@ body.dark-mode .form-subtitle {
     color: #CFD8DC;
 }
 
+/* هذا الكلاس هو الذي يتحكم بظهور النموذج، وهو مخفي افتراضياً في CSS */
+.hidden-form {
+    display: none;
+}
+
 .signup-form {
     display: flex;
     flex-direction: column;
@@ -315,7 +321,8 @@ body.dark-mode .input-group select:focus {
     box-shadow: 0 0 0 3px rgba(144, 202, 249, 0.25);
 }
 
-.signup-button {
+/* زر إنشاء الحساب (مهم: ID: signupButton في HTML) */
+#signupButton { /* استخدم ID لضمان الأولوية العالية في التصميم */
     background: linear-gradient(45deg, #007bff, #0056b3);
     color: white;
     border: none;
@@ -326,46 +333,36 @@ body.dark-mode .input-group select:focus {
     cursor: pointer;
     transition: all 0.3s ease;
     text-decoration: none;
-    display: inline-block;
-    white-space: nowrap;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
+    display: flex; /* لترتيب النص والسبينر */
+    justify-content: center; /* توسيط أفقي */
+    align-items: center; /* توسيط عمودي */
+    gap: 12px; /* مسافة بين النص والسبينر */
     margin-top: 20px;
-    width: 100%;
+    width: 100%; /* اجعله يملأ العرض */
+    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
 }
 
-body.dark-mode .signup-button {
+body.dark-mode #signupButton {
     background: linear-gradient(45deg, #90CAF9, #64B5F6);
     box-shadow: 0 8px 20px rgba(144, 202, 249, 0.3);
 }
 
-.signup-button::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    transition: width 0.4s ease-out, height 0.4s ease-out, top 0.4s ease-out, left 0.4s ease-out;
-    transform: translate(-50%, -50%);
-}
-
-.signup-button:hover::before {
-    width: 250%;
-    height: 250%;
-}
-
-.signup-button:hover {
+#signupButton:hover:not(:disabled) {
     transform: translateY(-3px);
     box-shadow: 0 12px 28px rgba(0, 123, 255, 0.4);
 }
 
-body.dark-mode .signup-button:hover {
+body.dark-mode #signupButton:hover:not(:disabled) {
     box-shadow: 0 12px 28px rgba(144, 202, 249, 0.4);
 }
+
+#signupButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: 0.7;
+}
+
 
 /* Spinner and Messages for button */
 .spinner {
@@ -377,7 +374,6 @@ body.dark-mode .signup-button:hover {
     animation: spin 0.8s linear infinite;
     display: inline-block;
     vertical-align: middle;
-    margin-right: 8px; /* Space between text and spinner */
 }
 
 @keyframes spin {
@@ -385,15 +381,17 @@ body.dark-mode .signup-button:hover {
     100% { transform: rotate(360deg); }
 }
 
-.status-message { /* Used for general messages like success/error feedback */
+/* رسائل الحالة العامة (نجاح/خطأ) - ID: generalMessage في HTML */
+.status-message {
     padding: 15px;
-    border-radius: 8px;
-    margin-top: 15px;
-    font-size: 0.95em;
-    font-weight: 500;
+    margin: 20px 0; /* مسافة من أعلى وأسفل */
+    border-radius: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
     text-align: center;
     display: none; /* مخفي افتراضياً */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.5s ease-out; /* حركة ظهور سلسة */
 }
 
 .status-message.success {
@@ -408,6 +406,7 @@ body.dark-mode .signup-button:hover {
     border: 1px solid #f5c6cb;
 }
 
+/* رابط دعم التواصل - ID: supportContact في HTML */
 .support-contact {
     margin-top: 10px;
     font-size: 0.9em;
@@ -425,7 +424,6 @@ body.dark-mode .signup-button:hover {
 .support-contact a:hover {
     text-decoration: underline;
 }
-
 
 .login-link {
     margin-top: 30px;
@@ -462,7 +460,7 @@ body.dark-mode .login-link a:hover {
 /* ✅ Modal (Instructions Pop-up) Styles */
 /* ===================================== */
 .modal {
-    display: none; /* مخفي افتراضياً */
+    display: none; /* مخفي افتراضياً - سيتم التحكم به بواسطة JS */
     position: fixed; /* يبقى في مكانه حتى عند التمرير */
     z-index: 1000; /* ليكون فوق كل العناصر الأخرى */
     left: 0;
@@ -475,6 +473,11 @@ body.dark-mode .login-link a:hover {
     align-items: center;
     padding: 20px;
     box-sizing: border-box;
+}
+
+/* عند إضافة كلاس 'show' بواسطة JS يظهر المودال */
+.modal.show {
+    display: flex;
 }
 
 .modal-content {
@@ -697,7 +700,7 @@ body.dark-mode .accept-button:hover {
         padding: 10px 12px;
         font-size: 0.95em;
     }
-    .signup-button {
+    #signupButton { /* استخدم ID لضمان الأولوية العالية في التصميم */
         padding: 12px 20px;
         font-size: 1.1em;
     }
@@ -734,7 +737,7 @@ body.dark-mode .accept-button:hover {
         padding: 8px 10px;
         font-size: 0.9em;
     }
-    .signup-button {
+    #signupButton { /* استخدم ID لضمان الأولوية العالية في التصميم */
         font-size: 1em;
         padding: 10px 15px;
     }
