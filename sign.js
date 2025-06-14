@@ -3,9 +3,9 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebas
 import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-// Your web app's Firebase configuration (provided by user)
+// Your web app's Firebase configuration (Please ensure this is correct and secure)
 const firebaseConfig = {
-    apiKey: "AIzaSyDh59dAoiUy1p8F4301kUjwzl9VT0nF2-E",
+    apiKey: "AIzaSyDh59dAoiUy1p8F4301kUjwzl9VT0nF2-E", // تأكد من أن هذا المفتاح صحيح
     authDomain: "ahmed-tarek-7beb4.firebaseapp.com",
     projectId: "ahmed-tarek-7beb4",
     storageBucket: "ahmed-tarek-7beb4.firebasestorage.app",
@@ -20,7 +20,7 @@ const auth = getAuth(app); // Firebase Authentication service
 const db = getFirestore(app); // Firebase Firestore service
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Form elements (Updated to correctly reference all elements by their IDs)
+    // Form elements (Updated to correctly reference all elements by their IDs as in sign.html)
     const signupForm = document.getElementById('signupForm');
     const usernameInput = document.getElementById('username');
     const emailInput = document.getElementById('email');
@@ -28,12 +28,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmPasswordInput = document.getElementById('confirmPassword');
     const gradeSelect = document.getElementById('grade');
     const governorateSelect = document.getElementById('governorate');
-    const studentIdInput = document.getElementById('studentId'); // Corrected ID
-    const parentPhoneInput = document.getElementById('parentPhone'); // Corrected ID
+    const studentIdInput = document.getElementById('studentId');
+    const parentPhoneInput = document.getElementById('parentPhone');
     const signupButton = document.getElementById('signupButton');
     let loadingSpinner = document.getElementById('loadingSpinner'); // Use 'let' as its reference might be updated
-    const generalMessageDiv = document.getElementById('generalMessage'); // Corrected ID
-    const supportContactDiv = document.getElementById('supportContact'); // Corrected ID
+    const generalMessageDiv = document.getElementById('generalMessage');
+    const supportContactDiv = document.getElementById('supportContact');
 
     // Error message elements for each input (Corrected to match HTML IDs)
     const usernameError = document.getElementById('usernameError');
@@ -101,14 +101,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Show the instructions modal when the page initially loads
     instructionsModal.classList.add('show'); // Use class for CSS transitions/visibility
-    signupForm.style.display = 'none'; // Keep the signup form hidden until instructions are accepted
+    // signupForm is already display: none; in HTML, so no need to set here again initially
+    // but ensure it's not 'flex' or 'block' here until accepted.
 
     // Event listener for the "Accept Instructions" button within the modal
     acceptInstructionsButton.addEventListener('click', () => {
         instructionsModal.classList.remove('show'); // Hide the modal
-        signupForm.style.display = 'block'; // Show the signup form
-        signupForm.style.display = 'flex'; // Ensure form takes correct display property after being shown
-        signupForm.style.flexDirection = 'column'; // Maintain flex direction for proper layout
+        signupForm.style.display = 'flex'; // Show the signup form using flex for proper layout
     });
 
     // Event listener for the modal's close button (top-left 'X')
@@ -231,8 +230,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const user = userCredential.user;
 
             // Prepare initial data for Firestore (Exams and Courses progress)
+            // This structure can be expanded as needed for your platform
             const initialExams = {};
-            for (let i = 1; i <= 10; i++) {
+            for (let i = 1; i <= 10; i++) { // Example: Initialize for 10 exams
                 initialExams[`exam${i}`] = {
                     score: 0,
                     date: null,
@@ -243,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const initialCourses = {};
-            for (let i = 1; i <= 10; i++) {
+            for (let i = 1; i <= 10; i++) { // Example: Initialize for 10 courses
                 initialCourses[`course${i}`] = {
                     progress: "0%",
                     status: "locked", // e.g., "locked", "unlocked", "completed"
@@ -280,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Redirect to index.html after a delay with a success message parameter
             setTimeout(() => {
                 const encodedUsername = encodeURIComponent(username); // Encode username for URL safety
-                window.location.href = `index.html?signupSuccess=true&message=${encodedUsername}`;
+                window.location.href = `index.html?signupSuccess=true&message=${encodedUsername}`; // Redirect to index.html
             }, 4000); // Redirect after 4 seconds to allow user to read the message
 
         } catch (error) {
