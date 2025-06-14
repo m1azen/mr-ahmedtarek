@@ -12,112 +12,145 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div class="container">
-        <div class="signup-box">
-            <div class="header">
-                <!-- الرابط للصفحة الرئيسية - تأكد أن index.html موجود لديك -->
-                <a href="index.html" class="back-link"><i class="fas fa-arrow-right"></i> الرئيسية</a>
-                <h2>إنشاء حساب جديد</h2>
+    <div class="signup-page-wrapper">
+        <!-- الجانب الأيمن: الرسوم المتحركة والرسالة الترحيبية -->
+        <div class="animation-side">
+            <div class="chemistry-animation">
+                <svg class="beaker-svg" viewBox="0 0 200 300">
+                    <defs>
+                        <linearGradient id="beakerGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#00bcd4" />
+                            <stop offset="100%" stop-color="#007bff" />
+                        </linearGradient>
+                        <filter id="liquidShadow">
+                            <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#000" flood-opacity="0.3" />
+                        </filter>
+                    </defs>
+                    <!-- جسم المخبار -->
+                    <path class="beaker-body" d="M30,0 L30,250 C30,280 45,300 100,300 C155,300 170,280 170,250 L170,0 Z" />
+                    <!-- السائل المتحرك -->
+                    <path class="liquid-base" d="M30,250 C30,280 45,300 100,300 C155,300 170,280 170,250 L170,150 C170,135 155,120 100,120 C45,120 30,135 30,150 Z" />
+                    <path class="liquid-wave" fill="url(#beakerGradient)" d="M30,150 Q65,140 100,150 T170,150 V250 C170,280 155,300 100,300 C45,300 30,280 30,250 Z" />
+
+                    <!-- علامات القياس (للتصميم فقط) -->
+                    <text x="180" y="50" fill="#fff" font-size="16px" text-anchor="middle">50ml</text>
+                    <line x1="170" y1="50" x2="160" y2="50" stroke="#fff" stroke-width="2"/>
+                    <text x="180" y="100" fill="#fff" font-size="16px" text-anchor="middle">100ml</text>
+                    <line x1="170" y1="100" x2="160" y2="100" stroke="#fff" stroke-width="2"/>
+                    <text x="180" y="150" fill="#fff" font-size="16px" text-anchor="middle">150ml</text>
+                    <line x1="170" y1="150" x2="160" y2="150" stroke="#fff" stroke-width="2"/>
+                </svg>
             </div>
-            <!-- النموذج مخفي في البداية بواسطة خاصية style="display: none;" 
-                 وسيتم إظهاره بواسطة JavaScript بعد قبول التعليمات في المودال.
-                 تأكد أن الـ ID هنا هي signupForm كما في JavaScript. -->
-            <form id="signupForm" style="display: none;"> 
-                <div class="input-group">
-                    <label for="username">اسم المستخدم الكامل:</label>
-                    <input type="text" id="username" placeholder="مثال: أحمد محمد علي" required>
-                    <div class="error-message" id="usernameError"></div>
-                </div>
+            <h1 class="animation-title">الكيمياء أصبحت أسهل!</h1>
+            <p class="animation-slogan">مع منصة القائد، استكشف عالم الكيمياء بطريقة جديدة ومبتكرة.</p>
+        </div>
 
-                <div class="input-group">
-                    <label for="email">البريد الإلكتروني:</label>
-                    <input type="email" id="email" placeholder="example@domain.com" required>
-                    <div class="error-message" id="emailError"></div>
+        <!-- الجانب الأيسر: نموذج التسجيل نفسه -->
+        <div class="signup-side">
+            <div class="signup-box">
+                <div class="header">
+                    <!-- زر الرجوع للصفحة الرئيسية -->
+                    <a href="index.html" class="back-link"><i class="fas fa-arrow-right"></i> الرئيسية</a>
+                    <h2 class="form-title">إنشاء حساب جديد</h2>
                 </div>
+                <!-- النموذج مخفي في البداية بواسطة JS ويظهر بعد قبول شروط المودال -->
+                <form id="signupForm" style="display: none;"> 
+                    <div class="input-group">
+                        <label for="username"><i class="fas fa-user"></i> اسم المستخدم الكامل:</label>
+                        <input type="text" id="username" placeholder="مثال: أحمد محمد علي" required>
+                        <div class="error-message" id="usernameError"></div>
+                    </div>
 
-                <div class="input-group">
-                    <label for="password">كلمة المرور:</label>
-                    <input type="password" id="password" placeholder="6+ أحرف، رقم، رمز" required>
-                    <div class="error-message" id="passwordError"></div>
+                    <div class="input-group">
+                        <label for="email"><i class="fas fa-envelope"></i> البريد الإلكتروني:</label>
+                        <input type="email" id="email" placeholder="example@domain.com" required>
+                        <div class="error-message" id="emailError"></div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="password"><i class="fas fa-lock"></i> كلمة المرور:</label>
+                        <input type="password" id="password" placeholder="6+ أحرف، رقم، رمز" required>
+                        <div class="error-message" id="passwordError"></div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="confirmPassword"><i class="fas fa-key"></i> تأكيد كلمة المرور:</label>
+                        <input type="password" id="confirmPassword" placeholder="أعد إدخال كلمة المرور" required>
+                        <div class="error-message" id="confirmPasswordError"></div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="grade"><i class="fas fa-graduation-cap"></i> الصف الدراسي:</label>
+                        <select id="grade" required>
+                            <option value="">اختر صفك الدراسي</option>
+                            <option value="first-secondary">الصف الأول الثانوي</option>
+                            <option value="second-secondary">الصف الثاني الثانوي</option>
+                            <option value="third-secondary">الصف الثالث الثانوي</option>
+                        </select>
+                        <div class="error-message" id="gradeError"></div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="governorate"><i class="fas fa-city"></i> المحافظة:</label>
+                        <select id="governorate" required>
+                            <option value="">اختر محافظتك</option>
+                            <option value="القاهرة">القاهرة</option>
+                            <option value="الإسكندرية">الإسكندرية</option>
+                            <option value="الجيزة">الجيزة</option>
+                            <option value="القليوبية">القليوبية</option>
+                            <option value="الشرقية">الشرقية</option>
+                            <option value="المنوفية">المنوفية</option>
+                            <option value="البحيرة">البحيرة</option>
+                            <option value="كفر الشيخ">كفر الشيخ</option>
+                            <option value="الغربية">الغربية</option>
+                            <option value="الدقهلية">الدقهلية</option>
+                            <option value="دمياط">دمياط</option>
+                            <option value="بورسعيد">بورسعيد</option>
+                            <option value="الإسماعيلية">الإسماعيلية</option>
+                            <option value="السويس">السويس</option>
+                            <option value="شمال سيناء">شمال سيناء</option>
+                            <option value="جنوب سيناء">جنوب سيناء</option>
+                            <option value="مطروح">مطروح</option>
+                            <option value="الوادي الجديد">الوادي الجديد</option>
+                            <option value="الفيوم">الفيوم</option>
+                            <option value="بني سويف">بني سويف</option>
+                            <option value="المنيا">المنيا</option>
+                            <option value="أسيوط">أسيوط</option>
+                            <option value="سوهاج">سوهاج</option>
+                            <option value="قنا">قنا</option>
+                            <option value="الأقصر">الأقصر</option>
+                            <option value="أسوان">أسوان</option>
+                            <option value="البحر الأحمر">البحر الأحمر</option>
+                        </select>
+                        <div class="error-message" id="governorateError"></div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="studentId"><i class="fas fa-id-badge"></i> رقم الطالب:</label>
+                        <input type="text" id="studentId" placeholder="ادخل رقم الطالب الخاص بك (مثال: 12345)" required>
+                        <div class="error-message" id="studentIdError"></div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="parentPhone"><i class="fas fa-phone-alt"></i> رقم ولي الأمر:</label>
+                        <input type="tel" id="parentPhone" placeholder="ادخل رقم هاتف ولي الأمر (مثال: 01xxxxxxxx)" required>
+                        <div class="error-message" id="parentPhoneError"></div>
+                    </div>
+
+                    <button type="submit" id="signupButton">
+                        إنشاء الحساب
+                        <span class="spinner" id="loadingSpinner" style="display: none;"></span>
+                    </button>
+
+                    <!-- هذه الرسائل يتم التحكم بظهورها من JavaScript -->
+                    <div class="status-message" id="generalMessage" style="display: none;"></div>
+                    <div class="support-contact" id="supportContact" style="display: none;">
+                        في حال واجهتك مشكلة، تواصل مع دعم <a href="https://wa.me/201006473018" target="_blank">Mazen</a>.
+                    </div>
+                </form>
+                <div class="login-link">
+                    لديك حساب بالفعل؟ <a href="login.html">تسجيل الدخول</a>
                 </div>
-
-                <div class="input-group">
-                    <label for="confirmPassword">تأكيد كلمة المرور:</label>
-                    <input type="password" id="confirmPassword" placeholder="أعد إدخال كلمة المرور" required>
-                    <div class="error-message" id="confirmPasswordError"></div>
-                </div>
-
-                <div class="input-group">
-                    <label for="grade">الصف الدراسي:</label>
-                    <select id="grade" required>
-                        <option value="">اختر صفك الدراسي</option>
-                        <option value="first-secondary">الصف الأول الثانوي</option>
-                        <option value="second-secondary">الصف الثاني الثانوي</option>
-                        <option value="third-secondary">الصف الثالث الثانوي</option>
-                    </select>
-                    <div class="error-message" id="gradeError"></div>
-                </div>
-
-                <div class="input-group">
-                    <label for="governorate">المحافظة:</label>
-                    <select id="governorate" required>
-                        <option value="">اختر محافظتك</option>
-                        <option value="القاهرة">القاهرة</option>
-                        <option value="الإسكندرية">الإسكندرية</option>
-                        <option value="الجيزة">الجيزة</option>
-                        <option value="القليوبية">القليوبية</option>
-                        <option value="الشرقية">الشرقية</option>
-                        <option value="المنوفية">المنوفية</option>
-                        <option value="البحيرة">البحيرة</option>
-                        <option value="كفر الشيخ">كفر الشيخ</option>
-                        <option value="الغربية">الغربية</option>
-                        <option value="الدقهلية">الدقهلية</option>
-                        <option value="دمياط">دمياط</option>
-                        <option value="بورسعيد">بورسعيد</option>
-                        <option value="الإسماعيلية">الإسماعيلية</option>
-                        <option value="السويس">السويس</option>
-                        <option value="شمال سيناء">شمال سيناء</option>
-                        <option value="جنوب سيناء">جنوب سيناء</option>
-                        <option value="مطروح">مطروح</option>
-                        <option value="الوادي الجديد">الوادي الجديد</option>
-                        <option value="الفيوم">الفيوم</option>
-                        <option value="بني سويف">بني سويف</option>
-                        <option value="المنيا">المنيا</option>
-                        <option value="أسيوط">أسيوط</option>
-                        <option value="سوهاج">سوهاج</option>
-                        <option value="قنا">قنا</option>
-                        <option value="الأقصر">الأقصر</option>
-                        <option value="أسوان">أسوان</option>
-                        <option value="البحر الأحمر">البحر الأحمر</option>
-                    </select>
-                    <div class="error-message" id="governorateError"></div>
-                </div>
-
-                <div class="input-group">
-                    <label for="studentId">رقم الطالب:</label>
-                    <input type="text" id="studentId" placeholder="ادخل رقم الطالب الخاص بك (مثال: 12345)" required>
-                    <div class="error-message" id="studentIdError"></div>
-                </div>
-
-                <div class="input-group">
-                    <label for="parentPhone">رقم ولي الأمر:</label>
-                    <input type="tel" id="parentPhone" placeholder="ادخل رقم هاتف ولي الأمر (مثال: 01xxxxxxxx)" required>
-                    <div class="error-message" id="parentPhoneError"></div>
-                </div>
-
-                <button type="submit" id="signupButton">
-                    إنشاء الحساب
-                    <span class="spinner" id="loadingSpinner" style="display: none;"></span>
-                </button>
-
-                <!-- هذه الرسائل يتم التحكم بظهورها من JavaScript -->
-                <div class="status-message" id="generalMessage" style="display: none;"></div>
-                <div class="support-contact" id="supportContact" style="display: none;">
-                    في حال واجهتك مشكلة، تواصل مع دعم <a href="https://wa.me/201006473018" target="_blank">Mazen</a>.
-                </div>
-            </form>
-            <div class="login-link">
-                لديك حساب بالفعل؟ <a href="login.html">تسجيل الدخول</a>
             </div>
         </div>
     </div>
