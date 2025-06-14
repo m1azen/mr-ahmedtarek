@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Event listener for the modal's close button (top-left 'X')
     if (closeModalButton) { // Check if the close button exists in the HTML
-        closeModalButton.addEventListener('click', () => {
+        closeButton.addEventListener('click', () => {
             // If user attempts to close the modal without accepting, it reappears
             instructionsModal.classList.add('show');
         });
