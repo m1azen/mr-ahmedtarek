@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.location.href = 'sign.html'; // توجيه إلى صفحة إنشاء حساب
             });
             document.getElementById('loginButton').addEventListener('click', () => {
-                window.location.href = 'sing.html'; // توجيه إلى صفحة تسجيل الدخول
+                window.location.href = 'sign.html'; // توجيه إلى صفحة تسجيل الدخول
             });
         }
     }
