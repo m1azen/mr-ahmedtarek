@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button class="sidebar-button" id="loginButton"><i class="fas fa-sign-in-alt"></i> تسجيل دخول</button>
             `;
             document.getElementById('registerButton').addEventListener('click', () => {
-                window.location.href = 'creat.html'; // توجيه إلى صفحة إنشاء حساب
+                window.location.href = 'sign.html'; // توجيه إلى صفحة إنشاء حساب
             });
             document.getElementById('loginButton').addEventListener('click', () => {
                 window.location.href = 'singe.html'; // توجيه إلى صفحة تسجيل الدخول
