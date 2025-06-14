@@ -4,6 +4,7 @@ import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com
 import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 // Your web app's Firebase configuration (Please ensure this is correct and secure)
+// قم بتحديث هذا الكائن إذا تغيرت إعدادات Firebase الخاصة بك
 const firebaseConfig = {
     apiKey: "AIzaSyDh59dAoiUy1p8F4301kUjwzl9VT0nF2-E", // تأكد من أن هذا المفتاح صحيح
     authDomain: "ahmed-tarek-7beb4.firebaseapp.com",
@@ -16,11 +17,11 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app); // Firebase Authentication service
-const db = getFirestore(app); // Firebase Firestore service
+const auth = getAuth(app); // خدمة Firebase Authentication
+const db = getFirestore(app); // خدمة Firebase Firestore
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Form elements (Updated to correctly reference all elements by their IDs as in sign.html)
+    // جلب عناصر النموذج والمودال ورسائل الحالة من HTML
     const signupForm = document.getElementById('signupForm');
     const usernameInput = document.getElementById('username');
     const emailInput = document.getElementById('email');
@@ -31,11 +32,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const studentIdInput = document.getElementById('studentId');
     const parentPhoneInput = document.getElementById('parentPhone');
     const signupButton = document.getElementById('signupButton');
-    let loadingSpinner = document.getElementById('loadingSpinner'); // Use 'let' as its reference might be updated
-    const generalMessageDiv = document.getElementById('generalMessage');
-    const supportContactDiv = document.getElementById('supportContact');
+    let loadingSpinner = document.getElementById('loadingSpinner'); // يستخدم 'let' لأن مرجعيته قد تتغير
+    const generalMessageDiv = document.getElementById('generalMessage'); // لعرض رسائل النجاح/الخطأ العامة
+    const supportContactDiv = document.getElementById('supportContact'); // لرابط الدعم
 
-    // Error message elements for each input (Corrected to match HTML IDs)
+    // عناصر رسائل الخطأ الخاصة بكل حقل إدخال
     const usernameError = document.getElementById('usernameError');
     const emailError = document.getElementById('emailError');
     const passwordError = document.getElementById('passwordError');
@@ -45,30 +46,39 @@ document.addEventListener('DOMContentLoaded', () => {
     const studentIdError = document.getElementById('studentIdError');
     const parentPhoneError = document.getElementById('parentPhoneError');
 
-    // Instructions Modal elements
+    // عناصر المودال (نافذة التعليمات المنبثقة)
     const instructionsModal = document.getElementById('instructionsModal');
     const acceptInstructionsButton = document.getElementById('acceptInstructions');
-    const closeModalButton = instructionsModal.querySelector('.close-button');
+    const closeModalButton = instructionsModal.querySelector('.close-button'); // زر إغلاق المودال
 
-
-    // Function to display specific error message for an input field
+    /**
+     * تعرض رسالة خطأ محددة لحقل إدخال معين.
+     * @param {HTMLElement} element العنصر الذي سيعرض رسالة الخطأ (مثل div#usernameError).
+     * @param {string} message نص رسالة الخطأ.
+     */
     function displayInputError(element, message) {
         element.textContent = message;
-        element.style.display = message ? 'block' : 'none'; // Show if message exists, hide otherwise
+        element.style.display = message ? 'block' : 'none'; // إظهار إذا كانت هناك رسالة، إخفاء بخلاف ذلك
     }
 
-    // Function to display general status messages (success/error/loading)
+    /**
+     * تعرض رسالة حالة عامة (نجاح، خطأ، تحميل).
+     * @param {string} message نص الرسالة.
+     * @param {'success'|'error'|''} type نوع الرسالة لتطبيق التنسيق المناسب.
+     */
     function displayGeneralMessage(message, type) {
         generalMessageDiv.textContent = message;
-        generalMessageDiv.className = `status-message ${type}`; // Apply 'success' or 'error' class for styling
-        generalMessageDiv.style.display = 'block';
+        generalMessageDiv.className = `status-message ${type}`; // تطبيق كلاس 'success' أو 'error' للتصميم
+        generalMessageDiv.style.display = 'block'; // التأكد من أن الرسالة مرئية
     }
 
-    // Function to clear all previously displayed messages
+    /**
+     * تمسح جميع رسائل الحالة والأخطاء التي تم عرضها مسبقًا.
+     */
     function clearMessages() {
         generalMessageDiv.style.display = 'none';
-        supportContactDiv.style.display = 'none'; // Hide support contact by default
-        // Clear all specific input error messages
+        supportContactDiv.style.display = 'none'; // إخفاء رابط الدعم افتراضيًا
+        // مسح جميع رسائل الخطأ الخاصة بالحقول
         displayInputError(usernameError, '');
         displayInputError(emailError, '');
         displayInputError(passwordError, '');
@@ -79,64 +89,64 @@ document.addEventListener('DOMContentLoaded', () => {
         displayInputError(parentPhoneError, '');
     }
 
-    // Function to control loading state (button disabled, spinner visibility)
+    /**
+     * تتحكم في حالة التحميل (تعطيل الزر، إظهار/إخفاء السبينر).
+     * @param {boolean} isLoading إذا كانت True، يتم تفعيل وضع التحميل.
+     */
     function setLoading(isLoading) {
-        signupButton.disabled = isLoading; // Disable button when loading
-        loadingSpinner.style.display = isLoading ? 'inline-block' : 'none'; // Show/hide spinner
+        signupButton.disabled = isLoading; // تعطيل الزر أثناء التحميل
+        loadingSpinner.style.display = isLoading ? 'inline-block' : 'none'; // إظهار/إخفاء السبينر
 
         if (isLoading) {
-            signupButton.textContent = 'جارٍ إنشاء الحساب...'; // Change button text
+            signupButton.textContent = 'جارٍ إنشاء الحساب...'; // تغيير نص الزر
+            signupButton.appendChild(loadingSpinner); // إعادة إضافة السبينر بعد تغيير textContent
         } else {
-            // Restore original button text and re-attach spinner (important after textContent change)
+            // استعادة نص الزر الأصلي وإعادة جلب مرجعية السبينر (مهم بعد تغيير innerHTML)
             signupButton.innerHTML = `إنشاء الحساب <span class="spinner" id="loadingSpinner" style="display: none;"></span>`;
-            // Re-get reference to spinner element as innerHTML reset it
-            loadingSpinner = document.getElementById('loadingSpinner');
+            loadingSpinner = document.getElementById('loadingSpinner'); // إعادة جلب المرجعية
         }
     }
 
     // =====================================
-    // Instructions Modal Logic
-    // This modal appears on page load to present terms/instructions
+    // منطق نافذة التعليمات المنبثقة (المودال)
     // =====================================
 
-    // Show the instructions modal when the page initially loads
-    instructionsModal.classList.add('show'); // Use class for CSS transitions/visibility
-    // signupForm is already display: none; in HTML, so no need to set here again initially
-    // but ensure it's not 'flex' or 'block' here until accepted.
+    // إظهار المودال عند تحميل الصفحة لأول مرة
+    instructionsModal.classList.add('show'); // إضافة الكلاس 'show' لتفعيل ظهور المودال عبر CSS
+    signupForm.style.display = 'none'; // إخفاء نموذج التسجيل في البداية
 
-    // Event listener for the "Accept Instructions" button within the modal
+    // معالج حدث النقر لزر "أوافق وأبدأ التسجيل" داخل المودال
     acceptInstructionsButton.addEventListener('click', () => {
-        instructionsModal.classList.remove('show'); // Hide the modal
-        signupForm.style.display = 'flex'; // Show the signup form using flex for proper layout
+        instructionsModal.classList.remove('show'); // إخفاء المودال
+        signupForm.style.display = 'flex'; // إظهار نموذج التسجيل باستخدام flex للتخطيط الصحيح
     });
 
-    // Event listener for the modal's close button (top-left 'X')
-    if (closeModalButton) { // Check if the close button exists in the HTML
-        closeButton.addEventListener('click', () => {
-            // If user attempts to close the modal without accepting, it reappears
+    // معالج حدث النقر لزر الإغلاق (X) في المودال
+    if (closeModalButton) {
+        closeModalButton.addEventListener('click', () => {
+            // إذا حاول المستخدم إغلاق المودال دون الموافقة، يعاد إظهاره
             instructionsModal.classList.add('show');
         });
     }
 
-    // Event listener for clicks outside the modal content (on the backdrop)
+    // معالج حدث النقر خارج محتوى المودال (على الخلفية الشفافة)
     instructionsModal.addEventListener('click', (event) => {
-        // If the click occurred directly on the modal backdrop (not on modal-content)
+        // إذا حدث النقر مباشرة على خلفية المودال (وليس على محتوى المودال)
         if (event.target === instructionsModal) {
-            instructionsModal.classList.add('show'); // Re-show the modal if backdrop clicked
+            instructionsModal.classList.add('show'); // إعادة إظهار المودال
         }
     });
 
     // =====================================
-    // Form Submission and Firebase Integration
-    // This section handles user registration, validation, and data saving
+    // معالجة إرسال النموذج وتكامل Firebase
     // =====================================
 
     signupForm.addEventListener('submit', async (e) => {
-        e.preventDefault(); // Prevent the default form submission (page reload)
+        e.preventDefault(); // منع الإرسال الافتراضي للنموذج (إعادة تحميل الصفحة)
 
-        clearMessages(); // Clear any existing messages or errors
+        clearMessages(); // مسح أي رسائل أو أخطاء سابقة
 
-        // Get sanitized (trimmed) values from all input fields
+        // جلب القيم من جميع حقول الإدخال وإزالة المسافات البيضاء الزائدة
         const username = usernameInput.value.trim();
         const email = emailInput.value.trim();
         const password = passwordInput.value;
@@ -146,25 +156,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const studentId = studentIdInput.value.trim();
         const parentPhone = parentPhoneInput.value.trim();
 
-        let isValid = true; // Flag to track overall form validation status
+        let isValid = true; // علامة لتتبع حالة التحقق الكلية للنموذج
 
-        // --- Client-side Validation Checks ---
-        // 1. Username validation
+        // --- التحقق من صحة البيانات من جانب العميل (Client-side Validation) ---
+        // 1. التحقق من اسم المستخدم
         if (!username) {
             displayInputError(usernameError, 'الرجاء إدخال اسم المستخدم الكامل.');
             isValid = false;
         }
 
-        // 2. Email validation
+        // 2. التحقق من البريد الإلكتروني
         if (!email) {
             displayInputError(emailError, 'الرجاء إدخال البريد الإلكتروني.');
             isValid = false;
-        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { // Basic email regex
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { // تحقق أساسي من صيغة البريد الإلكتروني
             displayInputError(emailError, 'الرجاء إدخال بريد إلكتروني صالح.');
             isValid = false;
         }
 
-        // 3. Password validation
+        // 3. التحقق من كلمة المرور
         if (!password) {
             displayInputError(passwordError, 'الرجاء إدخال كلمة المرور.');
             isValid = false;
@@ -172,12 +182,12 @@ document.addEventListener('DOMContentLoaded', () => {
             displayInputError(passwordError, 'كلمة المرور يجب أن تتكون من 6 أحرف على الأقل.');
             isValid = false;
         } else if (!/[0-9]/.test(password) || !/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(password)) {
-            // Check for at least one number and one special character (expanded set)
+            // التحقق من وجود رقم واحد على الأقل ورمز خاص واحد على الأقل
             displayInputError(passwordError, 'كلمة المرور يجب أن تحتوي على أرقام ورموز.');
             isValid = false;
         }
 
-        // 4. Confirm Password validation
+        // 4. التحقق من تأكيد كلمة المرور
         if (!confirmPassword) {
             displayInputError(confirmPasswordError, 'الرجاء تأكيد كلمة المرور.');
             isValid = false;
@@ -186,108 +196,108 @@ document.addEventListener('DOMContentLoaded', () => {
             isValid = false;
         }
 
-        // 5. Grade selection validation
-        if (!grade) { // If default empty option is still selected
+        // 5. التحقق من اختيار الصف الدراسي
+        if (!grade) { // إذا كان الخيار الافتراضي الفارغ لا يزال محدداً
             displayInputError(gradeError, 'الرجاء اختيار الصف الدراسي.');
             isValid = false;
         }
 
-        // 6. Governorate selection validation
-        if (!governorate) { // If default empty option is still selected
+        // 6. التحقق من اختيار المحافظة
+        if (!governorate) { // إذا كان الخيار الافتراضي الفارغ لا يزال محدداً
             displayInputError(governorateError, 'الرجاء اختيار المحافظة.');
             isValid = false;
         }
 
-        // 7. Student ID validation (digits only)
+        // 7. التحقق من رقم الطالب (أرقام فقط)
         if (!studentId) {
             displayInputError(studentIdError, 'الرجاء إدخال رقم الطالب.');
             isValid = false;
-        } else if (!/^\d+$/.test(studentId)) { // Ensures only digits
+        } else if (!/^\d+$/.test(studentId)) { // التأكد من أنها أرقام فقط
             displayInputError(studentIdError, 'رقم الطالب يجب أن يحتوي على أرقام فقط.');
             isValid = false;
         }
 
-        // 8. Parent Phone validation (basic Egyptian format)
+        // 8. التحقق من رقم هاتف ولي الأمر (صيغة مصرية أساسية)
         if (!parentPhone) {
             displayInputError(parentPhoneError, 'الرجاء إدخال رقم ولي الأمر.');
             isValid = false;
-        } else if (!/^01[0-2,5]\d{8}$/.test(parentPhone)) { // Egyptian phone numbers start with 010, 011, 012, 015 and are 11 digits
+        } else if (!/^01[0-2,5]\d{8}$/.test(parentPhone)) { // أرقام الهواتف المصرية تبدأ بـ 010, 011, 012, 015 وتتكون من 11 رقمًا
             displayInputError(parentPhoneError, 'الرجاء إدخال رقم هاتف ولي أمر مصري صحيح (11 رقم يبدأ بـ 01).');
             isValid = false;
         }
 
-        // If any client-side validation failed, stop the process
+        // إذا فشل أي تحقق من جانب العميل، يتم إيقاف العملية
         if (!isValid) {
             displayGeneralMessage('الرجاء تصحيح الأخطاء في النموذج لإكمال التسجيل.', 'error');
             return;
         }
 
-        setLoading(true); // Show loading spinner and disable button
+        setLoading(true); // إظهار سبينر التحميل وتعطيل الزر
 
         try {
-            // Firebase Authentication: Create user with Email and Password
+            // Firebase Authentication: إنشاء مستخدم بالبريد الإلكتروني وكلمة المرور
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
 
-            // Prepare initial data for Firestore (Exams and Courses progress)
-            // This structure can be expanded as needed for your platform
+            // إعداد البيانات الأولية لـ Firestore (تقدم الامتحانات والدورات)
+            // يمكن توسيع هذا الهيكل حسب الحاجة لمنصتك
             const initialExams = {};
-            for (let i = 1; i <= 10; i++) { // Example: Initialize for 10 exams
+            for (let i = 1; i <= 10; i++) { // مثال: تهيئة لـ 10 امتحانات
                 initialExams[`exam${i}`] = {
                     score: 0,
                     date: null,
-                    status: "pending", // e.g., "pending", "completed", "failed"
+                    status: "pending", // أمثلة: "pending", "completed", "failed"
                     questionsAnswered: 0,
                     correctAnswers: 0
                 };
             }
 
             const initialCourses = {};
-            for (let i = 1; i <= 10; i++) { // Example: Initialize for 10 courses
+            for (let i = 1; i <= 10; i++) { // مثال: تهيئة لـ 10 دورات
                 initialCourses[`course${i}`] = {
                     progress: "0%",
-                    status: "locked", // e.g., "locked", "unlocked", "completed"
+                    status: "locked", // أمثلة: "locked", "unlocked", "completed"
                     lastAccessed: null,
-                    totalLessons: 5, // Example: number of lessons in this course
+                    totalLessons: 5, // مثال: عدد الدروس في هذه الدورة
                     completedLessons: 0
                 };
             }
 
-            // Save all user data to Firestore under the "userdata" collection
-            // The document ID will be the Firebase User UID for easy retrieval
-            await setDoc(doc(db, "userdata", user.uid), { // Collection name is "userdata" as requested
+            // حفظ جميع بيانات المستخدم في Firestore ضمن مجموعة "userdata"
+            // معرف المستند سيكون هو User UID لسهولة الاسترجاع
+            await setDoc(doc(db, "userdata", user.uid), { // اسم المجموعة هو "userdata" كما هو مطلوب
                 username: username,
                 email: email,
                 grade: grade,
                 governorate: governorate,
                 studentId: studentId,
                 parentPhone: parentPhone,
-                createdAt: new Date(), // Timestamp of account creation
-                lastLogin: new Date(), // Set initial login time
-                userRole: "student", // Assign a default role
-                isActive: true, // Account status
-                profilePicUrl: "https://cdn-icons-png.flaticon.com/512/9131/9131529.png", // Default profile picture URL
-                exams: initialExams, // Initial exams progress/status
-                courses: initialCourses // Initial courses progress/status
+                createdAt: new Date(), // تاريخ إنشاء الحساب
+                lastLogin: new Date(), // تعيين وقت تسجيل الدخول الأولي
+                userRole: "student", // تعيين دور افتراضي
+                isActive: true, // حالة الحساب
+                profilePicUrl: "https://cdn-icons-png.flaticon.com/512/9131/9131529.png", // رابط صورة الملف الشخصي الافتراضية
+                exams: initialExams, // تقدم/حالة الامتحانات الأولية
+                courses: initialCourses // تقدم/حالة الدورات الأولية
             });
 
-            setLoading(false); // Hide loading spinner and enable button
+            setLoading(false); // إخفاء سبينر التحميل وتمكين الزر
 
-            // Display success message to the user with their chosen username
+            // عرض رسالة نجاح للمستخدم باسم المستخدم الذي اختاره
             const successMessageText = `🎉 تم إنشاء الحساب بنجاح! أنت الآن يا ${username} بقيت ضمن كتيّبة القائد. سيتم توجيهك للصفحة الرئيسية...`;
             displayGeneralMessage(successMessageText, 'success');
 
-            // Redirect to index.html after a delay with a success message parameter
+            // إعادة التوجيه إلى index.html بعد تأخير مع معامل رسالة نجاح في الرابط
             setTimeout(() => {
-                const encodedUsername = encodeURIComponent(username); // Encode username for URL safety
-                window.location.href = `index.html?signupSuccess=true&message=${encodedUsername}`; // Redirect to index.html
-            }, 4000); // Redirect after 4 seconds to allow user to read the message
+                const encodedUsername = encodeURIComponent(username); // ترميز اسم المستخدم لأمان الرابط
+                window.location.href = `index.html?signupSuccess=true&message=${encodedUsername}`; // إعادة التوجيه
+            }, 4000); // إعادة التوجيه بعد 4 ثوانٍ للسماح للمستخدم بقراءة الرسالة
 
         } catch (error) {
-            setLoading(false); // Hide loading spinner and enable button
+            setLoading(false); // إخفاء سبينر التحميل وتمكين الزر
 
             let errorMessage = "حدث خطأ أثناء إنشاء الحساب. الرجاء المحاولة مرة أخرى.";
-            // Handle specific Firebase authentication errors with user-friendly messages
+            // معالجة أخطاء Firebase authentication المحددة برسائل سهلة للمستخدم
             switch (error.code) {
                 case 'auth/email-already-in-use':
                     errorMessage = '⚠️ هذا البريد الإلكتروني مستخدم بالفعل. الرجاء تسجيل الدخول أو استخدام بريد إلكتروني آخر.';
@@ -302,17 +312,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     displayInputError(emailError, errorMessage);
                     break;
                 case 'auth/operation-not-allowed':
-                    // This error means email/password sign-in is not enabled in Firebase project settings
+                    // هذا الخطأ يعني أن تسجيل الدخول بالبريد الإلكتروني/كلمة المرور غير مفعل في إعدادات مشروع Firebase
                     errorMessage = '🚫 تم تعطيل التسجيل بالبريد الإلكتروني/كلمة المرور. يرجى الاتصال بالدعم.';
                     break;
                 default:
-                    // Generic error message for unhandled errors
+                    // رسالة خطأ عامة للأخطاء غير المعالجة
                     errorMessage = `❌ خطأ غير معروف: ${error.message}.`;
                     break;
             }
-            displayGeneralMessage(errorMessage, 'error'); // Display the error message
-            supportContactDiv.style.display = 'block'; // Show the support contact link
-            console.error("Firebase Auth Error:", error); // Log the full error for debugging
+            displayGeneralMessage(errorMessage, 'error'); // عرض رسالة الخطأ
+            supportContactDiv.style.display = 'block'; // إظهار رابط الدعم الفني
+            console.error("Firebase Auth Error:", error); // تسجيل الخطأ الكامل للتصحيح
         }
     });
 });
