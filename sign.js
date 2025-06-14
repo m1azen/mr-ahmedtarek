@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const acceptInstructionsButton = document.getElementById('acceptInstructions');
     const closeModalButton = instructionsModal.querySelector('.close-button'); // زر إغلاق المودال
 
+
     /**
      * تعرض رسالة خطأ محددة لحقل إدخال معين.
      * @param {HTMLElement} element العنصر الذي سيعرض رسالة الخطأ (مثل div#usernameError).
@@ -102,6 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
             signupButton.appendChild(loadingSpinner); // إعادة إضافة السبينر بعد تغيير textContent
         } else {
             // استعادة نص الزر الأصلي وإعادة جلب مرجعية السبينر (مهم بعد تغيير innerHTML)
+            // (تعديل: التأكد من وجود السبينر في HTML أولاً)
             signupButton.innerHTML = `إنشاء الحساب <span class="spinner" id="loadingSpinner" style="display: none;"></span>`;
             loadingSpinner = document.getElementById('loadingSpinner'); // إعادة جلب المرجعية
         }
@@ -113,12 +115,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // إظهار المودال عند تحميل الصفحة لأول مرة
     instructionsModal.classList.add('show'); // إضافة الكلاس 'show' لتفعيل ظهور المودال عبر CSS
-    signupForm.style.display = 'none'; // إخفاء نموذج التسجيل في البداية
+    signupForm.classList.add('hidden-form'); // إخفاء نموذج التسجيل باستخدام الكلاس 'hidden-form'
 
     // معالج حدث النقر لزر "أوافق وأبدأ التسجيل" داخل المودال
     acceptInstructionsButton.addEventListener('click', () => {
         instructionsModal.classList.remove('show'); // إخفاء المودال
-        signupForm.style.display = 'flex'; // إظهار نموذج التسجيل باستخدام flex للتخطيط الصحيح
+        signupForm.classList.remove('hidden-form'); // إظهار نموذج التسجيل بإزالة الكلاس 'hidden-form'
     });
 
     // معالج حدث النقر لزر الإغلاق (X) في المودال
