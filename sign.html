@@ -4,17 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>إنشاء حساب جديد - منصة القائد التعليمية</title>
+    <!-- تأكد من أن هذا المسار لملف الأيقونة صحيح وموجود في نفس المجلد -->
     <link rel="icon" type="image/png" sizes="2000" href="5926948237783189215.png">
-    <link rel="stylesheet" href="signup.css">
+    <!-- تأكد أن ملف CSS اسمه sign.css وموجود في نفس مجلد HTML -->
+    <link rel="stylesheet" href="sign.css">
+    <!-- Font Awesome للأيقونات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <div class="container">
         <div class="signup-box">
             <div class="header">
+                <!-- الرابط للصفحة الرئيسية - تأكد أن index.html موجود لديك -->
                 <a href="index.html" class="back-link"><i class="fas fa-arrow-right"></i> الرئيسية</a>
                 <h2>إنشاء حساب جديد</h2>
             </div>
+            <!-- النموذج مخفي في البداية بواسطة خاصية style="display: none;" 
+                 وسيتم إظهاره بواسطة JavaScript بعد قبول التعليمات في المودال.
+                 تأكد أن الـ ID هنا هي signupForm كما في JavaScript. -->
             <form id="signupForm" style="display: none;"> 
                 <div class="input-group">
                     <label for="username">اسم المستخدم الكامل:</label>
@@ -103,6 +110,7 @@
                     <span class="spinner" id="loadingSpinner" style="display: none;"></span>
                 </button>
 
+                <!-- هذه الرسائل يتم التحكم بظهورها من JavaScript -->
                 <div class="status-message" id="generalMessage" style="display: none;"></div>
                 <div class="support-contact" id="supportContact" style="display: none;">
                     في حال واجهتك مشكلة، تواصل مع دعم <a href="https://wa.me/201006473018" target="_blank">Mazen</a>.
@@ -114,8 +122,11 @@
         </div>
     </div>
 
+    <!-- Instructions Modal (النافذة المنبثقة للتعليمات) -->
+    <!-- تأكد أن الـ ID هنا هي instructionsModal كما في JavaScript -->
     <div id="instructionsModal" class="modal">
         <div class="modal-content">
+            <!-- تأكد أن الـ class هنا هي close-button كما في JavaScript -->
             <span class="close-button">&times;</span>
             <h2>تعليمات منصة القائد</h2>
             <div class="instructions-text">
@@ -129,10 +140,12 @@
                 </ul>
                 <p>باستمرارك، فإنك توافق على <a href="#" target="_blank">شروط الاستخدام</a> و <a href="#" target="_blank">سياسة الخصوصية</a>.</p>
             </div>
+            <!-- تأكد أن الـ ID هنا هي acceptInstructions كما في JavaScript -->
             <button id="acceptInstructions" class="accept-button">أوافق وأبدأ التسجيل</button>
         </div>
     </div>
 
+    <!-- تأكد أن ملف JavaScript اسمه sign.js وموجود في نفس مجلد HTML -->
     <script type="module" src="sign.js"></script>
 </body>
 </html>
