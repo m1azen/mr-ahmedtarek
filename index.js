@@ -1,11 +1,13 @@
-// Import Firebase SDKs
+// استيراد حزم Firebase المطلوبة
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+// استيراد onAuthStateChanged و signOut من Firebase Auth لتتبع حالة المستخدم وتسجيل الخروج
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+// استيراد Firestore Functions لقراءة بيانات المستخدم
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-// Your web app's Firebase configuration (يجب أن تكون هي نفسها في sign.js و login.js)
+// إعدادات Firebase الخاصة بتطبيقك (تأكد من مطابقتها لتلك الموجودة في sign.js و login.js)
 const firebaseConfig = {
-    apiKey: "AIzaSyDh59dAoiUy1p8F4301kUjwzl9VT0nF2-E",
+    apiKey: "AIzaSyDh59dAoiUy1p8F4301kUjwzl9VT0nF2-E", // تأكد من صحة هذا المفتاح
     authDomain: "ahmed-tarek-7beb4.firebaseapp.com",
     projectId: "ahmed-tarek-7beb4",
     storageBucket: "ahmed-tarek-7beb4.firebasestorage.app",
@@ -14,15 +16,17 @@ const firebaseConfig = {
     measurementId: "G-FZRCD5N87Z"
 };
 
-// Initialize Firebase
+// تهيئة Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app); // Firebase Authentication service
-const db = getFirestore(app); // Firebase Firestore service
+const auth = getAuth(app); // خدمة مصادقة Firebase
+const db = getFirestore(app); // خدمة Firestore Firebase
 
-let currentUserName = "زائر"; // متغير لتخزين اسم المستخدم الحالي
-let isFirebaseReady = false; // flag to indicate firebase is initialized and auth state is checked.
+let currentUserName = "زائر"; // متغير لتخزين اسم المستخدم الحالي، "زائر" كقيمة افتراضية
+let isFirebaseReady = false; // علامة للإشارة إلى أن Firebase قد أكملت التحقق الأولي لحالة المصادقة
 
+// عند تحميل محتوى DOM بالكامل
 document.addEventListener('DOMContentLoaded', () => {
+    // جلب العناصر الأساسية من HTML
     const sidebar = document.getElementById('sidebar');
     const closeSidebarBtn = document.getElementById('closeSidebarButton');
     const userIcon = document.getElementById('userIcon');
@@ -32,16 +36,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
 
-    // Load theme preference from localStorage
+    // =====================================
+    // منطق تبديل الوضع (فاتح/داكن)
+    // =====================================
+    // تحميل تفضيل الوضع من التخزين المحلي
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
         body.classList.add(savedTheme);
         themeToggle.checked = (savedTheme === 'dark-mode');
     } else {
+        // تعيين الوضع الافتراضي إذا لم يكن هناك تفضيل محفوظ
         body.classList.remove('dark-mode');
         localStorage.setItem('theme', 'light-mode');
+        themeToggle.checked = false; // تأكد من أن مفتاح التبديل يعكس الوضع الفاتح
     }
 
+    // معالج حدث لتغيير الوضع عند تبديل المفتاح
     themeToggle.addEventListener('change', () => {
         if (themeToggle.checked) {
             body.classList.add('dark-mode');
@@ -53,15 +63,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /**
-     * تتحقق مما إذا كان المستخدم مسجلاً للدخول عبر Firebase Authentication.
-     * @returns {boolean} True إذا كان المستخدم مسجلاً للدخول، False بخلاف ذلك.
+     * تتحقق مما إذا كان المستخدم مسجلاً للدخول حالياً عبر Firebase Authentication.
+     * @returns {boolean} True إذا كان هناك مستخدم مسجل الدخول، False بخلاف ذلك.
      */
     function isUserLoggedIn() {
         return auth.currentUser !== null;
     }
 
     /**
-     * تحصل على اسم المستخدم الحالي.
+     * تحصل على اسم المستخدم الحالي (من متغير currentUserName).
      * @returns {string} اسم المستخدم إذا كان مسجلاً للدخول، وإلا "زائر".
      */
     function getUserName() {
@@ -70,23 +80,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * تقوم بتسجيل خروج المستخدم من Firebase.
+     * وتعتمد على onAuthStateChanged لتحديث الواجهة.
      */
     async function firebaseLogout() {
         try {
-            await signOut(auth); // تسجيل الخروج من Firebase Auth
-            console.log("User signed out from Firebase.");
-            // onAuthStateChanged سيتولى تحديث الواجهة
+            await signOut(auth); // تنفيذ عملية تسجيل الخروج من Firebase Auth
+            console.log("تم تسجيل خروج المستخدم بنجاح من Firebase.");
+            // onAuthStateChanged listener سيتكفل بتحديث الواجهة بشكل تلقائي
         } catch (error) {
-            console.error("Error signing out:", error);
-            alert("حدث خطأ أثناء تسجيل الخروج. الرجاء المحاولة مرة أخرى."); // استخدام alert مؤقتًا، يفضل مودال مخصص
+            console.error("خطأ أثناء تسجيل الخروج من Firebase:", error);
+            // هنا يمكنك عرض رسالة خطأ أنيقة للمستخدم بدلاً من alert()
+            alert("حدث خطأ أثناء تسجيل الخروج. الرجاء المحاولة مرة أخرى.");
         }
     }
 
     /**
-     * تعرض محتوى الشريط الجانبي بناءً على حالة تسجيل الدخول.
+     * تعرض محتوى الشريط الجانبي (Sidebar) بناءً على حالة تسجيل الدخول.
      */
     function renderSidebarContent() {
-        sidebarContent.innerHTML = ''; // مسح المحتوى الحالي
+        sidebarContent.innerHTML = ''; // مسح أي محتوى سابق في الشريط الجانبي
         sidebarContent.innerHTML += `<button class="sidebar-button"><i class="fas fa-home"></i> الصفحة الرئيسية</button>`;
 
         if (isUserLoggedIn()) {
@@ -100,38 +112,41 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button class="sidebar-button"><i class="fas fa-book-open"></i> كورساتي</button>
                 <button class="sidebar-button" id="logoutButton"><i class="fas fa-sign-out-alt"></i> تسجيل خروج</button>
             `;
+            // إضافة معالج الحدث لزر تسجيل الخروج
             const logoutBtn = document.getElementById('logoutButton');
             if (logoutBtn) {
                 logoutBtn.addEventListener('click', () => {
-                    firebaseLogout();
-                    sidebar.classList.remove('show'); // إغلاق الشريط الجانبي بعد تسجيل الخروج
+                    firebaseLogout(); // استدعاء دالة تسجيل الخروج من Firebase
+                    sidebar.classList.remove('show'); // إغلاق الشريط الجانبي
                 });
             }
         } else {
+            // إذا لم يكن المستخدم مسجلاً للدخول، اعرض أزرار التسجيل/تسجيل الدخول
             sidebarContent.innerHTML += `
                 <button class="sidebar-button" id="registerButton"><i class="fas fa-user-plus"></i> تسجيل جديد</button>
                 <button class="sidebar-button" id="loginButton"><i class="fas fa-sign-in-alt"></i> تسجيل دخول</button>
             `;
+            // إضافة معالجات الأحداث لهذه الأزرار
             const registerBtn = document.getElementById('registerButton');
             if (registerBtn) {
                 registerBtn.addEventListener('click', () => {
-                    window.location.href = 'sign.html'; // توجيه إلى صفحة إنشاء حساب
+                    window.location.href = 'sign.html'; // توجيه لصفحة إنشاء حساب
                 });
             }
             const loginBtn = document.getElementById('loginButton');
             if (loginBtn) {
                 loginBtn.addEventListener('click', () => {
-                    window.location.href = 'login.html'; // توجيه إلى صفحة تسجيل الدخول
+                    window.location.href = 'login.html'; // توجيه لصفحة تسجيل الدخول
                 });
             }
         }
     }
 
     /**
-     * تعرض أزرار البانر بناءً على حالة تسجيل الدخول.
+     * تعرض أزرار البانر الرئيسية بناءً على حالة تسجيل الدخول.
      */
     function renderBannerButtons() {
-        bannerButtonsContainer.innerHTML = ''; // مسح المحتوى الحالي
+        bannerButtonsContainer.innerHTML = ''; // مسح أي محتوى سابق
         if (isUserLoggedIn()) {
             bannerButtonsContainer.innerHTML += `<button onclick="window.location.href='my_subscriptions.html'">اشتراكاتي</button>`;
         } else {
@@ -140,7 +155,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * تقوم بتحديث جميع عناصر الواجهة التي تعتمد على حالة تسجيل الدخول.
+     * الدالة الرئيسية لتحديث الواجهة بأكملها.
+     * يتم استدعاؤها بعد تغيير حالة مصادقة Firebase أو عند الحاجة لتحديث الواجهة.
      */
     function updateUI() {
         renderSidebarContent();
@@ -148,27 +164,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =====================================
-    // Firebase Authentication State Listener
+    // مستمع حالة مصادقة Firebase (Firebase Authentication State Listener)
+    // هذا هو الجزء الأهم الذي يربط حالة تسجيل الدخول بواجهة المستخدم.
     // =====================================
     onAuthStateChanged(auth, async (user) => {
         if (user) {
-            // المستخدم مسجل الدخول
+            // المستخدم مسجل الدخول حالياً
+            console.log("المستخدم مسجل الدخول:", user.uid);
             try {
+                // محاولة جلب بيانات المستخدم من Firestore باستخدام UID الخاص به
                 const userDocRef = doc(db, "userdata", user.uid);
                 const userDocSnap = await getDoc(userDocRef);
 
                 if (userDocSnap.exists()) {
-                    currentUserName = userDocSnap.data().username || "مستخدم"; // تحديث اسم المستخدم من Firestore
+                    // إذا وجدت بيانات المستخدم في Firestore، استخدم اسم المستخدم الخاص به
+                    currentUserName = userDocSnap.data().username || "مستخدم";
+                    console.log("تم جلب اسم المستخدم من Firestore:", currentUserName);
                 } else {
-                    console.warn("User data not found in Firestore for UID:", user.uid);
-                    currentUserName = "مستخدم"; // اسم افتراضي إذا لم يتم العثور على البيانات
+                    // إذا لم يتم العثور على بيانات المستخدم في Firestore، قم بتسجيل تحذير واستخدم اسم افتراضي
+                    console.warn("لم يتم العثور على بيانات المستخدم في Firestore لـ UID:", user.uid);
+                    currentUserName = "مستخدم";
                 }
             } catch (error) {
-                console.error("Error fetching user data from Firestore:", error);
-                currentUserName = "مستخدم"; // اسم افتراضي في حالة الخطأ
+                console.error("خطأ أثناء جلب بيانات المستخدم من Firestore:", error);
+                currentUserName = "مستخدم"; // استخدام اسم افتراضي في حالة الخطأ
             }
         } else {
             // المستخدم غير مسجل الدخول
+            console.log("المستخدم غير مسجل الدخول.");
             currentUserName = "زائر";
         }
         isFirebaseReady = true; // الإشارة إلى أن Firebase قد أكملت التحقق الأولي للحالة
@@ -176,54 +199,72 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // =====================================
-    // Sidebar and Animation Logic (Existing code)
+    // منطق الشريط الجانبي والأنيميشن (الكود الموجود لديك)
     // =====================================
-    userIcon.addEventListener('click', (event) => {
-        event.stopPropagation();
-        sidebar.classList.toggle('show');
-        if (sidebar.classList.contains('show')) {
-            // إذا كان الشريط الجانبي سيظهر، تأكد من تحديثه
-            // هذا لضمان عرض حالة تسجيل الدخول الصحيحة فورًا
-            if (isFirebaseReady) { // تحديث فقط إذا كانت حالة Firebase جاهزة
-               updateUI();
+    // معالج حدث النقر على أيقونة المستخدم لتبديل الشريط الجانبي
+    if (userIcon) { // التأكد من وجود العنصر قبل إضافة المستمع
+        userIcon.addEventListener('click', (event) => {
+            event.stopPropagation(); // منع انتشار الحدث لأعلى في DOM
+            sidebar.classList.toggle('show'); // تبديل فئة 'show' لإظهار/إخفاء الشريط الجانبي
+            if (sidebar.classList.contains('show')) {
+                // إذا كان الشريط الجانبي سيظهر، تأكد من تحديثه بأحدث حالة تسجيل دخول
+                if (isFirebaseReady) {
+                   updateUI(); // تحديث فوري للشريط الجانبي
+                }
             }
-        }
-    });
+        });
+    } else {
+        console.error("العنصر ذو الـ ID 'userIcon' غير موجود في HTML.");
+    }
 
-    closeSidebarBtn.addEventListener('click', () => {
-        sidebar.classList.remove('show');
-    });
 
+    // معالج حدث النقر على زر إغلاق الشريط الجانبي
+    if (closeSidebarBtn) { // التأكد من وجود العنصر
+        closeSidebarBtn.addEventListener('click', () => {
+            sidebar.classList.remove('show'); // إخفاء الشريط الجانبي
+        });
+    } else {
+        console.error("العنصر ذو الـ ID 'closeSidebarButton' غير موجود في HTML.");
+    }
+
+
+    // إغلاق الشريط الجانبي عند النقر خارج الشريط أو أيقونة المستخدم
     document.addEventListener('click', (event) => {
-        if (!sidebar.contains(event.target) && !userIcon.contains(event.target)) {
+        // التحقق مما إذا كان النقر خارج الشريط الجانبي وأيقونة المستخدم
+        if (sidebar && userIcon && !sidebar.contains(event.target) && !userIcon.contains(event.target)) {
             sidebar.classList.remove('show');
         }
     });
 
-    sidebar.addEventListener('click', (event) => {
-        event.stopPropagation();
-    });
+    // منع إغلاق الشريط الجانبي عند النقر داخل الشريط نفسه
+    if (sidebar) { // التأكد من وجود العنصر
+        sidebar.addEventListener('click', (event) => {
+            event.stopPropagation(); // منع انتشار الحدث وإغلاق الشريط
+        });
+    } else {
+         console.error("العنصر ذو الـ ID 'sidebar' غير موجود في HTML.");
+    }
 
+
+    // =====================================
+    // منطق أنيميشن العناصر عند التمرير
+    // =====================================
     const animateElements = document.querySelectorAll('.feature-box, .chem-text, .chem-img, .card');
 
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('animate');
-                observer.unobserve(entry.target);
+                entry.target.classList.add('animate'); // إضافة كلاس 'animate' لتفعيل الحركة
+                observer.unobserve(entry.target); // إيقاف المراقبة بعد تفعيل الحركة مرة واحدة
             }
         });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.1 }); // تفعيل الحركة عندما يكون 10% من العنصر مرئياً
 
+    // مراقبة جميع العناصر التي تحتاج إلى أنيميشن
     animateElements.forEach(element => {
         observer.observe(element);
     });
 
-    // Initial UI update. This might show "زائر" briefly until Firebase loads,
-    // then onAuthStateChanged will trigger another update.
-    // Ensure this is called ONLY after Firebase is initialized in the DOmContentLoaded
-    // and ideally after the onAuthStateChanged listener has done its first check.
-    // We use the `isFirebaseReady` flag to ensure `updateUI()` is called only once
-    // when Firebase Auth state is initially known.
-    // No need to call `updateUI()` here anymore, as `onAuthStateChanged` will handle the initial render.
+    // لا داعي لاستدعاء `updateUI()` هنا عند `DOMContentLoaded`
+    // لأن `onAuthStateChanged` سيتولى تحديث الواجهة بمجرد معرفة حالة المصادقة الأولية.
 });
