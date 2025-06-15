@@ -338,6 +338,37 @@ body.dark-mode .input-group select:focus {
     box-shadow: 0 0 0 3px rgba(144, 202, 249, 0.25);
 }
 
+/* New: Remember Me Checkbox Group */
+.remember-me-group {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between checkbox and label */
+    margin-top: -10px; /* Pull it slightly closer to the password field */
+    margin-bottom: 10px;
+    user-select: none; /* Prevent text selection */
+}
+
+.remember-me-group input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: #007bff; /* Highlight color for checkbox */
+    cursor: pointer;
+    margin-right: 0; /* Override default browser margin */
+    margin-left: 0;
+}
+
+.remember-me-group label {
+    font-size: 1em;
+    color: #555;
+    cursor: pointer;
+    margin-bottom: 0; /* Override default label margin */
+    font-weight: normal; /* Less bold than input labels */
+}
+body.dark-mode .remember-me-group label {
+    color: #CFD8DC;
+}
+
+
 /* زر تسجيل الدخول (ID: loginButton في HTML) */
 #loginButton {
     background: linear-gradient(45deg, #007bff, #0056b3);
