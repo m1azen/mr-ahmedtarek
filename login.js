@@ -1,6 +1,7 @@
 // Import Firebase SDKs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+// استيراد setPersistence و browserLocalPersistence لتمكين الحفظ التلقائي لتسجيل الدخول
+import { getAuth, signInWithEmailAndPassword, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 // Your web app's Firebase configuration (يجب أن تكون هذه البيانات هي نفسها في ملف signup.js)
@@ -22,13 +23,13 @@ const db = getFirestore(app); // خدمة Firestore من Firebase
 document.addEventListener('DOMContentLoaded', () => {
     // عناصر النموذج (Form elements)
     const loginForm = document.getElementById('loginForm');
-    const phoneNumberInput = document.getElementById('phoneNumber');
+    const emailInput = document.getElementById('email'); // Changed from phoneNumberInput to emailInput as per HTML
     const passwordInput = document.getElementById('password');
     const loginButton = document.getElementById('loginButton');
-    let loadingSpinner = document.getElementById('loadingSpinner'); // استخدام 'let' لأنه قد يتم تحديث مرجعه
+    let loadingSpinner = document.getElementById('loadingSpinner');
 
     // عناصر رسائل الخطأ لكل حقل إدخال
-    const phoneNumberError = document.getElementById('phoneNumberError');
+    const emailError = document.getElementById('emailError'); // Changed from phoneNumberError to emailError
     const passwordError = document.getElementById('passwordError');
 
     // عناصر نافذة الرسائل العامة (من ملف login.html)
@@ -36,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const messageTitle = document.getElementById('messageTitle');
     const messageText = document.getElementById('messageText');
     const messageOkButton = document.getElementById('messageOkButton');
-    const messageSupportLink = document.getElementById('messageSupportLink'); // هذا الرابط سيكون ديناميكيًا بناءً على نوع الرسالة
+    const messageSupportLink = document.getElementById('messageSupportLink');
 
     // دالة لعرض رسائل خطأ محددة لحقل إدخال
     function displayInputError(element, message) {
@@ -46,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // دالة لمسح جميع رسائل الخطأ الداخلية
     function clearInlineErrors() {
-        displayInputError(phoneNumberError, '');
+        displayInputError(emailError, ''); // Changed from phoneNumberError
         displayInputError(passwordError, '');
     }
 
@@ -90,23 +91,40 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // =====================================
+    // ✅ ضبط مدة بقاء جلسة تسجيل الدخول تلقائياً
+    // هذا الجزء هو الإضافة الجديدة لتمكين "تذكرني" تلقائياً
+    // =====================================
+    // يتم تعيين مدة البقاء إلى "local" مما يعني أن جلسة المستخدم
+    // ستبقى حتى بعد إغلاق المتصفح (مثل ميزة "تذكرني" الدائمة).
+    // هذا السطر يجب أن يتم تنفيذه مرة واحدة في بداية التطبيق.
+    // يجب أن يحدث هذا قبل محاولة تسجيل الدخول.
+    setPersistence(auth, browserLocalPersistence)
+        .then(() => {
+            console.log("Firebase Auth persistence set to LOCAL.");
+        })
+        .catch((error) => {
+            console.error("Error setting persistence:", error);
+        });
+
+
     // منطق إرسال النموذج
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault(); // منع الإرسال الافتراضي للنموذج
         clearInlineErrors(); // مسح رسائل الخطأ السابقة
         setLoading(true); // إظهار حالة التحميل
 
-        const phoneNumber = phoneNumberInput.value.trim();
+        const email = emailInput.value.trim(); // Changed from phoneNumberInput to emailInput
         const password = passwordInput.value;
 
         let isValid = true;
 
         // التحقق من صحة حقول جانب العميل (Client-side validation)
-        if (!phoneNumber) {
-            displayInputError(phoneNumberError, 'الرجاء إدخال رقم الهاتف.');
+        if (!email) {
+            displayInputError(emailError, 'الرجاء إدخال البريد الإلكتروني.');
             isValid = false;
-        } else if (!/^01[0-2,5]\d{8}$/.test(phoneNumber)) { // التحقق من رقم هاتف مصري (11 رقم يبدأ بـ 01)
-            displayInputError(phoneNumberError, 'الرجاء إدخال رقم هاتف مصري صحيح (11 رقم يبدأ بـ 01).');
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { // Basic email regex validation
+            displayInputError(emailError, 'الرجاء إدخال بريد إلكتروني صالح.');
             isValid = false;
         }
         if (!password) {
@@ -124,29 +142,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            // 1. الاستعلام من Firestore للعثور على البريد الإلكتروني المرتبط برقم الهاتف
-            const usersRef = collection(db, "userdata"); // اسم المجموعة في Firestore
-            // هام: استعلامات Firestore على الحقول بخلاف المعرف (ID) تتطلب فهرسة.
-            // إذا تلقيت خطأ "The query requires an index..."، ستحتاج لإنشائه
-            // في Firebase Console -> Firestore Database -> Indexes.
-            const q = query(usersRef, where("parentPhone", "==", phoneNumber));
-            const querySnapshot = await getDocs(q);
+            // تسجيل الدخول باستخدام البريد الإلكتروني وكلمة المرور
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
 
-            if (querySnapshot.empty) {
-                setLoading(false);
-                showMessageModal('خطأ في تسجيل الدخول 🔒', 'لا يوجد حساب مرتبط برقم الهاتف هذا. الرجاء التحقق من الرقم أو إنشاء حساب جديد.', true);
-                return;
+            // بعد تسجيل الدخول بنجاح، جلب اسم المستخدم من Firestore
+            // ✅ تم التأكد من أن اسم المجموعة هو "userdata"
+            const userDocRef = doc(db, "userdata", user.uid);
+            const userDocSnap = await getDoc(userDocRef);
+            let username = user.email; // الافتراضي هو البريد الإلكتروني
+            if (userDocSnap.exists()) {
+                username = userDocSnap.data().username || user.email; // استخدام اسم المستخدم من Firestore إن وجد
+            } else {
+                console.warn("User data not found in 'userdata' collection for UID:", user.uid);
             }
 
-            // بافتراض أن أرقام الهواتف فريدة وسيتم العثور على مستخدم واحد فقط
-            const userData = querySnapshot.docs[0].data();
-            const emailToLogin = userData.email; // الحصول على البريد الإلكتروني من بيانات المستخدم
-
-            // 2. تسجيل الدخول باستخدام البريد الإلكتروني المسترجع وكلمة المرور المقدمة
-            await signInWithEmailAndPassword(auth, emailToLogin, password);
-
             setLoading(false);
-            showMessageModal('تم تسجيل الدخول بنجاح! 🎉', 'أهلاً بك مرة أخرى في منصة القائد.', false);
+            showMessageModal('تم تسجيل الدخول بنجاح! 🎉', `أهلاً بك مرة أخرى يا ${username} في منصة القائد.`, false);
 
             // إعادة التوجيه ستتم بعد نقر المستخدم على زر "حسناً" في النافذة المنبثقة.
 
@@ -155,7 +167,9 @@ document.addEventListener('DOMContentLoaded', () => {
             let errorMessage = "حدث خطأ أثناء تسجيل الدخول. الرجاء المحاولة مرة أخرى.";
             switch (error.code) {
                 case 'auth/invalid-credential': // يشمل 'auth/user-not-found' و 'auth/wrong-password' في الإصدارات الحديثة
-                    errorMessage = 'رقم الهاتف أو كلمة المرور غير صحيحة. الرجاء التحقق والمحاولة مرة أخرى.';
+                    errorMessage = 'البريد الإلكتروني أو كلمة المرور غير صحيحة. الرجاء التحقق والمحاولة مرة أخرى.';
+                    displayInputError(emailError, errorMessage); // عرض الخطأ تحت حقل البريد الإلكتروني
+                    displayInputError(passwordError, ''); // مسح خطأ كلمة المرور القديم
                     break;
                 case 'auth/too-many-requests':
                     errorMessage = 'تم حظر الوصول مؤقتاً بسبب محاولات تسجيل دخول كثيرة. الرجاء المحاولة لاحقاً.';
