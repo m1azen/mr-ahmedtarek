@@ -4,35 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>إنشاء حساب جديد - منصة القائد التعليمية</title>
-    <!-- تأكد من أن هذا المسار لملف الأيقونة صحيح وموجود في نفس المجلد -->
+    <!-- رابط الأيقونة: تأكد أن ملف الصورة (5926948237783189215.png) موجود في نفس مجلد ملف HTML -->
     <link rel="icon" type="image/png" sizes="2000" href="5926948237783189215.png">
-    <!-- تأكد أن ملف CSS اسمه sign.css وموجود في نفس مجلد HTML -->
+    <!-- رابط ملف CSS: تأكد أن ملف (signup.css) موجود في نفس مجلد HTML -->
     <link rel="stylesheet" href="signup.css">
-    <!-- Font Awesome للأيقونات -->
+    <!-- Font Awesome CDN للأيقونات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
+    <!-- الغلاف الرئيسي لصفحة التسجيل -->
     <div class="signup-page-wrapper">
         <!-- الجانب الأيمن: الرسوم المتحركة والرسالة الترحيبية -->
         <div class="animation-side">
             <div class="chemistry-animation">
                 <svg class="beaker-svg" viewBox="0 0 200 300">
                     <defs>
+                        <!-- تدرج لوني للسائل داخل المخبار -->
                         <linearGradient id="beakerGradient" x1="0%" y1="0%" x2="0%" y2="100%">
                             <stop offset="0%" stop-color="#00bcd4" />
                             <stop offset="100%" stop-color="#007bff" />
                         </linearGradient>
+                        <!-- تأثير الظل للسائل (اختياري) -->
                         <filter id="liquidShadow">
                             <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#000" flood-opacity="0.3" />
                         </filter>
                     </defs>
-                    <!-- جسم المخبار -->
+                    <!-- جسم المخبار الزجاجي -->
                     <path class="beaker-body" d="M30,0 L30,250 C30,280 45,300 100,300 C155,300 170,280 170,250 L170,0 Z" />
-                    <!-- السائل المتحرك -->
+                    <!-- السائل المتحرك داخل المخبار (القاعدة) -->
                     <path class="liquid-base" fill="url(#beakerGradient)" d="M30,250 C30,280 45,300 100,300 C155,300 170,280 170,250 L170,150 C170,135 155,120 100,120 C45,120 30,135 30,150 Z" />
+                    <!-- السائل المتحرك داخل المخبار (الموجة العلوية) -->
                     <path class="liquid-wave" fill="url(#beakerGradient)" d="M30,150 Q65,140 100,150 T170,150 V250 C170,280 155,300 100,300 C45,300 30,280 30,250 Z" />
 
-                    <!-- علامات القياس (للتصميم فقط) -->
+                    <!-- علامات القياس على المخبار (للتصميم الجمالي فقط) -->
                     <text x="180" y="50" fill="#fff" font-size="16px" text-anchor="middle">50ml</text>
                     <line x1="170" y1="50" x2="160" y2="50" stroke="#fff" stroke-width="2"/>
                     <text x="180" y="100" fill="#fff" font-size="16px" text-anchor="middle">100ml</text>
@@ -45,7 +49,7 @@
             <p class="animation-slogan">مع منصة القائد، استكشف عالم الكيمياء بطريقة جديدة ومبتكرة.</p>
         </div>
 
-        <!-- الجانب الأيسر: نموذج التسجيل نفسه -->
+        <!-- الجانب الأيسر: نموذج التسجيل -->
         <div class="signup-side">
             <div class="signup-box">
                 <div class="header">
@@ -53,7 +57,7 @@
                     <a href="index.html" class="back-link"><i class="fas fa-arrow-right"></i> الرئيسية</a>
                     <h2 class="form-title">إنشاء حساب جديد</h2>
                 </div>
-                <!-- النموذج نفسه - في البداية سياخذ كلاس "hidden-form" لإخفائه -->
+                <!-- النموذج نفسه - في البداية سيأخذ كلاس "hidden-form" لإخفائه حتى يتم قبول التعليمات -->
                 <form id="signupForm" class="hidden-form"> 
                     <div class="input-group">
                         <label for="username"><i class="fas fa-user"></i> اسم المستخدم الكامل:</label>
@@ -139,10 +143,11 @@
 
                     <button type="submit" id="signupButton">
                         إنشاء الحساب
+                        <!-- السبينر سيظهر عند التحميل ويتم التحكم به عبر JavaScript -->
                         <span class="spinner" id="loadingSpinner" style="display: none;"></span>
                     </button>
                     
-                    <!-- هذه الرسائل لم تعد تستخدم هنا مباشرة لأنها ستظهر في مودال مخصص -->
+                    <!-- الرسائل العامة القديمة تم التعليق عليها/إزالتها لأنها الآن تُعرض داخل مودال مخصص -->
                     <!-- <div class="status-message" id="generalMessage" style="display: none;"></div> -->
                     <!-- <div class="support-contact" id="supportContact" style="display: none;">
                         في حال واجهتك مشكلة، تواصل مع دعم <a href="https://wa.me/201006473018" target="_blank">Mazen</a>.
@@ -156,10 +161,10 @@
     </div>
 
     <!-- Instructions Modal (النافذة المنبثقة للتعليمات) -->
-    <!-- تأكد أن الـ ID هنا هي instructionsModal كما في JavaScript -->
+    <!-- هذا المودال يظهر عند تحميل الصفحة ليطلب من المستخدم قراءة التعليمات -->
     <div id="instructionsModal" class="modal">
         <div class="modal-content">
-            <!-- تأكد أن الـ class هنا هي close-button كما في JavaScript -->
+            <!-- زر الإغلاق للمودال -->
             <span class="close-button">&times;</span>
             <h2>تعليمات منصة القائد</h2>
             <div class="instructions-text">
@@ -173,24 +178,27 @@
                 </ul>
                 <p>باستمرارك، فإنك توافق على <a href="#" target="_blank">شروط الاستخدام</a> و <a href="#" target="_blank">سياسة الخصوصية</a>.</p>
             </div>
-            <!-- تأكد أن الـ ID هنا هي acceptInstructions كما في JavaScript -->
+            <!-- زر الموافقة الذي يقوم بإظهار نموذج التسجيل وإخفاء هذا المودال -->
             <button id="acceptInstructions" class="accept-button">أوافق وأبدأ التسجيل</button>
         </div>
     </div>
 
     <!-- New: General Message Modal (نافذة الرسالة العامة) -->
+    <!-- هذا المودال يستخدم لعرض رسائل النجاح أو الخطأ من JavaScript -->
     <div id="messageModal" class="modal">
         <div class="modal-content message-modal-content">
             <h2 id="messageTitle"></h2>
             <p id="messageText"></p>
             <div class="message-footer">
+                <!-- رابط الدعم يظهر فقط عند وجود رسالة خطأ -->
                 <a href="https://wa.me/201006473018" target="_blank" id="messageSupportLink" class="support-button" style="display: none;">تواصل مع الدعم</a>
+                <!-- زر "حسناً" لإغلاق المودال -->
                 <button id="messageOkButton" class="accept-button">حسناً</button>
             </div>
         </div>
     </div>
 
-    <!-- تأكد أن ملف JavaScript اسمه sign.js وموجود في نفس مجلد HTML -->
+    <!-- رابط ملف JavaScript (sign.js): تأكد أنه موجود في نفس مجلد HTML ونوعه "module" -->
     <script type="module" src="sign.js"></script>
 </body>
 </html>
