@@ -5,7 +5,7 @@ import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/fi
 // استيراد Firestore Functions لقراءة بيانات المستخدم
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-// إعدادات Firebase الخاصة بتطبيقك (تأكد من مطابقتها لتلك الموجودة في sign.js و login.js)
+// إعدادات Firebase الخاصة بتطبيقك (تأكد من مطابقتها لتلك الموجودة في signup.js و login.js)
 const firebaseConfig = {
     apiKey: "AIzaSyDh59dAoiUy1p8F4301kUjwzl9VT0nF2-E", // تأكد من صحة هذا المفتاح
     authDomain: "ahmed-tarek-7beb4.firebaseapp.com",
@@ -99,7 +99,10 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     function renderSidebarContent() {
         sidebarContent.innerHTML = ''; // مسح أي محتوى سابق في الشريط الجانبي
-        sidebarContent.innerHTML += `<button class="sidebar-button"><i class="fas fa-home"></i> الصفحة الرئيسية</button>`;
+        // أزرار ثابتة تظهر دائمًا
+        sidebarContent.innerHTML += `<button class="sidebar-button" onclick="window.location.href='index.html'"><i class="fas fa-home"></i> الصفحة الرئيسية</button>`;
+        sidebarContent.innerHTML += `<button class="sidebar-button" onclick="window.location.href='my_courses.html'"><i class="fas fa-book"></i> كورساتي</button>`; // إضافة رابط كورساتي
+        sidebarContent.innerHTML += `<button class="sidebar-button" onclick="window.location.href='faq.html'"><i class="fas fa-question-circle"></i> الأسئلة الشائعة</button>`; // إضافة رابط الأسئلة الشائعة
 
         if (isUserLoggedIn()) {
             const userName = getUserName();
@@ -107,9 +110,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="sidebar-user-info">
                     <span>أهلاً ${userName}</span>
                 </div>
-                <button class="sidebar-button"><i class="fas fa-users"></i> منتدى الطلبة</button>
-                <button class="sidebar-button"><i class="fas fa-user-circle"></i> حسابي</button>
-                <button class="sidebar-button"><i class="fas fa-book-open"></i> كورساتي</button>
+                <button class="sidebar-button" onclick="window.location.href='student_forum.html'"><i class="fas fa-users"></i> منتدى الطلبة</button>
+                <button class="sidebar-button" onclick="window.location.href='my_account.html'"><i class="fas fa-user-circle"></i> حسابي</button>
                 <button class="sidebar-button" id="logoutButton"><i class="fas fa-sign-out-alt"></i> تسجيل خروج</button>
             `;
             // إضافة معالج الحدث لزر تسجيل الخروج
@@ -124,18 +126,19 @@ document.addEventListener('DOMContentLoaded', () => {
             // إذا لم يكن المستخدم مسجلاً للدخول، اعرض أزرار التسجيل/تسجيل الدخول
             sidebarContent.innerHTML += `
                 <button class="sidebar-button" id="registerButton"><i class="fas fa-user-plus"></i> تسجيل جديد</button>
-                <button class="sidebar-button" id="loginButton"><i class="fas fa-sign-in-alt"></i> تسجيل دخول</button>
+                <button class="sidebar-button" id="loginButtonSidebar"><i class="fas fa-sign-in-alt"></i> تسجيل دخول</button>
             `;
             // إضافة معالجات الأحداث لهذه الأزرار
             const registerBtn = document.getElementById('registerButton');
             if (registerBtn) {
                 registerBtn.addEventListener('click', () => {
-                    window.location.href = 'sign.html'; // توجيه لصفحة إنشاء حساب
+                    window.location.href = 'createaccount.html'; // توجيه لصفحة إنشاء حساب (تأكد من اسم الملف الصحيح)
                 });
             }
-            const loginBtn = document.getElementById('loginButton');
-            if (loginBtn) {
-                loginBtn.addEventListener('click', () => {
+            // ملاحظة: تغيير ID لزر تسجيل الدخول في الشريط الجانبي لتجنب التضارب مع زر تسجيل الدخول في البانر إذا كان له نفس ID
+            const loginBtnSidebar = document.getElementById('loginButtonSidebar');
+            if (loginBtnSidebar) {
+                loginBtnSidebar.addEventListener('click', () => {
                     window.location.href = 'login.html'; // توجيه لصفحة تسجيل الدخول
                 });
             }
@@ -150,7 +153,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isUserLoggedIn()) {
             bannerButtonsContainer.innerHTML += `<button onclick="window.location.href='my_subscriptions.html'">اشتراكاتي</button>`;
         } else {
-            bannerButtonsContainer.innerHTML += `<button onclick="window.location.href='join_us.html'">انضم إلينا</button>`;
+            // أزرار البانر عندما لا يكون المستخدم مسجلاً للدخول
+            bannerButtonsContainer.innerHTML += `<button onclick="window.location.href='createaccount.html'">انضم إلينا</button>`; // توجيه لصفحة إنشاء حساب (تأكد من اسم الملف الصحيح)
+            bannerButtonsContainer.innerHTML += `<button onclick="window.location.href='login.html'">تسجيل الدخول</button>`;
         }
     }
 
@@ -167,12 +172,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // مستمع حالة مصادقة Firebase (Firebase Authentication State Listener)
     // هذا هو الجزء الأهم الذي يربط حالة تسجيل الدخول بواجهة المستخدم.
     // =====================================
+    // هذا المستمع سيتكفل بالتعامل مع جلسات تسجيل الدخول المحفوظة محليًا
+    // التي تم إعدادها في login.js تلقائيًا.
     onAuthStateChanged(auth, async (user) => {
         if (user) {
             // المستخدم مسجل الدخول حالياً
             console.log("المستخدم مسجل الدخول:", user.uid);
             try {
                 // محاولة جلب بيانات المستخدم من Firestore باستخدام UID الخاص به
+                // ✅ يتم الجلب من مجموعة "userdata" كما هو متوقع
                 const userDocRef = doc(db, "userdata", user.uid);
                 const userDocSnap = await getDoc(userDocRef);
 
@@ -199,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // =====================================
-    // منطق الشريط الجانبي والأنيميشن (الكود الموجود لديك)
+    // منطق الشريط الجانبي والأنيميشن
     // =====================================
     // معالج حدث النقر على أيقونة المستخدم لتبديل الشريط الجانبي
     if (userIcon) { // التأكد من وجود العنصر قبل إضافة المستمع
@@ -217,7 +225,6 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error("العنصر ذو الـ ID 'userIcon' غير موجود في HTML.");
     }
 
-
     // معالج حدث النقر على زر إغلاق الشريط الجانبي
     if (closeSidebarBtn) { // التأكد من وجود العنصر
         closeSidebarBtn.addEventListener('click', () => {
@@ -226,7 +233,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         console.error("العنصر ذو الـ ID 'closeSidebarButton' غير موجود في HTML.");
     }
-
 
     // إغلاق الشريط الجانبي عند النقر خارج الشريط أو أيقونة المستخدم
     document.addEventListener('click', (event) => {
@@ -242,9 +248,8 @@ document.addEventListener('DOMContentLoaded', () => {
             event.stopPropagation(); // منع انتشار الحدث وإغلاق الشريط
         });
     } else {
-         console.error("العنصر ذو الـ ID 'sidebar' غير موجود في HTML.");
+        console.error("العنصر ذو الـ ID 'sidebar' غير موجود في HTML.");
     }
-
 
     // =====================================
     // منطق أنيميشن العناصر عند التمرير
@@ -265,6 +270,4 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(element);
     });
 
-    // لا داعي لاستدعاء `updateUI()` هنا عند `DOMContentLoaded`
-    // لأن `onAuthStateChanged` سيتولى تحديث الواجهة بمجرد معرفة حالة المصادقة الأولية.
 });
