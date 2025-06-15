@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const signupButton = document.getElementById('signupButton');
     let loadingSpinner = document.getElementById('loadingSpinner');
 
-    // Error message elements for each input (still used for inline validation feedback)
+    // Error message elements for each input
     const usernameError = document.getElementById('usernameError');
     const emailError = document.getElementById('emailError');
     const passwordError = document.getElementById('passwordError');
@@ -46,9 +46,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Modals and their elements
     const instructionsModal = document.getElementById('instructionsModal');
     const acceptInstructionsButton = document.getElementById('acceptInstructions');
-    const closeModalButton = instructionsModal.querySelector('.close-button'); // Close button for instructions modal
+    const closeModalButton = instructionsModal.querySelector('.close-button');
 
-    const messageModal = document.getElementById('messageModal'); // The new general message modal
+    const messageModal = document.getElementById('messageModal');
     const messageTitle = document.getElementById('messageTitle');
     const messageText = document.getElementById('messageText');
     const messageOkButton = document.getElementById('messageOkButton');
@@ -65,13 +65,13 @@ document.addEventListener('DOMContentLoaded', () => {
         messageTitle.textContent = title;
         messageText.textContent = text;
         if (isError) {
-            messageSupportLink.style.display = 'inline-block'; // Show support link for errors
+            messageSupportLink.style.display = 'inline-block';
             messageTitle.style.color = '#e74c3c'; // Red title for error
         } else {
-            messageSupportLink.style.display = 'none'; // Hide support link for success
+            messageSupportLink.style.display = 'none';
             messageTitle.style.color = '#2ecc71'; // Green title for success
         }
-        messageModal.classList.add('show'); // Use 'show' class for CSS transition
+        messageModal.classList.add('show');
     }
 
     // Function to hide the general message modal
@@ -98,12 +98,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (isLoading) {
             signupButton.textContent = 'جارٍ إنشاء الحساب...';
-            // Re-add the spinner after textContent change
             signupButton.appendChild(loadingSpinner);
         } else {
-            // Restore original button content
             signupButton.innerHTML = `إنشاء الحساب <span class="spinner" id="loadingSpinner" style="display: none;"></span>`;
-            // Re-get reference to spinner after innerHTML change
             loadingSpinner = document.getElementById('loadingSpinner');
         }
     }
@@ -140,11 +137,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle "Okay" button click on the general message modal
     messageOkButton.addEventListener('click', () => {
         hideMessageModal();
-        // If it was a success, redirect after the user clicks "Okay"
-        // This ensures the user sees the success message and interacts with it.
-        if (messageTitle.textContent.includes('نجاح')) { // Check title for "نجاح"
-            // You can add a small delay here if needed, but clicking "Okay" implies readiness to proceed.
-            window.location.href = `index.html?signupSuccess=true&message=${encodeURIComponent(usernameInput.value.trim())}`;
+        if (messageTitle.textContent.includes('نجاح')) {
+            // Redirect to index.html after user clicks "Okay" on success message
+            const encodedUsername = encodeURIComponent(usernameInput.value.trim());
+            window.location.href = `index.html?signupSuccess=true&message=${encodedUsername}`;
         }
     });
 
@@ -154,9 +150,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // =====================================
 
     signupForm.addEventListener('submit', async (e) => {
-        e.preventDefault(); // Prevent default form submission
+        e.preventDefault();
 
-        clearInlineErrors(); // Clear previous inline error messages
+        clearInlineErrors();
 
         // Get trimmed values from inputs
         const username = usernameInput.value.trim();
@@ -178,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!email) {
             displayInputError(emailError, 'الرجاء إدخال البريد الإلكتروني.');
             isValid = false;
-        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { // Basic email regex validation
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
             displayInputError(emailError, 'الرجاء إدخال بريد إلكتروني صالح.');
             isValid = false;
         }
@@ -188,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (password.length < 6) {
             displayInputError(passwordError, 'كلمة المرور يجب أن تتكون من 6 أحرف على الأقل.');
             isValid = false;
-        } else if (!/[0-9]/.test(password)) { // Only check for at least one number, no symbols required now
+        } else if (!/[0-9]/.test(password)) { // Only check for at least one number, no symbols required
             displayInputError(passwordError, 'كلمة المرور يجب أن تحتوي على رقم واحد على الأقل.');
             isValid = false;
         }
@@ -210,96 +206,79 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!studentId) {
             displayInputError(studentIdError, 'الرجاء إدخال رقم الطالب.');
             isValid = false;
-        } else if (!/^\d+$/.test(studentId)) { // Only digits allowed
+        } else if (!/^\d+$/.test(studentId)) {
              displayInputError(studentIdError, 'رقم الطالب يجب أن يحتوي على أرقام فقط.');
              isValid = false;
         }
         if (!parentPhone) {
             displayInputError(parentPhoneError, 'الرجاء إدخال رقم ولي الأمر.');
             isValid = false;
-        } else if (!/^01[0-2,5]\d{8}$/.test(parentPhone)) { // Basic Egyptian phone number validation (010, 011, 012, 015)
+        } else if (!/^01[0-2,5]\d{8}$/.test(parentPhone)) {
             displayInputError(parentPhoneError, 'الرجاء إدخال رقم هاتف ولي أمر مصري صحيح (11 رقم يبدأ بـ 01).');
             isValid = false;
         }
 
-
         if (!isValid) {
             showMessageModal('خطأ في البيانات', 'الرجاء تصحيح الأخطاء في النموذج لإكمال التسجيل.', true);
-            return; // Stop if validation fails
+            return;
         }
 
-        setLoading(true); // Show loading spinner and disable button
+        setLoading(true);
 
         try {
             // 1. Create user with Email and Password in Firebase Authentication
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
 
-            // 2. Prepare initial data for Firestore (10 exams and 10 courses)
-            const initialExams = {};
-            for (let i = 1; i <= 10; i++) {
-                initialExams[`exam${i}`] = {
-                    score: 0,
-                    date: null,
-                    status: "pending", // "pending", "completed", "failed"
-                    questionsAnswered: 0,
-                    correctAnswers: 0
-                };
-            }
-
+            // 2. Prepare initial data for Firestore (10 courses with "inactive" status)
             const initialCourses = {};
             for (let i = 1; i <= 10; i++) {
                 initialCourses[`course${i}`] = {
-                    progress: "0%",
-                    status: "inactive", // Set to "inactive" as requested
-                    lastAccessed: null,
-                    totalLessons: 5, // Example
-                    completedLessons: 0
+                    status: "inactive" // As requested: only 'inactive' status
                 };
             }
 
-            // 3. Save ALL user data to Firestore under "userdata" collection
-            await setDoc(doc(db, "userdata", user.uid), { // Collection name "userdata"
+            // 3. Save ALL specified user data to Firestore under "userdata" collection
+            // Note: Password is NOT stored in Firestore, only used for Firebase Auth.
+            await setDoc(doc(db, "userdata", user.uid), {
                 username: username,
                 email: email,
                 grade: grade,
                 governorate: governorate,
                 studentId: studentId,
                 parentPhone: parentPhone,
-                createdAt: new Date(), // Timestamp of creation
-                lastLogin: new Date(), // Initial login time
-                userRole: "student", // Example role
-                isActive: true, // User account status
-                profilePicUrl: "https://cdn-icons-png.flaticon.com/512/9131/9131529.png", // Default profile picture
-                exams: initialExams, // Initial exams progress
-                courses: initialCourses // Initial courses progress
+                createdAt: new Date(),
+                lastLogin: new Date(),
+                userRole: "student",
+                isActive: true,
+                profilePicUrl: "https://cdn-icons-png.flaticon.com/512/9131/9131529.png",
+                courses: initialCourses // Initial courses with inactive status
             });
 
-            setLoading(false); // Hide loading spinner
+            setLoading(false);
 
             // Show success message in the general message modal
-            showMessageModal('تم إنشاء الحساب بنجاح! 🎉', `أنت الآن يا ${username} بقيت ضمن كتيّبة القائد.`, false);
+            showMessageModal('تم إنشاء الحساب بنجاح! 🎉', `أهلاً بك يا ${username} في كتيّبة القائد.`, false);
 
-            // Redirection will happen after user clicks "Okay" on the message modal.
-            // No direct setTimeout redirect here.
+            // Redirection happens after user clicks "Okay" on the message modal.
 
         } catch (error) {
-            setLoading(false); // Hide loading spinner
+            setLoading(false);
 
             let errorMessage = "حدث خطأ أثناء إنشاء الحساب. الرجاء المحاولة مرة أخرى.";
             let errorTitle = "خطأ في إنشاء الحساب ❌";
             switch (error.code) {
                 case 'auth/email-already-in-use':
                     errorMessage = 'هذا البريد الإلكتروني مستخدم بالفعل. الرجاء تسجيل الدخول أو استخدام بريد إلكتروني آخر.';
-                    displayInputError(emailError, errorMessage); // Also show inline error
+                    displayInputError(emailError, errorMessage);
                     break;
                 case 'auth/weak-password':
                     errorMessage = 'كلمة المرور ضعيفة جداً. الرجاء استخدام كلمة مرور أقوى (أحرف وأرقام).';
-                    displayInputError(passwordError, errorMessage); // Also show inline error
+                    displayInputError(passwordError, errorMessage);
                     break;
                 case 'auth/invalid-email':
                     errorMessage = 'صيغة البريد الإلكتروني غير صالحة. الرجاء التحقق من البريد المدخل.';
-                    displayInputError(emailError, errorMessage); // Also show inline error
+                    displayInputError(emailError, errorMessage);
                     break;
                 case 'auth/operation-not-allowed':
                     errorMessage = 'تم تعطيل التسجيل بالبريد الإلكتروني/كلمة المرور. يرجى الاتصال بالدعم.';
@@ -308,7 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     errorMessage = `حدث خطأ غير معروف: ${error.message}.`;
                     break;
             }
-            showMessageModal(errorTitle, errorMessage, true); // Show error in general message modal
+            showMessageModal(errorTitle, errorMessage, true);
             console.error("Firebase Auth Error:", error);
         }
     });
