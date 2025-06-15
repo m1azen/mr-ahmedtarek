@@ -1,6 +1,7 @@
 // Import Firebase SDKs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+// استيراد setPersistence و أنواع الثبات المطلوبة
+import { getAuth, signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 // Your web app's Firebase configuration (يجب أن تكون هذه البيانات هي نفسها في ملف signup.js)
@@ -24,8 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const phoneNumberInput = document.getElementById('phoneNumber');
     const passwordInput = document.getElementById('password');
+    const rememberMeCheckbox = document.getElementById('rememberMe'); // مربع اختيار "تذكرني" الجديد
     const loginButton = document.getElementById('loginButton');
-    let loadingSpinner = document.getElementById('loadingSpinner'); // استخدام 'let' لأنه قد يتم تحديث مرجعه
+    let loadingSpinner = document.getElementById('loadingSpinner');
 
     // عناصر رسائل الخطأ لكل حقل إدخال
     const phoneNumberError = document.getElementById('phoneNumberError');
@@ -36,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const messageTitle = document.getElementById('messageTitle');
     const messageText = document.getElementById('messageText');
     const messageOkButton = document.getElementById('messageOkButton');
-    const messageSupportLink = document.getElementById('messageSupportLink'); // هذا الرابط سيكون ديناميكيًا بناءً على نوع الرسالة
+    const messageSupportLink = document.getElementById('messageSupportLink');
 
     // دالة لعرض رسائل خطأ محددة لحقل إدخال
     function displayInputError(element, message) {
@@ -98,6 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const phoneNumber = phoneNumberInput.value.trim();
         const password = passwordInput.value;
+        const rememberMe = rememberMeCheckbox.checked; // الحصول على حالة مربع "تذكرني"
 
         let isValid = true;
 
@@ -124,11 +127,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            // 1. الاستعلام من Firestore للعثور على البريد الإلكتروني المرتبط برقم الهاتف
+            // 1. تحديد مدة بقاء الجلسة بناءً على مربع "تذكرني"
+            if (rememberMe) {
+                await setPersistence(auth, browserLocalPersistence); // يبقى تسجيل الدخول حتى لو تم إغلاق المتصفح
+            } else {
+                await setPersistence(auth, browserSessionPersistence); // يبقى تسجيل الدخول طالما المتصفح مفتوح
+            }
+
+            // 2. الاستعلام من Firestore للعثور على البريد الإلكتروني المرتبط برقم الهاتف
             const usersRef = collection(db, "userdata"); // اسم المجموعة في Firestore
-            // هام: استعلامات Firestore على الحقول بخلاف المعرف (ID) تتطلب فهرسة.
-            // إذا تلقيت خطأ "The query requires an index..."، ستحتاج لإنشائه
-            // في Firebase Console -> Firestore Database -> Indexes.
             const q = query(usersRef, where("parentPhone", "==", phoneNumber));
             const querySnapshot = await getDocs(q);
 
@@ -142,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const userData = querySnapshot.docs[0].data();
             const emailToLogin = userData.email; // الحصول على البريد الإلكتروني من بيانات المستخدم
 
-            // 2. تسجيل الدخول باستخدام البريد الإلكتروني المسترجع وكلمة المرور المقدمة
+            // 3. تسجيل الدخول باستخدام البريد الإلكتروني المسترجع وكلمة المرور المقدمة
             await signInWithEmailAndPassword(auth, emailToLogin, password);
 
             setLoading(false);
