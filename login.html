@@ -4,16 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تسجيل الدخول - منصة القائد التعليمية</title>
-    <!-- تأكد من أن هذا المسار لملف الأيقونة صحيح وموجود في نفس المجلد -->
     <link rel="icon" type="image/png" sizes="2000" href="5926948237783189215.png">
-    <!-- تأكد أن ملف CSS اسمه login.css وموجود في نفس مجلد HTML -->
     <link rel="stylesheet" href="login.css">
-    <!-- Font Awesome للأيقونات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <div class="signup-page-wrapper">
-        <!-- الجانب الأيمن: الرسوم المتحركة والرسالة الترحيبية (كما في صفحة التسجيل) -->
         <div class="animation-side">
             <div class="chemistry-animation">
                 <svg class="beaker-svg" viewBox="0 0 200 300">
@@ -26,13 +22,10 @@
                             <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#000" flood-opacity="0.3" />
                         </filter>
                     </defs>
-                    <!-- جسم المخبار -->
                     <path class="beaker-body" d="M30,0 L30,250 C30,280 45,300 100,300 C155,300 170,280 170,250 L170,0 Z" />
-                    <!-- السائل المتحرك -->
                     <path class="liquid-base" fill="url(#beakerGradient)" d="M30,250 C30,280 45,300 100,300 C155,300 170,280 170,250 L170,150 C170,135 155,120 100,120 C45,120 30,135 30,150 Z" />
                     <path class="liquid-wave" fill="url(#beakerGradient)" d="M30,150 Q65,140 100,150 T170,150 V250 C170,280 155,300 100,300 C45,300 30,280 30,250 Z" />
 
-                    <!-- علامات القياس (للتصميم فقط) -->
                     <text x="180" y="50" fill="#fff" font-size="16px" text-anchor="middle">50ml</text>
                     <line x1="170" y1="50" x2="160" y2="50" stroke="#fff" stroke-width="2"/>
                     <text x="180" y="100" fill="#fff" font-size="16px" text-anchor="middle">100ml</text>
@@ -45,20 +38,17 @@
             <p class="animation-slogan">مع منصة القائد، استكشف عالم الكيمياء بطريقة جديدة ومبتكرة.</p>
         </div>
 
-        <!-- الجانب الأيسر: نموذج تسجيل الدخول نفسه -->
         <div class="signup-side">
             <div class="signup-box">
                 <div class="header">
-                    <!-- زر الرجوع للصفحة الرئيسية -->
                     <a href="index.html" class="back-link"><i class="fas fa-arrow-right"></i> الرئيسية</a>
                     <h2 class="form-title">تسجيل الدخول</h2>
                 </div>
-                <!-- نموذج تسجيل الدخول -->
                 <form id="loginForm">
                     <div class="input-group">
-                        <label for="phoneNumber"><i class="fas fa-phone-alt"></i> رقم الهاتف:</label>
-                        <input type="tel" id="phoneNumber" placeholder="ادخل رقم هاتفك (مثال: 01xxxxxxxx)" required>
-                        <div class="error-message" id="phoneNumberError"></div>
+                        <label for="email"><i class="fas fa-envelope"></i> البريد الإلكتروني:</label>
+                        <input type="email" id="email" placeholder="example@domain.com" required>
+                        <div class="error-message" id="emailError"></div>
                     </div>
 
                     <div class="input-group">
@@ -88,7 +78,6 @@
         </div>
     </div>
 
-    <!-- New: General Message Modal (نافذة الرسالة العامة) -->
     <div id="messageModal" class="modal">
         <div class="modal-content message-modal-content">
             <h2 id="messageTitle"></h2>
@@ -100,7 +89,6 @@
         </div>
     </div>
 
-    <!-- تأكد أن ملف JavaScript اسمه login.js وموجود في نفس مجلد HTML -->
     <script type="module" src="login.js"></script>
 </body>
 </html>
