@@ -7,7 +7,7 @@
     <!-- تأكد من أن هذا المسار لملف الأيقونة صحيح وموجود في نفس المجلد -->
     <link rel="icon" type="image/png" sizes="2000" href="5926948237783189215.png">
     <!-- تأكد أن ملف CSS اسمه sign.css وموجود في نفس مجلد HTML -->
-    <link rel="stylesheet" href="signup.css">
+    <link rel="stylesheet" href="sign.css">
     <!-- Font Awesome للأيقونات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -69,7 +69,7 @@
 
                     <div class="input-group">
                         <label for="password"><i class="fas fa-lock"></i> كلمة المرور:</label>
-                        <input type="password" id="password" placeholder="6+ أحرف، رقم، رمز" required>
+                        <input type="password" id="password" placeholder="6+ أحرف، رقم فقط" required>
                         <div class="error-message" id="passwordError"></div>
                     </div>
 
@@ -141,12 +141,12 @@
                         إنشاء الحساب
                         <span class="spinner" id="loadingSpinner" style="display: none;"></span>
                     </button>
-
-                    <!-- هذه الرسائل يتم التحكم بظهورها من JavaScript -->
-                    <div class="status-message" id="generalMessage" style="display: none;"></div>
-                    <div class="support-contact" id="supportContact" style="display: none;">
+                    
+                    <!-- هذه الرسائل لم تعد تستخدم هنا مباشرة لأنها ستظهر في مودال مخصص -->
+                    <!-- <div class="status-message" id="generalMessage" style="display: none;"></div> -->
+                    <!-- <div class="support-contact" id="supportContact" style="display: none;">
                         في حال واجهتك مشكلة، تواصل مع دعم <a href="https://wa.me/201006473018" target="_blank">Mazen</a>.
-                    </div>
+                    </div> -->
                 </form>
                 <div class="login-link">
                     لديك حساب بالفعل؟ <a href="login.html">تسجيل الدخول</a>
@@ -166,7 +166,7 @@
                 <p>مرحباً بك في منصة القائد التعليمية. لضمان أفضل تجربة، يرجى قراءة التعليمات التالية قبل إنشاء حسابك:</p>
                 <ul>
                     <li><i class="fas fa-check-circle"></i> **دقة البيانات:** تأكد من إدخال جميع معلوماتك بشكل صحيح ودقيق.</li>
-                    <li><i class="fas fa-check-circle"></i> **قوة كلمة المرور:** اختر كلمة مرور قوية (أكثر من 6 أحرف، أرقام، رموز).</li>
+                    <li><i class="fas fa-check-circle"></i> **قوة كلمة المرور:** اختر كلمة مرور قوية (أكثر من 6 أحرف، رقم فقط).</li>
                     <li><i class="fas fa-check-circle"></i> **أرقام التواصل:** رقم الطالب وولي الأمر ضروريان للمتابعة والدعم.</li>
                     <li><i class="fas fa-check-circle"></i> **أمان حسابك:** لا تشارك بياناتك مع أي شخص.</li>
                     <li><i class="fas fa-check-circle"></i> **الدعم الفني:** فريق الدعم متاح لمساعدتك في أي وقت.</li>
@@ -175,6 +175,18 @@
             </div>
             <!-- تأكد أن الـ ID هنا هي acceptInstructions كما في JavaScript -->
             <button id="acceptInstructions" class="accept-button">أوافق وأبدأ التسجيل</button>
+        </div>
+    </div>
+
+    <!-- New: General Message Modal (نافذة الرسالة العامة) -->
+    <div id="messageModal" class="modal">
+        <div class="modal-content message-modal-content">
+            <h2 id="messageTitle"></h2>
+            <p id="messageText"></p>
+            <div class="message-footer">
+                <a href="https://wa.me/201006473018" target="_blank" id="messageSupportLink" class="support-button" style="display: none;">تواصل مع الدعم</a>
+                <button id="messageOkButton" class="accept-button">حسناً</button>
+            </div>
         </div>
     </div>
 
