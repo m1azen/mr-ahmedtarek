@@ -1,11 +1,12 @@
 // Import Firebase SDKs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+// استيراد setPersistence و browserLocalPersistence لتمكين الحفظ التلقائي لتسجيل الدخول
+import { getAuth, createUserWithEmailAndPassword, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-// Your web app's Firebase configuration (Please ensure this is correct and secure)
+// Your web app's Firebase configuration (provided by user)
 const firebaseConfig = {
-    apiKey: "AIzaSyDh59dAoiUy1p8F4301kUjwzl9VT0nF2-E", // تأكد من أن هذا المفتاح صحيح
+    apiKey: "AIzaSyDh59dAoiUy1p8F4301kUjwzl9VT0nF2-E",
     authDomain: "ahmed-tarek-7beb4.firebaseapp.com",
     projectId: "ahmed-tarek-7beb4",
     storageBucket: "ahmed-tarek-7beb4.firebasestorage.app",
@@ -20,7 +21,7 @@ const auth = getAuth(app); // Firebase Authentication service
 const db = getFirestore(app); // Firebase Firestore service
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Form elements
+    // Form elements (Updated to correctly reference all elements by their IDs)
     const signupForm = document.getElementById('signupForm');
     const usernameInput = document.getElementById('username');
     const emailInput = document.getElementById('email');
@@ -28,12 +29,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmPasswordInput = document.getElementById('confirmPassword');
     const gradeSelect = document.getElementById('grade');
     const governorateSelect = document.getElementById('governorate');
-    const studentIdInput = document.getElementById('studentId');
-    const parentPhoneInput = document.getElementById('parentPhone');
+    const studentIdInput = document.getElementById('studentId'); // Corrected ID
+    const parentPhoneInput = document.getElementById('parentPhone'); // Corrected ID
     const signupButton = document.getElementById('signupButton');
-    let loadingSpinner = document.getElementById('loadingSpinner');
+    let loadingSpinner = document.getElementById('loadingSpinner'); // Use 'let' as its reference might be updated
+    const generalMessageDiv = document.getElementById('generalMessage'); // Corrected ID
+    const supportContactDiv = document.getElementById('supportContact'); // Corrected ID
 
-    // Error message elements for each input (still used for inline validation feedback)
+    // Error message elements for each input (Corrected to match HTML IDs)
     const usernameError = document.getElementById('usernameError');
     const emailError = document.getElementById('emailError');
     const passwordError = document.getElementById('passwordError');
@@ -43,44 +46,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const studentIdError = document.getElementById('studentIdError');
     const parentPhoneError = document.getElementById('parentPhoneError');
 
-    // Modals and their elements
+    // Instructions Modal elements
     const instructionsModal = document.getElementById('instructionsModal');
     const acceptInstructionsButton = document.getElementById('acceptInstructions');
-    const closeModalButton = instructionsModal.querySelector('.close-button'); // Close button for instructions modal
+    const closeModalButton = instructionsModal.querySelector('.close-button');
 
-    const messageModal = document.getElementById('messageModal'); // The new general message modal
-    const messageTitle = document.getElementById('messageTitle');
-    const messageText = document.getElementById('messageText');
-    const messageOkButton = document.getElementById('messageOkButton');
-    const messageSupportLink = document.getElementById('messageSupportLink');
 
-    // Function to display specific error message for an input
+    // Function to display specific error message for an input field
     function displayInputError(element, message) {
         element.textContent = message;
-        element.style.display = message ? 'block' : 'none';
+        element.style.display = message ? 'block' : 'none'; // Show if message exists, hide otherwise
     }
 
-    // Function to show the general message modal
-    function showMessageModal(title, text, isError = false) {
-        messageTitle.textContent = title;
-        messageText.textContent = text;
-        if (isError) {
-            messageSupportLink.style.display = 'inline-block'; // Show support link for errors
-            messageTitle.style.color = '#e74c3c'; // Red title for error
-        } else {
-            messageSupportLink.style.display = 'none'; // Hide support link for success
-            messageTitle.style.color = '#2ecc71'; // Green title for success
-        }
-        messageModal.classList.add('show'); // Use 'show' class for CSS transition
+    // Function to display general status messages (success/error/loading)
+    function displayGeneralMessage(message, type) {
+        generalMessageDiv.textContent = message;
+        generalMessageDiv.className = `status-message ${type}`; // Apply 'success' or 'error' class for styling
+        generalMessageDiv.style.display = 'block';
     }
 
-    // Function to hide the general message modal
-    function hideMessageModal() {
-        messageModal.classList.remove('show');
-    }
-
-    // Function to hide all inline error messages
-    function clearInlineErrors() {
+    // Function to clear all previously displayed messages
+    function clearMessages() {
+        generalMessageDiv.style.display = 'none';
+        supportContactDiv.style.display = 'none'; // Hide support contact by default
+        // Clear all specific input error messages
         displayInputError(usernameError, '');
         displayInputError(emailError, '');
         displayInputError(passwordError, '');
@@ -91,73 +80,65 @@ document.addEventListener('DOMContentLoaded', () => {
         displayInputError(parentPhoneError, '');
     }
 
-    // Function to show/hide loading state on button
+    // Function to control loading state (button disabled, spinner visibility)
     function setLoading(isLoading) {
-        signupButton.disabled = isLoading;
-        loadingSpinner.style.display = isLoading ? 'inline-block' : 'none';
+        signupButton.disabled = isLoading; // Disable button when loading
+        loadingSpinner.style.display = isLoading ? 'inline-block' : 'none'; // Show/hide spinner
 
         if (isLoading) {
-            signupButton.textContent = 'جارٍ إنشاء الحساب...';
-            // Re-add the spinner after textContent change
-            signupButton.appendChild(loadingSpinner);
+            signupButton.textContent = 'جارٍ إنشاء الحساب...'; // Change button text
         } else {
-            // Restore original button content
+            // Restore original button text and re-attach spinner (important after textContent change)
             signupButton.innerHTML = `إنشاء الحساب <span class="spinner" id="loadingSpinner" style="display: none;"></span>`;
-            // Re-get reference to spinner after innerHTML change
+            // Re-get reference to spinner element as innerHTML reset it
             loadingSpinner = document.getElementById('loadingSpinner');
         }
     }
 
     // =====================================
     // Instructions Modal Logic
+    // This modal appears on page load to present terms/instructions
     // =====================================
 
-    // Show instructions modal on page load
-    instructionsModal.classList.add('show');
-    signupForm.classList.add('hidden-form'); // Hide form using the CSS class
+    // Show the instructions modal when the page initially loads
+    instructionsModal.classList.add('show'); // Use class for CSS transitions/visibility
+    signupForm.style.display = 'none'; // Keep the signup form hidden until instructions are accepted
 
-    // Handle acceptance of instructions
+    // Event listener for the "Accept Instructions" button within the modal
     acceptInstructionsButton.addEventListener('click', () => {
-        instructionsModal.classList.remove('show');
-        signupForm.classList.remove('hidden-form'); // Show form
-        clearInlineErrors(); // Clear any pre-existing errors
+        instructionsModal.classList.remove('show'); // Hide the modal
+        signupForm.style.display = 'block'; // Show the signup form
+        signupForm.style.display = 'flex'; // Ensure form takes correct display property after being shown
+        signupForm.style.flexDirection = 'column'; // Maintain flex direction for proper layout
     });
 
-    // Close button for the instructions modal (re-shows modal if closed without accepting)
-    if (closeModalButton) {
+    // Event listener for the modal's close button (top-left 'X')
+    if (closeModalButton) { // Check if the close button exists in the HTML
         closeModalButton.addEventListener('click', () => {
+            // If user attempts to close the modal without accepting, it reappears
             instructionsModal.classList.add('show');
         });
     }
 
-    // Prevent instructions modal from closing if clicked outside content
+    // Event listener for clicks outside the modal content (on the backdrop)
     instructionsModal.addEventListener('click', (event) => {
+        // If the click occurred directly on the modal backdrop (not on modal-content)
         if (event.target === instructionsModal) {
-            instructionsModal.classList.add('show');
+            instructionsModal.classList.add('show'); // Re-show the modal if backdrop clicked
         }
     });
-
-    // Handle "Okay" button click on the general message modal
-    messageOkButton.addEventListener('click', () => {
-        hideMessageModal();
-        if (messageTitle.textContent.includes('نجاح')) {
-            // Redirect to index.html after user clicks "Okay" on success message
-            const encodedUsername = encodeURIComponent(usernameInput.value.trim());
-            window.location.href = `index.html?signupSuccess=true&message=${encodedUsername}`;
-        }
-    });
-
 
     // =====================================
-    // Form Submission and Firebase Logic
+    // Form Submission and Firebase Integration
+    // This section handles user registration, validation, and data saving
     // =====================================
 
     signupForm.addEventListener('submit', async (e) => {
-        e.preventDefault(); // Prevent default form submission
+        e.preventDefault(); // Prevent the default form submission (page reload)
 
-        clearInlineErrors(); // Clear previous inline error messages
+        clearMessages(); // Clear any existing messages or errors
 
-        // Get trimmed values from inputs
+        // Get sanitized (trimmed) values from all input fields
         const username = usernameInput.value.trim();
         const email = emailInput.value.trim();
         const password = passwordInput.value;
@@ -167,30 +148,38 @@ document.addEventListener('DOMContentLoaded', () => {
         const studentId = studentIdInput.value.trim();
         const parentPhone = parentPhoneInput.value.trim();
 
-        let isValid = true;
+        let isValid = true; // Flag to track overall form validation status
 
-        // Client-side validation for all fields
+        // --- Client-side Validation Checks ---
+        // 1. Username validation
         if (!username) {
             displayInputError(usernameError, 'الرجاء إدخال اسم المستخدم الكامل.');
             isValid = false;
         }
+
+        // 2. Email validation
         if (!email) {
             displayInputError(emailError, 'الرجاء إدخال البريد الإلكتروني.');
             isValid = false;
-        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { // Basic email regex validation
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { // Basic email regex
             displayInputError(emailError, 'الرجاء إدخال بريد إلكتروني صالح.');
             isValid = false;
         }
+
+        // 3. Password validation
         if (!password) {
             displayInputError(passwordError, 'الرجاء إدخال كلمة المرور.');
             isValid = false;
         } else if (password.length < 6) {
             displayInputError(passwordError, 'كلمة المرور يجب أن تتكون من 6 أحرف على الأقل.');
             isValid = false;
-        } else if (!/[0-9]/.test(password)) { // Only check for at least one number, no symbols required now
-            displayInputError(passwordError, 'كلمة المرور يجب أن تحتوي على رقم واحد على الأقل.');
+        } else if (!/[0-9]/.test(password) || !/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(password)) {
+            // Check for at least one number and one special character (expanded set)
+            displayInputError(passwordError, 'كلمة المرور يجب أن تحتوي على أرقام ورموز.');
             isValid = false;
         }
+
+        // 4. Confirm Password validation
         if (!confirmPassword) {
             displayInputError(confirmPasswordError, 'الرجاء تأكيد كلمة المرور.');
             isValid = false;
@@ -198,102 +187,137 @@ document.addEventListener('DOMContentLoaded', () => {
             displayInputError(confirmPasswordError, 'كلمتا المرور غير متطابقتين.');
             isValid = false;
         }
-        if (!grade) {
+
+        // 5. Grade selection validation
+        if (!grade) { // If default empty option is still selected
             displayInputError(gradeError, 'الرجاء اختيار الصف الدراسي.');
             isValid = false;
         }
-        if (!governorate) {
+
+        // 6. Governorate selection validation
+        if (!governorate) { // If default empty option is still selected
             displayInputError(governorateError, 'الرجاء اختيار المحافظة.');
             isValid = false;
         }
+
+        // 7. Student ID validation (digits only)
         if (!studentId) {
             displayInputError(studentIdError, 'الرجاء إدخال رقم الطالب.');
             isValid = false;
-        } else if (!/^\d+$/.test(studentId)) { // Only digits allowed
-             displayInputError(studentIdError, 'رقم الطالب يجب أن يحتوي على أرقام فقط.');
-             isValid = false;
+        } else if (!/^\d+$/.test(studentId)) { // Ensures only digits
+            displayInputError(studentIdError, 'رقم الطالب يجب أن يحتوي على أرقام فقط.');
+            isValid = false;
         }
+
+        // 8. Parent Phone validation (basic Egyptian format)
         if (!parentPhone) {
             displayInputError(parentPhoneError, 'الرجاء إدخال رقم ولي الأمر.');
             isValid = false;
-        } else if (!/^01[0-2,5]\d{8}$/.test(parentPhone)) { // Basic Egyptian phone number validation (010, 011, 012, 015)
+        } else if (!/^01[0-2,5]\d{8}$/.test(parentPhone)) { // Egyptian phone numbers start with 010, 011, 012, 015 and are 11 digits
             displayInputError(parentPhoneError, 'الرجاء إدخال رقم هاتف ولي أمر مصري صحيح (11 رقم يبدأ بـ 01).');
             isValid = false;
         }
 
-
+        // If any client-side validation failed, stop the process
         if (!isValid) {
-            showMessageModal('خطأ في البيانات', 'الرجاء تصحيح الأخطاء في النموذج لإكمال التسجيل.', true);
-            return; // Stop if validation fails
+            displayGeneralMessage('الرجاء تصحيح الأخطاء في النموذج لإكمال التسجيل.', 'error');
+            return;
         }
 
         setLoading(true); // Show loading spinner and disable button
 
         try {
-            // 1. Create user with Email and Password in Firebase Authentication
+            // Firebase Authentication: Create user with Email and Password
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
 
-            // 2. Prepare initial data for Firestore (10 courses with "inactive" status)
-            const initialCourses = {};
+            // NEW: Set persistence to browserLocalPersistence immediately after successful creation
+            // هذا سيجعل تسجيل الدخول محفوظاً بشكل دائم (حتى يقم المستخدم بتسجيل الخروج يدوياً)
+            await setPersistence(auth, browserLocalPersistence);
+
+            // Prepare initial data for Firestore (Exams and Courses progress)
+            const initialExams = {};
             for (let i = 1; i <= 10; i++) {
-                initialCourses[`course${i}`] = {
-                    status: "inactive" // As requested: only 'inactive' status
+                initialExams[`exam${i}`] = {
+                    score: 0,
+                    date: null,
+                    status: "pending", // e.g., "pending", "completed", "failed"
+                    questionsAnswered: 0,
+                    correctAnswers: 0
                 };
             }
 
-            // 3. Save ALL specified user data to Firestore under "userdata" collection
-            // Note: Password is NOT stored in Firestore, only used for Firebase Auth.
-            await setDoc(doc(db, "userdata", user.uid), {
+            const initialCourses = {};
+            for (let i = 1; i <= 10; i++) {
+                initialCourses[`course${i}`] = {
+                    progress: "0%",
+                    status: "locked", // e.g., "locked", "unlocked", "completed"
+                    lastAccessed: null,
+                    totalLessons: 5, // Example: number of lessons in this course
+                    completedLessons: 0
+                };
+            }
+
+            // Save all user data to Firestore under the "userdata" collection
+            // The document ID will be the Firebase User UID for easy retrieval
+            await setDoc(doc(db, "userdata", user.uid), { // Collection name is "userdata" as requested
                 username: username,
                 email: email,
                 grade: grade,
                 governorate: governorate,
                 studentId: studentId,
                 parentPhone: parentPhone,
-                createdAt: new Date(), // Timestamp of creation
-                lastLogin: new Date(), // Initial login time
-                userRole: "student", // Example role
-                isActive: true, // User account status
-                profilePicUrl: "https://cdn-icons-png.flaticon.com/512/9131/9131529.png", // Default profile picture
-                courses: initialCourses // Initial courses with inactive status
+                createdAt: new Date(), // Timestamp of account creation
+                lastLogin: new Date(), // Set initial login time
+                userRole: "student", // Assign a default role
+                isActive: true, // Account status
+                profilePicUrl: "https://cdn-icons-png.flaticon.com/512/9131/9131529.png", // Default profile picture URL
+                exams: initialExams, // Initial exams progress/status
+                courses: initialCourses // Initial courses progress/status
             });
 
-            setLoading(false); // Hide loading spinner
+            setLoading(false); // Hide loading spinner and enable button
 
-            // Show success message in the general message modal
-            showMessageModal('تم إنشاء الحساب بنجاح! 🎉', `أهلاً بك يا ${username} في كتيّبة القائد.`, false);
+            // Display success message to the user with their chosen username
+            const successMessageText = `🎉 تم إنشاء الحساب بنجاح! أنت الآن يا ${username} بقيت ضمن كتيّبة القائد. سيتم توجيهك للصفحة الرئيسية...`;
+            displayGeneralMessage(successMessageText, 'success');
 
-            // Redirection will happen after user clicks "Okay" on the message modal.
-            // No direct setTimeout redirect here.
+            // Redirect to index.html after a delay with a success message parameter
+            setTimeout(() => {
+                const encodedUsername = encodeURIComponent(username); // Encode username for URL safety
+                window.location.href = `index.html?signupSuccess=true&message=${encodedUsername}`;
+            }, 4000); // Redirect after 4 seconds to allow user to read the message
 
         } catch (error) {
-            setLoading(false); // Hide loading spinner
+            setLoading(false); // Hide loading spinner and enable button
 
             let errorMessage = "حدث خطأ أثناء إنشاء الحساب. الرجاء المحاولة مرة أخرى.";
-            let errorTitle = "خطأ في إنشاء الحساب ❌";
+            // Handle specific Firebase authentication errors with user-friendly messages
             switch (error.code) {
                 case 'auth/email-already-in-use':
-                    errorMessage = 'هذا البريد الإلكتروني مستخدم بالفعل. الرجاء تسجيل الدخول أو استخدام بريد إلكتروني آخر.';
-                    displayInputError(emailError, errorMessage); // Also show inline error
+                    errorMessage = '⚠️ هذا البريد الإلكتروني مستخدم بالفعل. الرجاء تسجيل الدخول أو استخدام بريد إلكتروني آخر.';
+                    displayInputError(emailError, errorMessage);
                     break;
                 case 'auth/weak-password':
-                    errorMessage = 'كلمة المرور ضعيفة جداً. الرجاء استخدام كلمة مرور أقوى (أحرف وأرقام).';
-                    displayInputError(passwordError, errorMessage); // Also show inline error
+                    errorMessage = '🔒 كلمة المرور ضعيفة جداً. الرجاء استخدام كلمة مرور أقوى (أرقام وحروف ورموز).';
+                    displayInputError(passwordError, errorMessage);
                     break;
                 case 'auth/invalid-email':
-                    errorMessage = 'صيغة البريد الإلكتروني غير صالحة. الرجاء التحقق من البريد المدخل.';
-                    displayInputError(emailError, errorMessage); // Also show inline error
+                    errorMessage = '✉️ صيغة البريد الإلكتروني غير صالحة. الرجاء التحقق من البريد المدخل.';
+                    displayInputError(emailError, errorMessage);
                     break;
                 case 'auth/operation-not-allowed':
-                    errorMessage = 'تم تعطيل التسجيل بالبريد الإلكتروني/كلمة المرور. يرجى الاتصال بالدعم.';
+                    // This error means email/password sign-in is not enabled in Firebase project settings
+                    errorMessage = '🚫 تم تعطيل التسجيل بالبريد الإلكتروني/كلمة المرور. يرجى الاتصال بالدعم.';
                     break;
                 default:
-                    errorMessage = `حدث خطأ غير معروف: ${error.message}.`;
+                    // Generic error message for unhandled errors
+                    errorMessage = `❌ خطأ غير معروف: ${error.message}.`;
                     break;
             }
-            showMessageModal(errorTitle, errorMessage, true); // Show error in general message modal
-            console.error("Firebase Auth Error:", error);
+            displayGeneralMessage(errorMessage, 'error'); // Display the error message
+            supportContactDiv.style.display = 'block'; // Show the support contact link
+            console.error("Firebase Auth Error:", error); // Log the full error for debugging
         }
     });
 });
