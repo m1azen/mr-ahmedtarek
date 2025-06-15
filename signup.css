@@ -245,10 +245,11 @@ body.dark-mode .form-subtitle {
     display: none;
 }
 
-.signup-form {
+/* التأكد من ظهور النموذج كـ flex عند إزالة الـ hidden-form class */
+#signupForm:not(.hidden-form) {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 20px; /* مسافة بين مجموعات الإدخال */
 }
 
 .input-group {
@@ -381,83 +382,39 @@ body.dark-mode #signupButton:hover:not(:disabled) {
     100% { transform: rotate(360deg); }
 }
 
-/* رسائل الحالة العامة (نجاح/خطأ) - ID: generalMessage في HTML */
-.status-message {
-    padding: 15px;
-    margin: 20px 0; /* مسافة من أعلى وأسفل */
-    border-radius: 10px;
-    font-size: 1.1em;
-    font-weight: bold;
-    text-align: center;
-    display: none; /* مخفي افتراضياً */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    animation: fadeIn 0.5s ease-out; /* حركة ظهور سلسة */
-}
-
-.status-message.success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-}
-
-.status-message.error {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-}
-
-/* رابط دعم التواصل - ID: supportContact في HTML */
-.support-contact {
-    margin-top: 10px;
+/* رسائل الخطأ التي تظهر تحت الحقول */
+.error-message {
+    color: #e74c3c; /* لون أحمر واضح للأخطاء */
     font-size: 0.9em;
-    color: #555;
-    text-align: center;
-    display: none; /* مخفي افتراضياً */
+    margin-top: 5px;
+    height: 1.2em; /* للحفاظ على ارتفاع ثابت حتى لو كانت الرسالة فارغة */
+    display: block;
+    text-align: right;
+    font-weight: 500;
 }
 
-.support-contact a {
-    color: #007bff;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.support-contact a:hover {
-    text-decoration: underline;
-}
-
+/* Login link at the bottom */
 .login-link {
-    margin-top: 30px;
-    font-size: 1em;
-    color: #555;
     text-align: center;
-    transition: color 0.3s ease;
-}
-
-body.dark-mode .login-link {
-    color: #CFD8DC;
+    margin-top: 40px; /* More space */
+    font-size: 1.05em;
+    color: #666;
 }
 
 .login-link a {
     color: #007bff;
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 600;
     transition: color 0.3s ease;
 }
 
-body.dark-mode .login-link a {
-    color: #90CAF9;
-}
-
 .login-link a:hover {
-    text-decoration: underline;
     color: #0056b3;
-}
-body.dark-mode .login-link a:hover {
-    color: #64B5F6;
+    text-decoration: underline;
 }
 
 /* ===================================== */
-/* ✅ Modal (Instructions Pop-up) Styles */
+/* Instructions Modal Styles (for instructionsModal) */
 /* ===================================== */
 .modal {
     display: none; /* مخفي افتراضياً - سيتم التحكم به بواسطة JS */
@@ -473,6 +430,7 @@ body.dark-mode .login-link a:hover {
     align-items: center;
     padding: 20px;
     box-sizing: border-box;
+    animation: fadeIn 0.3s ease-out; /* إضافة أنيميشن الظهور للمودال نفسه */
 }
 
 /* عند إضافة كلاس 'show' بواسطة JS يظهر المودال */
@@ -490,7 +448,7 @@ body.dark-mode .login-link a:hover {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     position: relative;
     text-align: right; /* محاذاة النص لليمين */
-    animation: fadeIn 0.3s ease-out;
+    animation: modalSlideIn 0.5s ease-out; /* حركة ظهور للمحتوى داخل المودال */
     max-height: 90vh; /* لتحديد أقصى ارتفاع للمودال */
     overflow-y: auto; /* السماح بالتمرير داخل المودال */
 }
@@ -611,12 +569,64 @@ body.dark-mode .accept-button:hover {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes modalSlideIn {
+    from { opacity: 0; transform: translateY(-50px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
 /* ===================================== */
-/* ✅ Responsive Design (Rest of the Signup Page) */
+/* New: General Message Modal Styles (for messageModal) */
+/* ===================================== */
+.message-modal-content {
+    /* نفس أنماط modal-content الأساسية */
+    text-align: center; /* توسيط المحتوى داخل رسالة المودال */
+}
+
+.message-modal-content h2 {
+    font-size: 2em;
+    margin-bottom: 15px;
+    color: #007bff; /* لون العنوان */
+}
+.message-modal-content p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 25px;
+}
+.message-footer {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+    flex-wrap: wrap; /* للسماح للأزرار بالانتقال لسطر جديد على الشاشات الصغيرة */
+}
+
+.support-button {
+    display: inline-block;
+    background-color: #4CAF50; /* لون أخضر لزر الدعم */
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+}
+.support-button:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(76, 175, 80, 0.4);
+}
+
+
+/* ===================================== */
+/* ✅ Responsive Design */
 /* ===================================== */
 @media (max-width: 992px) {
     .signup-page-wrapper {
@@ -662,6 +672,16 @@ body.dark-mode .accept-button:hover {
     .accept-button {
         font-size: 1em;
         padding: 10px 25px;
+    }
+    .message-modal-content h2 {
+        font-size: 1.8em;
+    }
+    .message-modal-content p {
+        font-size: 1em;
+    }
+    .support-button {
+        padding: 10px 20px;
+        font-size: 0.9em;
     }
 }
 
@@ -709,6 +729,9 @@ body.dark-mode .accept-button:hover {
     }
     .modal-content h2 {
         font-size: 1.5em;
+    }
+    .message-modal-content h2 {
+        font-size: 1.6em;
     }
 }
 
