@@ -99,7 +99,16 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     function renderSidebarContent() {
         sidebarContent.innerHTML = ''; // مسح أي محتوى سابق في الشريط الجانبي
-        sidebarContent.innerHTML += `<button class="sidebar-button"><i class="fas fa-home"></i> الصفحة الرئيسية</button>`;
+
+        // زر "الصفحة الرئيسية" - يظهر دائمًا
+        const homeButton = document.createElement('button');
+        homeButton.className = 'sidebar-button';
+        homeButton.innerHTML = `<i class="fas fa-home"></i> الصفحة الرئيسية`;
+        homeButton.onclick = () => {
+            window.location.href = 'index.html'; // المسار لصفحة الرئيسية
+            sidebar.classList.remove('show'); // إخفاء الشريط الجانبي بعد الانتقال
+        };
+        sidebarContent.appendChild(homeButton);
 
         if (isUserLoggedIn()) {
             const userName = getUserName();
@@ -107,52 +116,75 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="sidebar-user-info">
                     <span>أهلاً ${userName}</span>
                 </div>
-                <button class="sidebar-button"><i class="fas fa-users"></i> منتدى الطلبة</button>
-                <button class="sidebar-button"><i class="fas fa-user-circle"></i> حسابي</button>
-                <button class="sidebar-button"><i class="fas fa-book-open"></i> كورساتي</button>
-                <button class="sidebar-button" id="logoutButton"><i class="fas fa-sign-out-alt"></i> تسجيل خروج</button>
             `;
-            // إضافة معالج الحدث لزر تسجيل الخروج
-            const logoutBtn = document.getElementById('logoutButton');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', () => {
-                    firebaseLogout(); // استدعاء دالة تسجيل الخروج من Firebase
-                    sidebar.classList.remove('show'); // إغلاق الشريط الجانبي
-                });
-            }
+
+            // زر "منتدى الطلبة" - للمستخدمين المسجلين دخوله
+            const forumButton = document.createElement('button');
+            forumButton.className = 'sidebar-button';
+            forumButton.innerHTML = `<i class="fas fa-users"></i> منتدى الطلبة`;
+            forumButton.onclick = () => {
+                window.location.href = 'student_forum.html'; // المسار لصفحة منتدى الطلبة
+                sidebar.classList.remove('show');
+            };
+            sidebarContent.appendChild(forumButton);
+
+            // زر "حسابي" - للمستخدمين المسجلين دخوله
+            const accountButton = document.createElement('button');
+            accountButton.className = 'sidebar-button';
+            accountButton.innerHTML = `<i class="fas fa-user-circle"></i> حسابي`;
+            accountButton.onclick = () => {
+                window.location.href = 'my_account.html'; // المسار لصفحة حسابي
+                sidebar.classList.remove('show');
+            };
+            sidebarContent.appendChild(accountButton);
+
+            // زر "كورساتي" - للمستخدمين المسجلين دخوله
+            const coursesButton = document.createElement('button');
+            coursesButton.className = 'sidebar-button';
+            coursesButton.innerHTML = `<i class="fas fa-book-open"></i> كورساتي`;
+            coursesButton.onclick = () => {
+                window.location.href = 'my_courses.html'; // المسار لصفحة كورساتي
+                sidebar.classList.remove('show');
+            };
+            sidebarContent.appendChild(coursesButton);
+
+            // زر "تسجيل خروج" - للمستخدمين المسجلين دخوله
+            const logoutButton = document.createElement('button');
+            logoutButton.className = 'sidebar-button';
+            logoutButton.id = 'logoutButton'; // الاحتفاظ بالـ ID إذا كنت تستخدمه في مكان آخر
+            logoutButton.innerHTML = `<i class="fas fa-sign-out-alt"></i> تسجيل خروج`;
+            logoutButton.addEventListener('click', () => {
+                firebaseLogout(); // استدعاء دالة تسجيل الخروج من Firebase
+                sidebar.classList.remove('show'); // إغلاق الشريط الجانبي بعد تسجيل الخروج
+            });
+            sidebarContent.appendChild(logoutButton);
+
         } else {
             // إذا لم يكن المستخدم مسجلاً للدخول، اعرض أزرار التسجيل/تسجيل الدخول
-            sidebarContent.innerHTML += `
-                <button class="sidebar-button" id="registerButton"><i class="fas fa-user-plus"></i> تسجيل جديد</button>
-                <button class="sidebar-button" id="loginButton"><i class="fas fa-sign-in-alt"></i> تسجيل دخول</button>
-            `;
-            // إضافة معالجات الأحداث لهذه الأزرار
-            const registerBtn = document.getElementById('registerButton');
-            if (registerBtn) {
-                registerBtn.addEventListener('click', () => {
-                    window.location.href = 'sign.html'; // توجيه لصفحة إنشاء حساب
-                });
-            }
-            const loginBtn = document.getElementById('loginButton');
-            if (loginBtn) {
-                loginBtn.addEventListener('click', () => {
-                    window.location.href = 'login.html'; // توجيه لصفحة تسجيل الدخول
-                });
-            }
+            // زر "تسجيل جديد"
+            const registerButton = document.createElement('button');
+            registerButton.className = 'sidebar-button';
+            registerButton.id = 'registerButton';
+            registerButton.innerHTML = `<i class="fas fa-user-plus"></i> تسجيل جديد`;
+            registerButton.addEventListener('click', () => {
+                window.location.href = 'createaccount.html'; // توجيه إلى صفحة إنشاء حساب (استخدم createaccount.html إذا كان هذا هو الاسم الصحيح)
+                sidebar.classList.remove('show');
+            });
+            sidebarContent.appendChild(registerButton);
+
+            // زر "تسجيل دخول"
+            const loginButton = document.createElement('button');
+            loginButton.className = 'sidebar-button';
+            loginButton.id = 'loginButton'; // الاحتفاظ بالـ ID
+            loginButton.innerHTML = `<i class="fas fa-sign-in-alt"></i> تسجيل دخول`;
+            loginButton.addEventListener('click', () => {
+                window.location.href = 'login.html'; // توجيه إلى صفحة تسجيل الدخول
+                sidebar.classList.remove('show');
+            });
+            sidebarContent.appendChild(loginButton);
         }
     }
 
-    /**
-     * تعرض أزرار البانر الرئيسية بناءً على حالة تسجيل الدخول.
-     */
-    function renderBannerButtons() {
-        bannerButtonsContainer.innerHTML = ''; // مسح أي محتوى سابق
-        if (isUserLoggedIn()) {
-            bannerButtonsContainer.innerHTML += `<button onclick="window.location.href='my_subscriptions.html'">اشتراكاتي</button>`;
-        } else {
-            bannerButtonsContainer.innerHTML += `<button onclick="window.location.href='join_us.html'">انضم إلينا</button>`;
-        }
-    }
 
     /**
      * الدالة الرئيسية لتحديث الواجهة بأكملها.
