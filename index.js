@@ -101,34 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     function renderSidebarContent() {
         sidebarContent.innerHTML = ''; // مسح أي محتوى سابق في الشريط الجانبي
-
-            // رسالة ترحيب للمستخدم
-            const userInfoDiv = document.createElement('div');
-            userInfoDiv.className = 'sidebar-user-info';
-            userInfoDiv.innerHTML = `<span>أهلاً ${userName}</span>`;
-            sidebarContent.appendChild(userInfoDiv);
-
-            // زر "منتدى الطلبة" - للمستخدمين المسجلين دخوله
-            const forumButton = document.createElement('button');
-            forumButton.className = 'sidebar-button';
-            forumButton.innerHTML = `<i class="fas fa-users"></i> منتدى الطلبة`;
-            forumButton.addEventListener('click', () => {
-                window.location.href = 'student_forum.html'; // المسار لصفحة منتدى الطلبة
-                sidebar.classList.remove('show');
-            });
-            sidebarContent.appendChild(forumButton);
-
-            // زر "حسابي" - للمستخدمين المسجلين دخوله
-            const accountButton = document.createElement('button');
-            accountButton.className = 'sidebar-button';
-            accountButton.innerHTML = `<i class="fas fa-user-circle"></i> حسابي`;
-            accountButton.addEventListener('click', () => {
-                window.location.href = 'my_account.html'; // المسار لصفحة حسابي
-                sidebar.classList.remove('show');
-            });
-            sidebarContent.appendChild(accountButton);
-
-        // زر "الصفحة الرئيسية" - يظهر دائمًا
+  // زر "الصفحة الرئيسية" - يظهر دائمًا
         const homeButton = document.createElement('button');
         homeButton.className = 'sidebar-button';
         homeButton.innerHTML = `<i class="fas fa-home"></i> الصفحة الرئيسية`;
@@ -158,6 +131,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         sidebarContent.appendChild(faqButton);
 
+            // رسالة ترحيب للمستخدم
+            const userInfoDiv = document.createElement('div');
+            userInfoDiv.className = 'sidebar-user-info';
+            userInfoDiv.innerHTML = `<span>أهلاً ${userName}</span>`;
+            sidebarContent.appendChild(userInfoDiv);
+
+            // زر "منتدى الطلبة" - للمستخدمين المسجلين دخوله
+            const forumButton = document.createElement('button');
+            forumButton.className = 'sidebar-button';
+            forumButton.innerHTML = `<i class="fas fa-users"></i> منتدى الطلبة`;
+            forumButton.addEventListener('click', () => {
+                window.location.href = 'student_forum.html'; // المسار لصفحة منتدى الطلبة
+                sidebar.classList.remove('show');
+            });
+            sidebarContent.appendChild(forumButton);
+
+            // زر "حسابي" - للمستخدمين المسجلين دخوله
+            const accountButton = document.createElement('button');
+            accountButton.className = 'sidebar-button';
+            accountButton.innerHTML = `<i class="fas fa-user-circle"></i> حسابي`;
+            accountButton.addEventListener('click', () => {
+                window.location.href = 'my_account.html'; // المسار لصفحة حسابي
+                sidebar.classList.remove('show');
+            });
+            sidebarContent.appendChild(accountButton);
+
+      
 
         if (isUserLoggedIn()) {
             const userName = getUserName();
