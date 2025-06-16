@@ -577,6 +577,54 @@
                 align-items: center;
             }
         }
+        
+        /* تحسينات إضافية */
+        .exam-info-card {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        
+        .exam-title {
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 5px;
+        }
+        
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .course-badge {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .course-badge.active {
+            background: #e8f5e9;
+            border: 1px solid #c8e6c9;
+        }
+        
+        .course-badge.inactive {
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            opacity: 0.7;
+        }
+        
+        .exam-score {
+            display: flex;
+            justify-content: space-between;
+            background: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
@@ -778,136 +826,183 @@
         }
         
         // دالة لتحميل بيانات المستخدم
-        function loadUserData(user) {
-            // في تطبيق حقيقي، سيتم جلب البيانات من Firestore
-            
-            // بيانات افتراضية للمستخدم
-            const userData = {
-                name: "أحمد محمود",
-                phone: "0123456789",
-                email: user.email,
-                homework: {
+        async function loadUserData(user) {
+            try {
+                // جلب بيانات المستخدم من Firestore
+                const userDoc = await db.collection("userdata").doc(user.uid).get();
+                
+                if (!userDoc.exists) {
+                    throw new Error("بيانات المستخدم غير موجودة");
+                }
+                
+                const userData = userDoc.data();
+                
+                // تحديث معلومات المستخدم في الشريط العلوي
+                userName.textContent = userData.username || "بدون اسم";
+                userEmail.textContent = userData.email || "بدون بريد";
+                userAvatar.textContent = getInitials(userData.username || "?");
+                
+                // إذا كان هناك صورة للملف الشخصي
+                if (userData.profilePicUrl) {
+                    userAvatar.style.backgroundImage = `url(${userData.profilePicUrl})`;
+                    userAvatar.style.backgroundSize = 'cover';
+                    userAvatar.textContent = '';
+                }
+                
+                // عرض بيانات المستخدم
+                userInfoDiv.innerHTML = `
+                    <div class="user-info-grid">
+                        <div class="user-info-card">
+                            <div class="info-label">الاسم الكامل</div>
+                            <div class="info-value">${userData.username || "غير محدد"}</div>
+                        </div>
+                        <div class="user-info-card">
+                            <div class="info-label">البريد الإلكتروني</div>
+                            <div class="info-value">${userData.email || "غير محدد"}</div>
+                        </div>
+                        <div class="user-info-card">
+                            <div class="info-label">رقم هاتف ولي الأمر</div>
+                            <div class="info-value">${userData.parentPhone || "غير محدد"}</div>
+                        </div>
+                        <div class="user-info-card">
+                            <div class="info-label">المحافظة</div>
+                            <div class="info-value">${userData.governorate || "غير محدد"}</div>
+                        </div>
+                        <div class="user-info-card">
+                            <div class="info-label">الصف الدراسي</div>
+                            <div class="info-value">${userData.grade || "غير محدد"}</div>
+                        </div>
+                        <div class="user-info-card">
+                            <div class="info-label">حالة الحساب</div>
+                            <div class="info-value">${userData.isActive ? 'نشط' : 'غير نشط'}</div>
+                        </div>
+                    </div>
+                `;
+                
+                // حساب نسبة الامتحانات
+                let examTotal = 0;
+                let examMax = 0;
+                let examCount = 0;
+                let examHTML = '';
+                
+                if (userData.exam) {
+                    Object.entries(userData.exam).forEach(([examName, examData]) => {
+                        if (examData["الدرجة التي حصل عليها"] !== undefined && examData["الدرجة الكلية"] !== undefined) {
+                            const score = examData["الدرجة التي حصل عليها"];
+                            const total = examData["الدرجة الكلية"];
+                            const percentage = Math.round((score / total) * 100);
+                            
+                            examTotal += score;
+                            examMax += total;
+                            examCount++;
+                            
+                            examHTML += `
+                                <div class="exam-info-card">
+                                    <div class="exam-title">${examName}</div>
+                                    <div class="exam-score">
+                                        <span>الدرجة: ${score}/${total}</span>
+                                        <span>النسبة: ${percentage}%</span>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    });
+                }
+                
+                const examPercentage = examMax > 0 ? Math.round((examTotal / examMax) * 100) : 0;
+                
+                // إضافة معلومات الامتحانات إلى قسم بيانات المستخدم
+                if (examHTML) {
+                    userInfoDiv.innerHTML += `
+                        <div style="grid-column: span 2; margin-top: 20px;">
+                            <h3 style="margin-bottom: 15px; color: var(--primary-dark);">نتائج الامتحانات</h3>
+                            <div>${examHTML}</div>
+                        </div>
+                    `;
+                }
+                
+                // نسبة الواجبات - سنفترض أنك ستضيفها لاحقاً، وإلا يمكن استخدام بيانات افتراضية
+                // في هذا المثال، سنستخدم بيانات افتراضية للواجبات
+                const homeworkData = {
                     "الواجب الأول": { score: 18, total: 20, date: "2023-10-15" },
                     "الواجب الثاني": { score: 15, total: 20, date: "2023-11-05" },
                     "الواجب الثالث": { score: 19, total: 20, date: "2023-11-22" },
                     "الواجب الرابع": { score: 17, total: 20, date: "2023-12-10" },
                     "الواجب الخامس": { score: 16, total: 20, date: "2023-12-18" }
-                },
-                exams: {
-                    "امتحان منتصف الفصل": { score: 85, total: 100, date: "2023-10-30" },
-                    "امتحان نهاية الفصل": { score: 92, total: 100, date: "2023-12-15" }
-                },
-                courses: [
-                    { id: "math101", name: "الرياضيات المتقدمة", status: "active" },
-                    { id: "phy202", name: "الفيزياء الحديثة", status: "active" },
-                    { id: "eng301", name: "اللغة الإنجليزية", status: "inactive" },
-                    { id: "cs401", name: "البرمجة بلغة Python", status: "active" },
-                    { id: "chem102", name: "الكيمياء العضوية", status: "inactive" }
-                ]
-            };
-            
-            // تحديث معلومات المستخدم في الشريط العلوي
-            userName.textContent = userData.name;
-            userEmail.textContent = userData.email;
-            userAvatar.textContent = getInitials(userData.name);
-            
-            // عرض بيانات المستخدم
-            userInfoDiv.innerHTML = `
-                <div class="user-info-grid">
-                    <div class="user-info-card">
-                        <div class="info-label">الاسم الكامل</div>
-                        <div class="info-value">${userData.name}</div>
-                    </div>
-                    <div class="user-info-card">
-                        <div class="info-label">رقم الهاتف</div>
-                        <div class="info-value">${userData.phone}</div>
-                    </div>
-                    <div class="user-info-card">
-                        <div class="info-label">البريد الإلكتروني</div>
-                        <div class="info-value">${userData.email}</div>
-                    </div>
-                    <div class="user-info-card">
-                        <div class="info-label">حالة الحساب</div>
-                        <div class="info-value">نشط</div>
-                    </div>
-                </div>
-            `;
-            
-            // حساب نسبة الواجبات
-            let homeworkTotal = 0;
-            let homeworkMax = 0;
-            Object.values(userData.homework).forEach(assignment => {
-                homeworkTotal += assignment.score;
-                homeworkMax += assignment.total;
-            });
-            const homeworkPercentage = Math.round((homeworkTotal / homeworkMax) * 100);
-            
-            // حساب نسبة الامتحانات
-            let examTotal = 0;
-            let examMax = 0;
-            Object.values(userData.exams).forEach(exam => {
-                examTotal += exam.score;
-                examMax += exam.total;
-            });
-            const examPercentage = Math.round((examTotal / examMax) * 100);
-            
-            // تحديث دوائر التقدم
-            setTimeout(() => {
-                updateProgress(homeworkProgress, homeworkPercentage, homeworkPercentage, homeworkMessage);
-                updateProgress(examProgress, examPercentage, examPercentage, examMessage);
-            }, 500);
-            
-            // عرض الواجبات في الجدول
-            assignmentsTable.innerHTML = '';
-            Object.entries(userData.homework).forEach(([name, assignment]) => {
-                const percentage = Math.round((assignment.score / assignment.total) * 100);
-                const row = assignmentsTable.insertRow();
+                };
                 
-                row.insertCell(0).textContent = name;
-                row.insertCell(1).textContent = formatDate(assignment.date);
-                row.insertCell(2).textContent = `${assignment.score}/${assignment.total}`;
+                let homeworkTotal = 0;
+                let homeworkMax = 0;
+                Object.values(homeworkData).forEach(assignment => {
+                    homeworkTotal += assignment.score;
+                    homeworkMax += assignment.total;
+                });
+                const homeworkPercentage = homeworkMax > 0 ? Math.round((homeworkTotal / homeworkMax) * 100) : 0;
                 
-                const percentageCell = row.insertCell(3);
-                percentageCell.textContent = `${percentage}%`;
+                // تحديث دوائر التقدم
+                setTimeout(() => {
+                    updateProgress(homeworkProgress, homeworkPercentage, homeworkPercentage, homeworkMessage);
+                    updateProgress(examProgress, examPercentage, examPercentage, examMessage);
+                }, 500);
                 
-                // تلوين الخلية حسب النسبة
-                if (percentage >= 90) {
-                    percentageCell.style.color = "#2ecc71";
-                    percentageCell.style.fontWeight = "bold";
-                } else if (percentage >= 80) {
-                    percentageCell.style.color = "#27ae60";
-                } else if (percentage >= 70) {
-                    percentageCell.style.color = "#3498db";
-                } else if (percentage >= 60) {
-                    percentageCell.style.color = "#f39c12";
-                } else if (percentage >= 50) {
-                    percentageCell.style.color = "#e67e22";
-                } else {
-                    percentageCell.style.color = "#e74c3c";
-                }
-            });
-            
-            // عرض الكورسات النشطة
-            const activeCourses = userData.courses.filter(course => course.status === 'active');
-            const inactiveCourses = userData.courses.filter(course => course.status === 'inactive');
-            
-            activeCoursesDiv.innerHTML = `
-                <p>عدد الكورسات المفعلة: <span class="active-count">${activeCourses.length}</span></p>
-                <div class="course-list">
-                    ${activeCourses.map(course => `
-                        <div class="course-item">
-                            <div class="course-name">${course.name}</div>
-                            <div class="course-status">نشط</div>
+                // عرض الواجبات في الجدول
+                assignmentsTable.innerHTML = '';
+                Object.entries(homeworkData).forEach(([name, assignment]) => {
+                    const percentage = Math.round((assignment.score / assignment.total) * 100);
+                    const row = assignmentsTable.insertRow();
+                    
+                    row.insertCell(0).textContent = name;
+                    row.insertCell(1).textContent = formatDate(assignment.date);
+                    row.insertCell(2).textContent = `${assignment.score}/${assignment.total}`;
+                    
+                    const percentageCell = row.insertCell(3);
+                    percentageCell.textContent = `${percentage}%`;
+                    
+                    // تلوين الخلية حسب النسبة
+                    if (percentage >= 90) {
+                        percentageCell.style.color = "#2ecc71";
+                        percentageCell.style.fontWeight = "bold";
+                    } else if (percentage >= 80) {
+                        percentageCell.style.color = "#27ae60";
+                    } else if (percentage >= 70) {
+                        percentageCell.style.color = "#3498db";
+                    } else if (percentage >= 60) {
+                        percentageCell.style.color = "#f39c12";
+                    } else if (percentage >= 50) {
+                        percentageCell.style.color = "#e67e22";
+                    } else {
+                        percentageCell.style.color = "#e74c3c";
+                    }
+                });
+                
+                // عرض الكورسات
+                const courses = userData.courses || {};
+                const activeCourses = Object.values(courses).filter(course => course.status === 'active');
+                const inactiveCourses = Object.values(courses).filter(course => course.status === 'inactive');
+                
+                // إنشاء HTML للكورسات
+                let coursesHTML = '';
+                Object.entries(courses).forEach(([courseName, courseData]) => {
+                    coursesHTML += `
+                        <div class="course-badge ${courseData.status === 'active' ? 'active' : 'inactive'}">
+                            ${courseName}
+                            <div>${courseData.status === 'active' ? 'نشط' : 'غير نشط'}</div>
                         </div>
-                    `).join('')}
-                    ${inactiveCourses.map(course => `
-                        <div class="course-item">
-                            <div class="course-name">${course.name}</div>
-                            <div class="course-status inactive">غير نشط</div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
+                    `;
+                });
+                
+                activeCoursesDiv.innerHTML = `
+                    <p>عدد الكورسات المفعلة: <span class="active-count">${activeCourses.length}</span></p>
+                    <div class="course-grid">
+                        ${coursesHTML || '<p>لا توجد كورسات مسجلة</p>'}
+                    </div>
+                `;
+            } catch (error) {
+                console.error("حدث خطأ في جلب بيانات المستخدم: ", error);
+                userInfoDiv.innerHTML = '<div class="error">حدث خطأ في جلب بيانات المستخدم</div>';
+                activeCoursesDiv.innerHTML = '<div class="error">حدث خطأ في تحميل الكورسات</div>';
+                assignmentsTable.innerHTML = '<tr><td colspan="4" class="error">حدث خطأ في جلب بيانات الواجبات</td></tr>';
+            }
         }
         
         // دالة لتصدير الجدول إلى Excel
