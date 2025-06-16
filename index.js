@@ -96,6 +96,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * تعرض محتوى الشريط الجانبي (Sidebar) بناءً على حالة تسجيل الدخول.
+     * ✅ تم إعادة كتابة هذه الدالة بالكامل لاستخدام createElement و appendChild
+     * لتجنب مشاكل مسح event listeners التي تسببها innerHTML +=
      */
     function renderSidebarContent() {
         sidebarContent.innerHTML = ''; // مسح أي محتوى سابق في الشريط الجانبي
@@ -104,70 +106,83 @@ document.addEventListener('DOMContentLoaded', () => {
         const homeButton = document.createElement('button');
         homeButton.className = 'sidebar-button';
         homeButton.innerHTML = `<i class="fas fa-home"></i> الصفحة الرئيسية`;
-        homeButton.onclick = () => {
+        homeButton.addEventListener('click', () => { // استخدام addEventListener
             window.location.href = 'index.html'; // المسار لصفحة الرئيسية
             sidebar.classList.remove('show'); // إخفاء الشريط الجانبي بعد الانتقال
-        };
+        });
         sidebarContent.appendChild(homeButton);
+
+        // زر "كورساتي" - يظهر دائمًا
+        const coursesSidebarButton = document.createElement('button');
+        coursesSidebarButton.className = 'sidebar-button';
+        coursesSidebarButton.innerHTML = `<i class="fas fa-book-open"></i> كورساتي`;
+        coursesSidebarButton.addEventListener('click', () => {
+            window.location.href = 'my_courses.html'; // المسار لصفحة كورساتي
+            sidebar.classList.remove('show');
+        });
+        sidebarContent.appendChild(coursesSidebarButton);
+
+        // زر "الأسئلة الشائعة" - يظهر دائمًا
+        const faqButton = document.createElement('button');
+        faqButton.className = 'sidebar-button';
+        faqButton.innerHTML = `<i class="fas fa-question-circle"></i> الأسئلة الشائعة`;
+        faqButton.addEventListener('click', () => {
+            window.location.href = 'faq.html'; // المسار لصفحة الأسئلة الشائعة
+            sidebar.classList.remove('show');
+        });
+        sidebarContent.appendChild(faqButton);
+
 
         if (isUserLoggedIn()) {
             const userName = getUserName();
-            sidebarContent.innerHTML += `
-                <div class="sidebar-user-info">
-                    <span>أهلاً ${userName}</span>
-                </div>
-            `;
+
+            // رسالة ترحيب للمستخدم
+            const userInfoDiv = document.createElement('div');
+            userInfoDiv.className = 'sidebar-user-info';
+            userInfoDiv.innerHTML = `<span>أهلاً ${userName}</span>`;
+            sidebarContent.appendChild(userInfoDiv);
 
             // زر "منتدى الطلبة" - للمستخدمين المسجلين دخوله
             const forumButton = document.createElement('button');
             forumButton.className = 'sidebar-button';
             forumButton.innerHTML = `<i class="fas fa-users"></i> منتدى الطلبة`;
-            forumButton.onclick = () => {
+            forumButton.addEventListener('click', () => {
                 window.location.href = 'student_forum.html'; // المسار لصفحة منتدى الطلبة
                 sidebar.classList.remove('show');
-            };
+            });
             sidebarContent.appendChild(forumButton);
 
             // زر "حسابي" - للمستخدمين المسجلين دخوله
             const accountButton = document.createElement('button');
             accountButton.className = 'sidebar-button';
             accountButton.innerHTML = `<i class="fas fa-user-circle"></i> حسابي`;
-            accountButton.onclick = () => {
+            accountButton.addEventListener('click', () => {
                 window.location.href = 'my_account.html'; // المسار لصفحة حسابي
                 sidebar.classList.remove('show');
-            };
+            });
             sidebarContent.appendChild(accountButton);
-
-            // زر "كورساتي" - للمستخدمين المسجلين دخوله
-            const coursesButton = document.createElement('button');
-            coursesButton.className = 'sidebar-button';
-            coursesButton.innerHTML = `<i class="fas fa-book-open"></i> كورساتي`;
-            coursesButton.onclick = () => {
-                window.location.href = 'my_courses.html'; // المسار لصفحة كورساتي
-                sidebar.classList.remove('show');
-            };
-            sidebarContent.appendChild(coursesButton);
 
             // زر "تسجيل خروج" - للمستخدمين المسجلين دخوله
             const logoutButton = document.createElement('button');
             logoutButton.className = 'sidebar-button';
-            logoutButton.id = 'logoutButton'; // الاحتفاظ بالـ ID إذا كنت تستخدمه في مكان آخر
+            logoutButton.id = 'logoutButton'; // الاحتفاظ بالـ ID
             logoutButton.innerHTML = `<i class="fas fa-sign-out-alt"></i> تسجيل خروج`;
             logoutButton.addEventListener('click', () => {
                 firebaseLogout(); // استدعاء دالة تسجيل الخروج من Firebase
-                sidebar.classList.remove('show'); // إغلاق الشريط الجانبي بعد تسجيل الخروج
+                sidebar.classList.remove('show'); // إخفاء الشريط الجانبي بعد تسجيل الخروج
             });
             sidebarContent.appendChild(logoutButton);
 
         } else {
             // إذا لم يكن المستخدم مسجلاً للدخول، اعرض أزرار التسجيل/تسجيل الدخول
+
             // زر "تسجيل جديد"
             const registerButton = document.createElement('button');
             registerButton.className = 'sidebar-button';
             registerButton.id = 'registerButton';
             registerButton.innerHTML = `<i class="fas fa-user-plus"></i> تسجيل جديد`;
             registerButton.addEventListener('click', () => {
-                window.location.href = sign.html'; // توجيه إلى صفحة إنشاء حساب (استخدم createaccount.html إذا كان هذا هو الاسم الصحيح)
+                window.location.href = 'createaccount.html'; // توجيه إلى صفحة إنشاء حساب
                 sidebar.classList.remove('show');
             });
             sidebarContent.appendChild(registerButton);
@@ -175,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // زر "تسجيل دخول"
             const loginButton = document.createElement('button');
             loginButton.className = 'sidebar-button';
-            loginButton.id = 'loginButton'; // الاحتفاظ بالـ ID
+            loginButton.id = 'loginButtonSidebar'; // تغيير ID لتجنب التضارب مع زر البانر
             loginButton.innerHTML = `<i class="fas fa-sign-in-alt"></i> تسجيل دخول`;
             loginButton.addEventListener('click', () => {
                 window.location.href = 'login.html'; // توجيه إلى صفحة تسجيل الدخول
@@ -185,6 +200,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    /**
+     * تعرض أزرار البانر الرئيسية بناءً على حالة تسجيل الدخول.
+     */
+    function renderBannerButtons() {
+        bannerButtonsContainer.innerHTML = ''; // مسح أي محتوى سابق
+        if (isUserLoggedIn()) {
+            // زر "اشتراكاتي" - للمستخدمين المسجلين دخوله
+            const subscriptionsButton = document.createElement('button');
+            subscriptionsButton.textContent = 'اشتراكاتي';
+            subscriptionsButton.onclick = () => window.location.href = 'my_subscriptions.html';
+            bannerButtonsContainer.appendChild(subscriptionsButton);
+        } else {
+            // زر "انضم إلينا" - لغير المسجلين
+            const joinUsButton = document.createElement('button');
+            joinUsButton.textContent = 'انضم إلينا';
+            joinUsButton.onclick = () => window.location.href = 'createaccount.html';
+            bannerButtonsContainer.appendChild(joinUsButton);
+
+            // زر "تسجيل الدخول" - لغير المسجلين
+            const loginBannerButton = document.createElement('button');
+            loginBannerButton.textContent = 'تسجيل الدخول';
+            loginBannerButton.onclick = () => window.location.href = 'login.html';
+            bannerButtonsContainer.appendChild(loginBannerButton);
+        }
+    }
 
     /**
      * الدالة الرئيسية لتحديث الواجهة بأكملها.
@@ -274,7 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
             event.stopPropagation(); // منع انتشار الحدث وإغلاق الشريط
         });
     } else {
-         console.error("العنصر ذو الـ ID 'sidebar' غير موجود في HTML.");
+           console.error("العنصر ذو الـ ID 'sidebar' غير موجود في HTML.");
     }
 
 
