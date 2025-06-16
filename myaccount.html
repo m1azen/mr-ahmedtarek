@@ -200,7 +200,7 @@
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
         }
         
-        #assignments {
+        #assignments, #exams {
             grid-column: span 2;
         }
         
@@ -548,7 +548,7 @@
                 grid-template-columns: 1fr;
             }
             
-            #assignments {
+            #assignments, #exams {
                 grid-column: span 1;
             }
             
@@ -624,6 +624,13 @@
             padding: 8px 12px;
             border-radius: 6px;
             margin-top: 5px;
+        }
+        
+        .progress-placeholder {
+            text-align: center;
+            padding: 20px;
+            font-size: 1rem;
+            color: var(--gray);
         }
     </style>
 </head>
@@ -714,8 +721,8 @@
                             <div class="icon">📝</div>
                             <h2>الواجبات</h2>
                         </div>
-                        <button id="export-excel" class="btn">
-                            <span>📊</span> تصدير إلى Excel
+                        <button id="export-homework-btn" class="btn">
+                            <span>📊</span> تصدير الواجبات إلى Excel
                         </button>
                     </div>
                     <table id="assignments-table">
@@ -734,12 +741,40 @@
                         </tbody>
                     </table>
                 </section>
+                
+                <!-- الامتحانات -->
+                <section id="exams">
+                    <div class="header-section">
+                        <div class="section-title">
+                            <div class="icon">📚</div>
+                            <h2>الامتحانات</h2>
+                        </div>
+                        <button id="export-exam-btn" class="btn">
+                            <span>📊</span> تصدير الامتحانات إلى Excel
+                        </button>
+                    </div>
+                    <table id="exams-table">
+                        <thead>
+                            <tr>
+                                <th>اسم الامتحان</th>
+                                <th>الدرجة التي حصل عليها</th>
+                                <th>الدرجة الكلية</th>
+                                <th>النسبة</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="4" class="loading">جاري تحميل الامتحانات...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
             </div>
         </div>
     </div>
 
     <div id="success-message" class="success-message">
-        تم تصدير بيانات الواجبات بنجاح إلى ملف Excel
+        تم تصدير البيانات بنجاح إلى ملف Excel
     </div>
 
     <script>
@@ -776,34 +811,43 @@
         const examMessage = document.getElementById('exam-message');
         const activeCoursesDiv = document.getElementById('active-courses');
         const assignmentsTable = document.getElementById('assignments-table').getElementsByTagName('tbody')[0];
-        const exportExcelBtn = document.getElementById('export-excel');
+        const examsTable = document.getElementById('exams-table').getElementsByTagName('tbody')[0];
+        const exportHomeworkBtn = document.getElementById('export-homework-btn');
+        const exportExamBtn = document.getElementById('export-exam-btn');
         const successMessage = document.getElementById('success-message');
         
         // دالة لتحديث الدائرة والرسالة
         function updateProgress(element, percentage, textElement, messageElement) {
-            // تحديث الدائرة
-            const degrees = percentage * 3.6;
-            element.style.background = `conic-gradient(#1a73e8 ${degrees}deg, transparent 0deg)`;
-            
-            // تحديث النسبة
-            textElement.textContent = `${percentage}%`;
-            
-            // الرسائل التحفيزية
-            let message;
-            if (percentage >= 90) {
-                message = "ممتاز! استمر في التميز، أداؤك يتجاوز التوقعات";
-            } else if (percentage >= 80) {
-                message = "أداء رائع! أنت على الطريق الصحيح لتحقيق النجاح";
-            } else if (percentage >= 70) {
-                message = "أداء جيد جداً، واصل العمل لتحقيق المزيد";
-            } else if (percentage >= 60) {
-                message = "أداء مقبول، يمكنك التحسين ببذل المزيد من الجهد";
-            } else if (percentage >= 50) {
-                message = "أنت بحاجة لمزيد من التركيز والممارسة للتحسين";
+            if (percentage > 0) {
+                // تحديث الدائرة
+                const degrees = percentage * 3.6;
+                element.style.background = `conic-gradient(#1a73e8 ${degrees}deg, transparent 0deg)`;
+                
+                // تحديث النسبة
+                textElement.textContent = `${percentage}%`;
+                
+                // الرسائل التحفيزية
+                let message;
+                if (percentage >= 90) {
+                    message = "ممتاز! استمر في التميز، أداؤك يتجاوز التوقعات";
+                } else if (percentage >= 80) {
+                    message = "أداء رائع! أنت على الطريق الصحيح لتحقيق النجاح";
+                } else if (percentage >= 70) {
+                    message = "أداء جيد جداً، واصل العمل لتحقيق المزيد";
+                } else if (percentage >= 60) {
+                    message = "أداء مقبول، يمكنك التحسين ببذل المزيد من الجهد";
+                } else if (percentage >= 50) {
+                    message = "أنت بحاجة لمزيد من التركيز والممارسة للتحسين";
+                } else {
+                    message = "ركز أكثر، أنت قادر على التحسن والتفوق مع المزيد من العمل";
+                }
+                messageElement.textContent = message;
             } else {
-                message = "ركز أكثر، أنت قادر على التحسن والتفوق مع المزيد من العمل";
+                // إذا لم تكن هناك بيانات، عرض رسالة بديلة
+                textElement.textContent = "0%";
+                element.style.background = `conic-gradient(#f0f0f0 0deg, transparent 0deg)`;
+                messageElement.textContent = "لا توجد بيانات متاحة";
             }
-            messageElement.textContent = message;
         }
 
         // دالة لتحويل التاريخ إلى تنسيق عربي
@@ -818,6 +862,7 @@
         
         // دالة لإنشاء اسم أولي من الاسم الكامل
         function getInitials(name) {
+            if (!name) return "?";
             const parts = name.split(' ');
             if (parts.length > 1) {
                 return parts[0][0] + parts[1][0];
@@ -883,8 +928,8 @@
                 let examTotal = 0;
                 let examMax = 0;
                 let examCount = 0;
-                let examHTML = '';
                 
+                examsTable.innerHTML = '';
                 if (userData.exam) {
                     Object.entries(userData.exam).forEach(([examName, examData]) => {
                         if (examData["الدرجة التي حصل عليها"] !== undefined && examData["الدرجة الكلية"] !== undefined) {
@@ -896,84 +941,96 @@
                             examMax += total;
                             examCount++;
                             
-                            examHTML += `
-                                <div class="exam-info-card">
-                                    <div class="exam-title">${examName}</div>
-                                    <div class="exam-score">
-                                        <span>الدرجة: ${score}/${total}</span>
-                                        <span>النسبة: ${percentage}%</span>
-                                    </div>
-                                </div>
-                            `;
+                            const row = examsTable.insertRow();
+                            row.insertCell(0).textContent = examName;
+                            row.insertCell(1).textContent = score;
+                            row.insertCell(2).textContent = total;
+                            
+                            const percentageCell = row.insertCell(3);
+                            percentageCell.textContent = `${percentage}%`;
+                            
+                            // تلوين الخلية حسب النسبة
+                            if (percentage >= 90) {
+                                percentageCell.style.color = "#2ecc71";
+                                percentageCell.style.fontWeight = "bold";
+                            } else if (percentage >= 80) {
+                                percentageCell.style.color = "#27ae60";
+                            } else if (percentage >= 70) {
+                                percentageCell.style.color = "#3498db";
+                            } else if (percentage >= 60) {
+                                percentageCell.style.color = "#f39c12";
+                            } else if (percentage >= 50) {
+                                percentageCell.style.color = "#e67e22";
+                            } else {
+                                percentageCell.style.color = "#e74c3c";
+                            }
                         }
                     });
                 }
                 
                 const examPercentage = examMax > 0 ? Math.round((examTotal / examMax) * 100) : 0;
                 
-                // إضافة معلومات الامتحانات إلى قسم بيانات المستخدم
-                if (examHTML) {
-                    userInfoDiv.innerHTML += `
-                        <div style="grid-column: span 2; margin-top: 20px;">
-                            <h3 style="margin-bottom: 15px; color: var(--primary-dark);">نتائج الامتحانات</h3>
-                            <div>${examHTML}</div>
-                        </div>
-                    `;
+                // إذا لم توجد امتحانات، عرض رسالة
+                if (examCount === 0) {
+                    examsTable.innerHTML = '<tr><td colspan="4" class="progress-placeholder">لا توجد امتحانات مسجلة</td></tr>';
                 }
                 
-                // نسبة الواجبات - سنفترض أنك ستضيفها لاحقاً، وإلا يمكن استخدام بيانات افتراضية
-                // في هذا المثال، سنستخدم بيانات افتراضية للواجبات
-                const homeworkData = {
-                    "الواجب الأول": { score: 18, total: 20, date: "2023-10-15" },
-                    "الواجب الثاني": { score: 15, total: 20, date: "2023-11-05" },
-                    "الواجب الثالث": { score: 19, total: 20, date: "2023-11-22" },
-                    "الواجب الرابع": { score: 17, total: 20, date: "2023-12-10" },
-                    "الواجب الخامس": { score: 16, total: 20, date: "2023-12-18" }
-                };
-                
+                // معالجة الواجبات
+                assignmentsTable.innerHTML = '';
                 let homeworkTotal = 0;
                 let homeworkMax = 0;
-                Object.values(homeworkData).forEach(assignment => {
-                    homeworkTotal += assignment.score;
-                    homeworkMax += assignment.total;
-                });
+                let homeworkCount = 0;
+                
+                if (userData.homework) {
+                    Object.entries(userData.homework).forEach(([assignmentName, assignmentData]) => {
+                        if (assignmentData.score !== undefined && assignmentData.total !== undefined) {
+                            const score = assignmentData.score;
+                            const total = assignmentData.total;
+                            const percentage = Math.round((score / total) * 100);
+                            
+                            homeworkTotal += score;
+                            homeworkMax += total;
+                            homeworkCount++;
+                            
+                            const row = assignmentsTable.insertRow();
+                            row.insertCell(0).textContent = assignmentName;
+                            row.insertCell(1).textContent = assignmentData.date ? formatDate(assignmentData.date) : "غير محدد";
+                            row.insertCell(2).textContent = `${score}/${total}`;
+                            
+                            const percentageCell = row.insertCell(3);
+                            percentageCell.textContent = `${percentage}%`;
+                            
+                            // تلوين الخلية حسب النسبة
+                            if (percentage >= 90) {
+                                percentageCell.style.color = "#2ecc71";
+                                percentageCell.style.fontWeight = "bold";
+                            } else if (percentage >= 80) {
+                                percentageCell.style.color = "#27ae60";
+                            } else if (percentage >= 70) {
+                                percentageCell.style.color = "#3498db";
+                            } else if (percentage >= 60) {
+                                percentageCell.style.color = "#f39c12";
+                            } else if (percentage >= 50) {
+                                percentageCell.style.color = "#e67e22";
+                            } else {
+                                percentageCell.style.color = "#e74c3c";
+                            }
+                        }
+                    });
+                }
+                
                 const homeworkPercentage = homeworkMax > 0 ? Math.round((homeworkTotal / homeworkMax) * 100) : 0;
+                
+                // إذا لم توجد واجبات، عرض رسالة
+                if (homeworkCount === 0) {
+                    assignmentsTable.innerHTML = '<tr><td colspan="4" class="progress-placeholder">لا توجد واجبات مسجلة</td></tr>';
+                }
                 
                 // تحديث دوائر التقدم
                 setTimeout(() => {
                     updateProgress(homeworkProgress, homeworkPercentage, homeworkPercentage, homeworkMessage);
                     updateProgress(examProgress, examPercentage, examPercentage, examMessage);
                 }, 500);
-                
-                // عرض الواجبات في الجدول
-                assignmentsTable.innerHTML = '';
-                Object.entries(homeworkData).forEach(([name, assignment]) => {
-                    const percentage = Math.round((assignment.score / assignment.total) * 100);
-                    const row = assignmentsTable.insertRow();
-                    
-                    row.insertCell(0).textContent = name;
-                    row.insertCell(1).textContent = formatDate(assignment.date);
-                    row.insertCell(2).textContent = `${assignment.score}/${assignment.total}`;
-                    
-                    const percentageCell = row.insertCell(3);
-                    percentageCell.textContent = `${percentage}%`;
-                    
-                    // تلوين الخلية حسب النسبة
-                    if (percentage >= 90) {
-                        percentageCell.style.color = "#2ecc71";
-                        percentageCell.style.fontWeight = "bold";
-                    } else if (percentage >= 80) {
-                        percentageCell.style.color = "#27ae60";
-                    } else if (percentage >= 70) {
-                        percentageCell.style.color = "#3498db";
-                    } else if (percentage >= 60) {
-                        percentageCell.style.color = "#f39c12";
-                    } else if (percentage >= 50) {
-                        percentageCell.style.color = "#e67e22";
-                    } else {
-                        percentageCell.style.color = "#e74c3c";
-                    }
-                });
                 
                 // عرض الكورسات
                 const courses = userData.courses || {};
@@ -984,17 +1041,19 @@
                 let coursesHTML = '';
                 Object.entries(courses).forEach(([courseName, courseData]) => {
                     coursesHTML += `
-                        <div class="course-badge ${courseData.status === 'active' ? 'active' : 'inactive'}">
-                            ${courseName}
-                            <div>${courseData.status === 'active' ? 'نشط' : 'غير نشط'}</div>
+                        <div class="course-item">
+                            <div class="course-name">${courseName}</div>
+                            <div class="course-status ${courseData.status === 'active' ? '' : 'inactive'}">
+                                ${courseData.status === 'active' ? 'نشط' : 'غير نشط'}
+                            </div>
                         </div>
                     `;
                 });
                 
                 activeCoursesDiv.innerHTML = `
                     <p>عدد الكورسات المفعلة: <span class="active-count">${activeCourses.length}</span></p>
-                    <div class="course-grid">
-                        ${coursesHTML || '<p>لا توجد كورسات مسجلة</p>'}
+                    <div class="course-list">
+                        ${coursesHTML || '<p class="progress-placeholder">لا توجد كورسات مسجلة</p>'}
                     </div>
                 `;
             } catch (error) {
@@ -1002,20 +1061,31 @@
                 userInfoDiv.innerHTML = '<div class="error">حدث خطأ في جلب بيانات المستخدم</div>';
                 activeCoursesDiv.innerHTML = '<div class="error">حدث خطأ في تحميل الكورسات</div>';
                 assignmentsTable.innerHTML = '<tr><td colspan="4" class="error">حدث خطأ في جلب بيانات الواجبات</td></tr>';
+                examsTable.innerHTML = '<tr><td colspan="4" class="error">حدث خطأ في جلب بيانات الامتحانات</td></tr>';
             }
         }
         
         // دالة لتصدير الجدول إلى Excel
-        exportExcelBtn.addEventListener('click', () => {
-            const table = document.getElementById('assignments-table');
-            const wb = XLSX.utils.table_to_book(table, {sheet: "الواجبات"});
-            XLSX.writeFile(wb, 'واجبات_الطالب.xlsx');
+        function exportTableToExcel(tableId, fileName) {
+            const table = document.getElementById(tableId);
+            const wb = XLSX.utils.table_to_book(table, {sheet: "البيانات"});
+            XLSX.writeFile(wb, fileName);
             
             // عرض رسالة نجاح
             successMessage.classList.add('show');
             setTimeout(() => {
                 successMessage.classList.remove('show');
             }, 3000);
+        }
+        
+        // تصدير الواجبات
+        exportHomeworkBtn.addEventListener('click', () => {
+            exportTableToExcel('assignments-table', 'واجبات_الطالب.xlsx');
+        });
+        
+        // تصدير الامتحانات
+        exportExamBtn.addEventListener('click', () => {
+            exportTableToExcel('exams-table', 'امتحانات_الطالب.xlsx');
         });
         
         // تسجيل الخروج
