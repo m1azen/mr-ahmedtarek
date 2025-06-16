@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
             registerButton.id = 'registerButton';
             registerButton.innerHTML = `<i class="fas fa-user-plus"></i> تسجيل جديد`;
             registerButton.addEventListener('click', () => {
-                window.location.href = 'createaccount.html'; // توجيه إلى صفحة إنشاء حساب (استخدم createaccount.html إذا كان هذا هو الاسم الصحيح)
+                window.location.href = sign.html'; // توجيه إلى صفحة إنشاء حساب (استخدم createaccount.html إذا كان هذا هو الاسم الصحيح)
                 sidebar.classList.remove('show');
             });
             sidebarContent.appendChild(registerButton);
