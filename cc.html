@@ -21,7 +21,7 @@
 
     <main class="account-container">
         <aside class="sidebar">
-            <button id="user-data-btn">بيانات المستخدم</button>
+            <button id="user-data-btn" class="active">بيانات المستخدم</button>
             <button id="subscriptions-btn">اشتراكاتي</button>
             <button id="assignments-btn">الواجبات</button>
         </aside>
@@ -31,8 +31,10 @@
                 <h2>بيانات المستخدم</h2>
                 <p id="user-name">الاسم: جاري التحميل...</p>
                 <p id="user-email">البريد الإلكتروني: جاري التحميل...</p>
-                <div class="progress-circle">
+                <div class="progress-container">
+                    <div class="progress-circle" id="exam-circle"></div>
                     <p id="exam-score">نسبة درجات الامتحان: 0%</p>
+                    <div class="progress-circle" id="assignment-circle"></div>
                     <p id="assignment-score">نسبة درجات الواجب: 0%</p>
                 </div>
                 <p id="motivation-message">رسالة التحفيز ستظهر هنا</p>
@@ -53,9 +55,7 @@
                             <th>تاريخ التسليم</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <!-- سيتم إضافة البيانات هنا عبر JavaScript -->
-                    </tbody>
+                    <tbody></tbody>
                 </table>
                 <button id="download-excel">تحميل الدرجات</button>
             </div>
