@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
             accountButton.className = 'sidebar-button';
             accountButton.innerHTML = `<i class="fas fa-user-circle"></i> حسابي`;
             accountButton.addEventListener('click', () => {
-                window.location.href = 'my_account.html';
+                window.location.href = 'myaccount.html';
                 sidebar.classList.remove('show');
             });
             sidebarContent.appendChild(accountButton);
