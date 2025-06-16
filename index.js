@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
             registerButton.id = 'registerButton';
             registerButton.innerHTML = `<i class="fas fa-user-plus"></i> تسجيل جديد`;
             registerButton.addEventListener('click', () => {
-                window.location.href = 'createaccount.html';
+                window.location.href = 'sign.html';
                 sidebar.classList.remove('show');
             });
             sidebarContent.appendChild(registerButton);
@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // زر "انضم إلينا" - لغير المسجلين
             const joinUsButton = document.createElement('button');
             joinUsButton.textContent = 'انضم إلينا';
-            joinUsButton.onclick = () => window.location.href = 'createaccount.html';
+            joinUsButton.onclick = () => window.location.href = 'sign.html';
             bannerButtonsContainer.appendChild(joinUsButton);
 
             // زر "تسجيل الدخول" - لغير المسجلين
