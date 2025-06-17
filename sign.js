@@ -1,24 +1,24 @@
-// Import Firebase SDKs
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-// استيراد setPersistence و browserLocalPersistence لتمكين الحفظ التلقائي لتسجيل الدخول
-import { getAuth, createUserWithEmailAndPassword, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration (يجب أن تكون هذه هي نفس البيانات الموجودة لديك في مشروع Firebase)
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-    apiKey: "AIzaSyDh59dAoiUy1p8F4301kUjwzl9VT0nF2-E",
-    authDomain: "ahmed-tarek-7beb4.firebaseapp.com",
-    projectId: "ahmed-tarek-7beb4",
-    storageBucket: "ahmed-tarek-7beb4.firebasestorage.app",
-    messagingSenderId: "873531954018",
-    appId: "1:873531954018:web:0f3f29cb2d0232826b923b",
-    measurementId: "G-FZRCD5N87Z"
+  apiKey: "AIzaSyCV_AIVs3JAeVnIkGTievQdKO_RKVTMNtk",
+  authDomain: "mrahmedtarek-ffdac.firebaseapp.com",
+  projectId: "mrahmedtarek-ffdac",
+  storageBucket: "mrahmedtarek-ffdac.firebasestorage.app",
+  messagingSenderId: "660123002704",
+  appId: "1:660123002704:web:15b96f9d407042df412e55",
+  measurementId: "G-98B9X9J60E"
 };
 
-// Initialize Firebase services
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app); // خدمة مصادقة Firebase
-const db = getFirestore(app); // خدمة Firestore (قاعدة البيانات)
+const analytics = getAnalytics(app);
 
 // عند تحميل محتوى DOM بالكامل، ابدأ بتنفيذ السكريبت
 document.addEventListener('DOMContentLoaded', () => {
