@@ -279,22 +279,95 @@ document.addEventListener('DOMContentLoaded', () => {
                 initialExams[`exam${i}`] = {
                     score: 0,
                     date: null,
-                    status: "pending", // أمثلة: "pending", "completed", "failed"
+                    status: "inactive", // أمثلة: "pending", "completed", "failed"
                     questionsAnswered: 0,
                     correctAnswers: 0
                 };
             }
 
-            const initialCourses = {};
-            for (let i = 1; i <= 10; i++) { // يمكن تعديل العدد 10 ليتناسب مع عدد الدورات الفعلي
-                initialCourses[`course${i}`] = {
-                    progress: "0%",
-                    status: "locked", // أمثلة: "locked", "unlocked", "completed"
-                    lastAccessed: null,
-                    totalLessons: 5, // مثال: عدد الدروس في هذه الدورة
-                    completedLessons: 0
-                };
-            }
+        // تحضير بيانات الكورسات الأولية
+const initialCourses = {
+    course1: {
+        name: "اشتراك الترم كامل - أولى ثانوي",
+        score: 0,
+        date: null,
+        status: "inactive",
+        questionsAnswered: 0,
+        correctAnswers: 0
+    },
+    course2: {
+        name: "اشتراك أول شهر - أولى ثانوي",
+        score: 0,
+        date: null,
+        status: "inactive",
+        questionsAnswered: 0,
+        correctAnswers: 0
+    },
+    course3: {
+        name: "اشتراك تاني شهر - أولى ثانوي",
+        score: 0,
+        date: null,
+        status: "inactive",
+        questionsAnswered: 0,
+        correctAnswers: 0
+    },
+    course4: {
+        name: "اشتراك الترم كامل - تانية ثانوي",
+        score: 0,
+        date: null,
+        status: "inactive",
+        questionsAnswered: 0,
+        correctAnswers: 0
+    },
+    course5: {
+        name: "اشتراك أول شهر - تانية ثانوي",
+        score: 0,
+        date: null,
+        status: "inactive",
+        questionsAnswered: 0,
+        correctAnswers: 0
+    },
+    course6: {
+        name: "اشتراك تاني شهر - تانية ثانوي",
+        score: 0,
+        date: null,
+        status: "inactive",
+        questionsAnswered: 0,
+        correctAnswers: 0
+    },
+    course7: {
+        name: "اشتراك تالت شهر - تانية ثانوي",
+        score: 0,
+        date: null,
+        status: "inactive",
+        questionsAnswered: 0,
+        correctAnswers: 0
+    },
+    course8: {
+        name: "اشتراك الترم كامل - تالتة ثانوي",
+        score: 0,
+        date: null,
+        status: "inactive",
+        questionsAnswered: 0,
+        correctAnswers: 0
+    },
+    course9: {
+        name: "اشتراك أول شهر - تالتة ثانوي",
+        score: 0,
+        date: null,
+        status: "inactive",
+        questionsAnswered: 0,
+        correctAnswers: 0
+    },
+    course10: {
+        name: "اشتراك تاني شهر - تالتة ثانوي",
+        score: 0,
+        date: null,
+        status: "inactive",
+        questionsAnswered: 0,
+        correctAnswers: 0
+    }
+};
 
             // حفظ جميع بيانات المستخدم في Firestore ضمن مجموعة "userdata"
             // سيتم استخدام الـ UID الخاص بمستخدم Firebase كمعرف للمستند لسهولة الاسترجاع
