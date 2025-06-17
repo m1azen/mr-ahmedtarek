@@ -1,15 +1,23 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إنشاء حساب جديد - منصة القائد التعليمية</title>
-    <!-- رابط الأيقونة: تأكد أن ملف الصورة (5926948237783189215.png) موجود في نفس مجلد ملف HTML -->
-    <link rel="icon" type="image/png" sizes="2000" href="5926948237783189215.png">
-    <!-- رابط ملف CSS: تأكد أن ملف (signup.css) موجود في نفس مجلد HTML -->
-    <link rel="stylesheet" href="signup.css">
-    <!-- Font Awesome CDN للأيقونات -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إنشاء حساب جديد - منصة القائد التعليمية</title>
+
+  <!-- أيقونة -->
+  <link rel="icon" type="image/png" sizes="2000" href="5926948237783189215.png">
+  <link rel="stylesheet" href="signup.css">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <!-- Firebase CDN (نسخة UMD بدون import) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js"></script>
+
 </head>
 <body>
     <!-- الغلاف الرئيسي لصفحة التسجيل -->
@@ -199,6 +207,6 @@
     </div>
 
     <!-- رابط ملف JavaScript (sign.js): تأكد أنه موجود في نفس مجلد HTML ونوعه "module" -->
-    <script type="module" src="sign.js"></script>
+    <script  src="sign.js"></script>
 </body>
 </html>
