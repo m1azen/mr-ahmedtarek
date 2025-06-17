@@ -1036,27 +1036,27 @@
            const courses = userData.courses || {};
 
 // فصل الكورسات حسب الحالة
-           const activeCourses = Object.values(courses)
+          const activeCourses = Object.values(courses)
           .filter(course => course.status === 'active')
-          .map(course => course.name); // 👈 عرض الاسم فقط
-
-          const inactiveCourses = Object.values(courses)
-         .filter(course => course.status === 'inactive')
          .map(course => course.name); // 👈 عرض الاسم فقط
 
-                
-                // إنشاء HTML للكورسات
-                let coursesHTML = '';
-                Object.entries(courses).forEach(([courseName, courseData]) => {
-                    coursesHTML += `
-                        <div class="course-item">
-                            <div class="course-name">${courseName}</div>
-                            <div class="course-status ${courseData.status === 'active' ? '' : 'inactive'}">
-                                ${courseData.status === 'active' ? 'نشط' : 'غير نشط'}
-                            </div>
-                        </div>
-                    `;
-                });
+        const inactiveCourses = Object.values(courses)
+       .filter(course => course.status === 'inactive')
+       .map(course => course.name); // 👈 عرض الاسم فقط
+
+// إنشاء HTML للكورسات (كلهم)
+     let coursesHTML = '';
+    Object.entries(courses).forEach(([courseKey, courseData]) => {
+      coursesHTML += `
+         <div class="course-item">
+             <div class="course-name">${courseData.name || courseKey}</div>
+             <div class="course-status ${courseData.status === 'active' ? '' : 'inactive'}">
+                 ${courseData.status === 'active' ? 'نشط' : 'غير نشط'}
+             </div>
+         </div>
+     `;
+    });
+
                 
                 activeCoursesDiv.innerHTML = `
                     <p>عدد الكورسات المفعلة: <span class="active-count">${activeCourses.length}</span></p>
