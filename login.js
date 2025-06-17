@@ -1,3 +1,22 @@
+// Import Firebase SDKs
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+// Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyCV_AIVs3JAeVnIkGTievQdKO_RKVTMNtk",
+  authDomain: "mrahmedtarek-ffdac.firebaseapp.com",
+  projectId: "mrahmedtarek-ffdac",
+  storageBucket: "mrahmedtarek-ffdac.appspot.com",
+  messagingSenderId: "660123002704",
+  appId: "1:660123002704:web:15b96f9d407042df412e55",
+  measurementId: "G-98B9X9J60E"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const emailInput = document.getElementById('email');
@@ -5,8 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginButton = document.getElementById('loginButton');
     let loadingSpinner = document.getElementById('loadingSpinner');
 
-    const passwordError = document.getElementById('passwordError');
     const emailError = document.getElementById('emailError');
+    const passwordError = document.getElementById('passwordError');
 
     const messageModal = document.getElementById('messageModal');
     const messageTitle = document.getElementById('messageTitle');
@@ -86,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             await signInWithEmailAndPassword(auth, email, password);
             setLoading(false);
-            showMessageModal('تم تسجيل الدخول بنجاح! 🎉', 'أهلاً بك مرة أخرى في منصة القائد.', false);
+            showMessageModal('تم تسجيل الدخول بنجاح! 🎉', 'أهلاً بك مرة أخرى في منصة القائد.');
         } catch (error) {
             setLoading(false);
             let errorMessage = "حدث خطأ أثناء تسجيل الدخول.";
