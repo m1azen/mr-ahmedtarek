@@ -5,13 +5,13 @@ import { getFirestore, collection, query, where, getDocs } from "https://www.gst
 
 // Your web app's Firebase configuration (يجب أن تكون هذه البيانات هي نفسها في ملف signup.js)
 const firebaseConfig = {
-    apiKey: "AIzaSyDh59dAoiUy1p8F4301kUjwzl9VT0nF2-E", // تأكد من أن هذا المفتاح صحيح
-    authDomain: "ahmed-tarek-7beb4.firebaseapp.com",
-    projectId: "ahmed-tarek-7beb4",
-    storageBucket: "ahmed-tarek-7beb4.firebasestorage.app",
-    messagingSenderId: "873531954018",
-    appId: "1:873531954018:web:0f3f29cb2d0232826b923b",
-    measurementId: "G-FZRCD5N87Z"
+  apiKey: "AIzaSyCV_AIVs3JAeVnIkGTievQdKO_RKVTMNtk",
+  authDomain: "mrahmedtarek-ffdac.firebaseapp.com",
+  projectId: "mrahmedtarek-ffdac",
+  storageBucket: "mrahmedtarek-ffdac.firebasestorage.app",
+  messagingSenderId: "660123002704",
+  appId: "1:660123002704:web:15b96f9d407042df412e55",
+  measurementId: "G-98B9X9J60E"
 };
 
 // Initialize Firebase
