@@ -1032,10 +1032,18 @@
                     updateProgress(examProgress, examPercentage, examPercentage, examMessage);
                 }, 500);
                 
-                // عرض الكورسات
-                const courses = userData.courses || {};
-                const activeCourses = Object.values(courses).filter(course => course.status === 'active');
-                const inactiveCourses = Object.values(courses).filter(course => course.status === 'inactive');
+           // عرض الكورسات
+           const courses = userData.courses || {};
+
+// فصل الكورسات حسب الحالة
+           const activeCourses = Object.values(courses)
+          .filter(course => course.status === 'active')
+          .map(course => course.name); // 👈 عرض الاسم فقط
+
+          const inactiveCourses = Object.values(courses)
+         .filter(course => course.status === 'inactive')
+         .map(course => course.name); // 👈 عرض الاسم فقط
+
                 
                 // إنشاء HTML للكورسات
                 let coursesHTML = '';
