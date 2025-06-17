@@ -1035,27 +1035,22 @@
            // عرض الكورسات
            const courses = userData.courses || {};
 
-// فصل الكورسات حسب الحالة
-          const activeCourses = Object.values(courses)
-          .filter(course => course.status === 'active')
-         .map(course => course.name); // 👈 عرض الاسم فقط
-
-        const inactiveCourses = Object.values(courses)
-       .filter(course => course.status === 'inactive')
-       .map(course => course.name); // 👈 عرض الاسم فقط
-
-// إنشاء HTML للكورسات (كلهم)
-     let coursesHTML = '';
+// إنشاء HTML للكورسات النشطة فقط
+ let coursesHTML = '';
     Object.entries(courses).forEach(([courseKey, courseData]) => {
-      coursesHTML += `
-         <div class="course-item">
-             <div class="course-name">${courseData.name || courseKey}</div>
-             <div class="course-status ${courseData.status === 'active' ? '' : 'inactive'}">
-                 ${courseData.status === 'active' ? 'نشط' : 'غير نشط'}
-             </div>
-         </div>
-     `;
-    });
+         if (courseData.status === 'active') {
+             coursesHTML += `
+                     <div class="course-item">
+                      <div class="course-name">${courseData.name}</div>
+                       <div class="course-status">هذا الكورس مفعل ✅</div>
+                      </div>
+               `;
+         }
+     });
+
+      // عرض الكورسات في العنصر
+      document.getElementById('active-courses').innerHTML = coursesHTML || '<p>لا توجد كورسات مفعلة حالياً.</p>';
+
 
                 
                 activeCoursesDiv.innerHTML = `
