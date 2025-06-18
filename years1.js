@@ -14,18 +14,15 @@ const firebaseConfig = {
   measurementId: "G-98B9X9J60E"
 };
 
-// تهيئة Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const loadingOverlay = document.getElementById('loading-overlay');
 
-
 let currentUserName = "زائر";
 let isFirebaseReady = false;
 
 document.addEventListener("DOMContentLoaded", () => {
-  // عناصر الواجهة
   const sidebar = document.getElementById("sidebar");
   const closeSidebarButton = document.getElementById("closeSidebarButton");
   const userIcon = document.getElementById("userIcon");
@@ -47,7 +44,8 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("خطأ في تسجيل الخروج:", error);
     }
   };
-if (loadingOverlay) loadingOverlay.style.display = 'none';
+
+  if (loadingOverlay) loadingOverlay.style.display = 'none';
 
   const renderSidebarContent = () => {
     sidebarContent.innerHTML = '';
@@ -71,15 +69,17 @@ if (loadingOverlay) loadingOverlay.style.display = 'none';
         <button class="sidebar-button" id="registerButton"><i class="fas fa-user-plus"></i> تسجيل جديد</button>
         <button class="sidebar-button" id="loginButton"><i class="fas fa-sign-in-alt"></i> تسجيل دخول</button>
       `;
-      document.getElementById("registerButton").addEventListener("click", () => {
-        window.location.href = "sign.html";
-      });
-      document.getElementById("loginButton").addEventListener("click", () => {
-        window.location.href = "login.html";
-      });
+      document.getElementById("registerButton").addEventListener("click", () => window.location.href = "sign.html");
+      document.getElementById("loginButton").addEventListener("click", () => window.location.href = "login.html");
     }
   };
 
+  const renderBannerButtons = () => {
+    if (!bannerButtonsContainer) return;
+    bannerButtonsContainer.innerHTML = `
+      <button class="banner-btn">زر توضيحي</button>
+    `;
+  };
 
   const updateCourseStatus = async (user) => {
     if (!freeCourseBtn || !paidCourseStatus) return;
@@ -89,9 +89,8 @@ if (loadingOverlay) loadingOverlay.style.display = 'none';
         const userDoc = await getDoc(doc(db, "userdata", user.uid));
         if (userDoc.exists()) {
           const userData = userDoc.data();
-
-          if (userData.courses && userData.courses.course1 && userData.courses.course1.status === 'active') {
-
+          const status = userData?.courses?.course1?.status;
+          if (status === 'active') {
             paidCourseStatus.innerHTML = `
               <div class="enrollment-status">
                 <span class="status-badge"><i class="fas fa-check-circle"></i> أنت مشترك في هذا الكورس</span>
@@ -102,9 +101,7 @@ if (loadingOverlay) loadingOverlay.style.display = 'none';
               </div>
             `;
             const coursePriceElement = document.getElementById("course-price");
-            if (coursePriceElement) {
-              coursePriceElement.style.display = "none";
-            }
+            if (coursePriceElement) coursePriceElement.style.display = "none";
           } else {
             paidCourseStatus.innerHTML = `
               <a href="#" class="enroll-btn">
@@ -121,9 +118,7 @@ if (loadingOverlay) loadingOverlay.style.display = 'none';
       freeCourseBtn.innerHTML = '<span class="btn-text">يجب تسجيل الدخول أولاً</span><i class="fas fa-arrow-left"></i>';
       freeCourseBtn.href = '#';
       freeCourseBtn.classList.remove('enrolled');
-      freeCourseBtn.addEventListener("click", () => {
-        window.location.href = "login.html";
-      });
+      freeCourseBtn.addEventListener("click", () => window.location.href = "login.html");
 
       paidCourseStatus.innerHTML = `
         <a href="login.html" class="enroll-btn">
@@ -141,18 +136,16 @@ if (loadingOverlay) loadingOverlay.style.display = 'none';
   };
 
   onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      try {
+    try {
+      if (user) {
         const userDoc = await getDoc(doc(db, "userdata", user.uid));
         if (userDoc.exists()) {
           currentUserName = userDoc.data().username || "مستخدم";
-        } else {
-          currentUserName = "مستخدم";
         }
-      } catch {
-        currentUserName = "مستخدم";
+      } else {
+        currentUserName = "زائر";
       }
-    } else {
+    } catch {
       currentUserName = "زائر";
     }
     isFirebaseReady = true;
@@ -172,11 +165,7 @@ if (loadingOverlay) loadingOverlay.style.display = 'none';
   };
 
   const savedTheme = localStorage.getItem('theme');
-  if (savedTheme) {
-    applyTheme(savedTheme);
-  } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    applyTheme('dark');
-  }
+  applyTheme(savedTheme || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
 
   themeToggle.addEventListener("change", () => {
     const mode = themeToggle.checked ? 'dark' : 'light';
@@ -190,25 +179,18 @@ if (loadingOverlay) loadingOverlay.style.display = 'none';
     updateUI();
   });
 
-  closeSidebarButton.addEventListener("click", () => {
-    sidebar.classList.remove("show");
-  });
+  closeSidebarButton.addEventListener("click", () => sidebar.classList.remove("show"));
 
   document.addEventListener("click", (e) => {
-    if (sidebar.classList.contains("show") && 
-        !sidebar.contains(e.target) && 
-        !userIcon.contains(e.target)) {
+    if (sidebar.classList.contains("show") && !sidebar.contains(e.target) && !userIcon.contains(e.target)) {
       sidebar.classList.remove("show");
     }
   });
 
   const updateCurrentDate = () => {
     const now = new Date();
-    const options = { 
-      weekday: 'long', 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric',
+    const options = {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
       timeZone: 'Africa/Cairo'
     };
     const dateElement = document.getElementById('current-date');
@@ -218,12 +200,11 @@ if (loadingOverlay) loadingOverlay.style.display = 'none';
   };
   updateCurrentDate();
 
-  window.addEventListener('scroll', function() {
+  window.addEventListener('scroll', () => {
     const cards = document.querySelectorAll('.course-card');
     const windowHeight = window.innerHeight;
     cards.forEach(card => {
-      const cardPosition = card.getBoundingClientRect().top;
-      if (cardPosition < windowHeight - 100) {
+      if (card.getBoundingClientRect().top < windowHeight - 100) {
         card.style.opacity = '1';
       }
     });
