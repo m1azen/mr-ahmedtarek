@@ -87,7 +87,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (userDoc.exists()) {
           const userData = userDoc.data();
 
-          if (userData.course1 && userData.course1.status === "active") {
+          if (userData.courses && userData.courses.course1 && userData.courses.course1.status === 'active') {
+
             paidCourseStatus.innerHTML = `
               <div class="enrollment-status">
                 <span class="status-badge"><i class="fas fa-check-circle"></i> أنت مشترك في هذا الكورس</span>
