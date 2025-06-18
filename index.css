@@ -2,9 +2,7 @@
 /* ✅ 1. General Page Setup and Base Styles */
 /* ===================================== */
 body {
-    min-height: 100vh;
     width: 100%;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     direction: rtl; /* لضمان دعم اللغة العربية من اليمين لليسار */
     text-align: right; /* لمحاذاة النص لليمين افتراضيا */
     box-sizing: border-box;
