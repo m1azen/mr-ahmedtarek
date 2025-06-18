@@ -84,15 +84,17 @@ body.dark-mode .section-title::after {
     height: 70px;
     background-color: #1A2E47;
     display: flex;
-    justify-content: space-between; /* يدفع العناصر لأقصى اليمين واليسار */
+    justify-content: space-between;
     align-items: center;
-    padding: 0 25px; /* هذا البادينج يمنح مسافة من الجانبين الأيمن والأيسر للحاوية بالكامل */
+    padding: 0px 0px; /* تم إصلاح البادينج هنا */
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
     z-index: 1000;
 }
 
 .website-title {
-    /* هنا لا نحتاج لشيء خاص، البادينج في الـ .header-banner هو الذي يعطي المسافة الأساسية */
+    max-width: 200px; /* تحديد عرض ثابت للعنوان */
+    overflow: hidden;
+    text-overflow: ellipsis; /* إظهار نقاط ... إذا كان النص طويلاً */
 }
 
 .website-title a {
@@ -101,8 +103,9 @@ body.dark-mode .section-title::after {
     color: #F8F9FA;
     text-decoration: none;
     transition: color 0.3s ease;
-    white-space: nowrap; /* لضمان ظهور كامل الاسم وعدم تقسيم الحروف */
-    margin-right: -10px; /* لدفعه لليسار قليلاً من حافة اليمين */
+    white-space: nowrap;
+    display: block;
+    width: 100%;
 }
 .website-title a:hover {
     color: #BBDEFB;
@@ -128,6 +131,7 @@ body.dark-mode .section-title::after {
     transform: scale(1.1);
     box-shadow: 0 0 12px rgba(187, 222, 251, 0.7);
 }
+
 
 /* ===================================== */
 /* ✅ 3. Main Content Banner (Hero Section) */
