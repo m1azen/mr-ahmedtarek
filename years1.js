@@ -60,9 +60,9 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="sidebar-user-info">
           <span>أهلاً ${getUserName()}</span>
         </div>
-        <button class="sidebar-button" onclick="window.location.href='منتدى الطلبة.html'"><i class="fas fa-users"></i> منتدى الطلبة</button>
-        <button class="sidebar-button" onclick="window.location.href='حسابي.html'"><i class="fas fa-user-circle"></i> حسابي</button>
-        <button class="sidebar-button" onclick="window.location.href='كورساتي.html'"><i class="fas fa-book-open"></i> كورساتي</button>
+       
+        <button class="sidebar-button" onclick="window.location.href='myaccount.html'"><i class="fas fa-user-circle"></i> حسابي</button>
+        <button class="sidebar-button" onclick="window.location.href='myaccount.html'"><i class="fas fa-book-open"></i> كورساتي</button>
         <button class="sidebar-button" id="logoutButton"><i class="fas fa-sign-out-alt"></i> تسجيل خروج</button>
       `;
 
@@ -102,41 +102,35 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // دالة تحديث حالة الكورسات
-  const updateCourseStatus = async (user) => {
-    if (!freeCourseBtn || !paidCourseStatus) return;
-    
-    if (user) {
-      // المستخدم مسجل الدخول
-      freeCourseBtn.innerHTML = '<span class="btn-text">الدخول إلى الكورس</span><i class="fas fa-arrow-left"></i>';
-      freeCourseBtn.href = 'cours1.html';
-      freeCourseBtn.classList.add('enrolled');
-      
-      // التحقق من اشتراك المستخدم في الكورس المدفوع
-      try {
-        const userDoc = await getDoc(doc(db, "userdata", user.uid));
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          
-          if (userData && userData.cours1 === 'activa') {
-            paidCourseStatus.innerHTML = `
-              <div class="enrollment-status">
-                <span class="status-badge"><i class="fas fa-check-circle"></i> مشترك</span>
-                <a href="cours1.html" class="enroll-btn enrolled">
-                  <span class="btn-text">الدخول إلى الكورس</span>
-                  <i class="fas fa-arrow-left"></i>
-                </a>
-              </div>
-            `;
-          } else {
-            paidCourseStatus.innerHTML = `
-              <a href="#" class="enroll-btn">
-                <span class="btn-text">اشترك الآن</span>
+const updateCourseStatus = async (user) => {
+  if (!freeCourseBtn || !paidCourseStatus) return;
+
+  if (user) {
+    try {
+      const userDoc = await getDoc(doc(db, "userdata", user.uid));
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+
+        if (userData.course1 && userData.course1.status === 'active') {
+          // ✅ المستخدم مشترك في الكورس
+          paidCourseStatus.innerHTML = `
+            <div class="enrollment-status">
+              <span class="status-badge"><i class="fas fa-check-circle"></i> أنت مشترك في هذا الكورس</span>
+              <a href="coursyears1.html" class="enroll-btn enrolled">
+                <span class="btn-text">الدخول إلى الكورس</span>
                 <i class="fas fa-arrow-left"></i>
               </a>
-            `;
+            </div>
+          `;
+
+          // إخفاء السعر لو موجود
+          const coursePriceElement = document.getElementById("course-price");
+          if (coursePriceElement) {
+            coursePriceElement.style.display = "none";
           }
+
         } else {
+          // ❌ مش مشترك - عرض زر اشتراك
           paidCourseStatus.innerHTML = `
             <a href="#" class="enroll-btn">
               <span class="btn-text">اشترك الآن</span>
@@ -144,6 +138,25 @@ document.addEventListener("DOMContentLoaded", () => {
             </a>
           `;
         }
+      }
+    } catch (err) {
+      console.error("خطأ أثناء جلب بيانات المستخدم:", err);
+    }
+  } else {
+    // 🚫 المستخدم غير مسجل الدخول
+    freeCourseBtn.innerHTML = '<span class="btn-text">يجب تسجيل الدخول أولاً</span><i class="fas fa-arrow-left"></i>';
+    freeCourseBtn.href = '#';
+    freeCourseBtn.classList.remove('enrolled');
+
+    paidCourseStatus.innerHTML = `
+      <a href="login.html" class="enroll-btn">
+        <span class="btn-text">سجل الدخول للاشتراك</span>
+        <i class="fas fa-arrow-left"></i>
+      </a>
+    `;
+  }
+};
+
       } catch (err) {
         console.error("خطأ أثناء جلب بيانات الكورس:", err);
         paidCourseStatus.innerHTML = `
