@@ -18,6 +18,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const loadingOverlay = document.getElementById('loading-overlay');
+
 
 let currentUserName = "زائر";
 let isFirebaseReady = false;
@@ -45,6 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("خطأ في تسجيل الخروج:", error);
     }
   };
+if (loadingOverlay) loadingOverlay.style.display = 'none';
 
   const renderSidebarContent = () => {
     sidebarContent.innerHTML = '';
