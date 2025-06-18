@@ -77,16 +77,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  const renderBannerButtons = () => {
-    if (!bannerButtonsContainer) return;
-    bannerButtonsContainer.innerHTML = '';
-    if (isUserLoggedIn()) {
-      bannerButtonsContainer.innerHTML += `
-        <button onclick="window.location.href='منتدى الطلبة.html'">منتدى الطلبة</button>
-        <button onclick="window.location.href='حسابي.html'">حسابي</button>
-      `;
-    }
-  };
 
   const updateCourseStatus = async (user) => {
     if (!freeCourseBtn || !paidCourseStatus) return;
@@ -97,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (userDoc.exists()) {
           const userData = userDoc.data();
 
-          if (userData.course1 && userData.course1.status === 'active') {
+          if (userData.course1 && userData.course1.status === "active") {
             paidCourseStatus.innerHTML = `
               <div class="enrollment-status">
                 <span class="status-badge"><i class="fas fa-check-circle"></i> أنت مشترك في هذا الكورس</span>
