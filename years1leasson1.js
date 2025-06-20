@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     window.location.href = "years1.html";
                     break;
                   case "second-secondary":
-                    window.location.href = "years2.html";
+                    window.location.href = "yeasr2.html";
                     break;
                   case "third-secondary":
                     window.location.href = "years3.html";
