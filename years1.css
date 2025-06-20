@@ -745,7 +745,7 @@ body {
 
 /* حالة المستخدم المسجل */
 .enrolled .btn-text::after {
-    content: 'الدخول إلى الكورس';
+    content: '';
 }
 
 .enrolled .enroll-btn {
