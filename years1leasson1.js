@@ -67,17 +67,20 @@ sidebarContent.innerHTML += `
   <div class="sidebar-user-info">
     <span>أهلاً ${getUserName()}</span>
   </div>
-
-  <button class="sidebar-button" onclick="window.location.href='myaccount.html'">
+  <button class="sidebar-button" onclick="window.location.href='forum.html'">
+    <i class="fas fa-users"></i> منتدى الطلبة
+  </button>
+  <button class="sidebar-button" onclick="window.location.href='profile.html'">
     <i class="fas fa-user-circle"></i> حسابي
   </button>
-  <button class="sidebar-button" onclick="window.location.href='mycourses.html'">
+  <button class="sidebar-button" id="myCoursesBtn">
     <i class="fas fa-book-open"></i> كورساتي
   </button>
   <button class="sidebar-button" id="logoutButton">
     <i class="fas fa-sign-out-alt"></i> تسجيل خروج
   </button>
 `;
+
 setTimeout(() => {
   const myCoursesBtn = document.getElementById("myCoursesBtn");
   if (myCoursesBtn) {
