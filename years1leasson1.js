@@ -78,6 +78,45 @@ sidebarContent.innerHTML += `
     <i class="fas fa-sign-out-alt"></i> تسجيل خروج
   </button>
 `;
+setTimeout(() => {
+  const myCoursesBtn = document.getElementById("myCoursesBtn");
+  if (myCoursesBtn) {
+    myCoursesBtn.addEventListener("click", async () => {
+      const user = auth.currentUser;
+      if (!user) {
+        alert("يرجى تسجيل الدخول أولاً.");
+        window.location.href = "login.html";
+        return;
+      }
+
+      try {
+        const userDoc = await getDoc(doc(db, "userdata", user.uid));
+        if (userDoc.exists()) {
+          const grade = userDoc.data()?.grade;
+          switch (grade) {
+            case "first-secondary":
+              window.location.href = "years1.html";
+              break;
+            case "second-secondary":
+              window.location.href = "years2.html";
+              break;
+            case "third-secondary":
+              window.location.href = "years3.html";
+              break;
+            default:
+              alert("الصف الدراسي غير محدد.");
+              break;
+          }
+        } else {
+          alert("لا يوجد بيانات لهذا المستخدم.");
+        }
+      } catch (error) {
+        console.error("خطأ أثناء جلب البيانات:", error);
+        alert("حدث خطأ أثناء التوجيه.");
+      }
+    });
+  }
+}, 0);
 
 
       document.getElementById("logoutButton").addEventListener("click", () => {
