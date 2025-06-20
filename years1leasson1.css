@@ -546,3 +546,50 @@ body.dark-mode .user-icon-clickable {
     transform: scale(1);
   }
 }
+#loadingOverlay {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(to bottom right, #0973ec, #0e9aff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.5s ease;
+}
+
+.loader-content {
+  text-align: center;
+  animation: fadeIn 1s ease forwards;
+}
+
+.loader-logo {
+  width: 120px;
+  height: 120px;
+  animation: float 2s ease-in-out infinite;
+}
+
+.loader-text {
+  font-size: 1.2rem;
+  color: #ffffff;
+  font-weight: bold;
+  margin-top: 20px;
+  animation: pulse 1.5s infinite;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* الحركة العمودية الناعمة */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
