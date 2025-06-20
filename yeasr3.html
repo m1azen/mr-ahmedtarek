@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>كورسات تالته ثانوي - منصة القائد التعليمية</title>
+    <meta name="description" content="منصة القائد التعليمية للأستاذ أحمد طارق،#####.">
+    <link rel="icon" type="image/png" sizes="2000" href="5926948237783189215.png">
+
+    <!-- ملف الأنماط العامة (الرأس، الشريط الجانبي، الجسم) -->
+    <link rel="stylesheet" href="yeasr3.css">
+
+    <!-- مكتبة Font Awesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- مكتبات Firebase (لن تُستخدم مباشرة هنا، لأننا نستوردها داخل module) -->
+</head>
+<body>
+    <header class="header-banner">
+        <div class="website-title">
+            <a href="javascript:location.reload()" class="text-2xl font-bold no-underline">Ahmed Tareek</a>
+        </div>
+
+        <div class="header-controls">
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch" for="theme-toggle">
+                    <input type="checkbox" id="theme-toggle">
+                    <div class="slider round"></div>
+                    <span class="icon-light"><i class="fas fa-sun"></i></span>
+                    <span class="icon-dark"><i class="fas fa-moon"></i></span>
+                </label>
+            </div>
+            <img src="https://cdn-icons-png.flaticon.com/512/9131/9131529.png" alt="User Icon" class="user-icon-clickable" id="userIcon">
+        </div>
+    </header>
+
+    <aside class="sidebar" id="sidebar">
+        <button class="close-sidebar-button" id="closeSidebarButton">✖</button>
+        <div id="sidebarContent">
+            <!-- هذا الجزء سيظل فارغًا، الشريط الجانبي سيفتح بدون محتوى داخله -->
+        </div>
+    </aside>
+<div class="mmm"> سوف يتم اضافات الكورسات قريبا✖ </div>
+
+    <main class="main-content">
+        <!-- ✅ إضافة العنصر المطلوب -->
+        <div id="bannerButtons"></div>
+
+        <!-- مساحة افتراضية لضمان التمرير -->
+        <div style="height: 270px;"></div>
+    </main>
+
+<a href="https://wa.me/201006473018" class="whatsapp-support" target="_blank">
+  <i class="fab fa-whatsapp"></i> الدعم الفني
+</a>
+
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section about">
+                <h4>عن منصة القائد</h4>
+                <p>منصتنا توفر شروحات مميزة في الكيمياء والعلوم لطلاب الثانوية العامة، مع دعم فني متواصل وامتحانات لضمان أعلى مستوى من الاستيعاب.</p>
+            </div>
+            <div class="footer-section links">
+                <h4>روابط سريعة</h4>
+                <ul>
+                    <li><a href="#">الرئيسية</a></li>
+                    <li><a href="#">كورساتنا</a></li>
+                    <li><a href="#">الأسئلة الشائعة</a></li>
+                    <li><a href="#">سياسة الخصوصية</a></li>
+                </ul>
+            </div>
+            <div class="footer-section contact">
+                <h4>تواصل معنا</h4>
+                <div class="social-links">
+                    <a href="https://wa.me/qr/CZO3X7WAZOEEE1" target="_blank" aria-label="تواصل معنا عبر واتساب">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="https://youtube.com/@chemist9666?si=c7n0aOCyxp1l9WYs" target="_blank" aria-label="تابعنا على يوتيوب">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                    <a href="https://www.facebook.com/share/19ZDKvKrUm/" target="_blank" aria-label="تابعنا على فيسبوك">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                </div>
+                <a href="https://wa.me/201006473018" target="_blank" class="support-number-link">
+                    <i class="fab fa-whatsapp"></i> <span>الدعم الفني: 01006473018</span>
+                </a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p class="credit-text">
+                © 2025 منصة القائد. جميع الحقوق محفوظة. تم التطوير بواسطة <a href="https://wa.me/qr/CZO3X7WAZOEEE1" target="_blank">Mazen</a>.
+            </p>
+        </div>
+    </footer>
+    <!-- ملف JavaScript للصفحة -->
+    <script type="module" src="yeasr3.css"></script>
+    <script>
+setInterval(() => {
+  const btn = document.querySelector('.whatsapp-support');
+  if (btn) {
+    btn.classList.add('super-flashy');
+    setTimeout(() => btn.classList.remove('super-flashy'), 1200); // نفس مدة الأنيميشن
+  }
+}, 500); // كل 5 ثواني
+</script>
+ 
+</body>
+</html>
