@@ -57,16 +57,63 @@ document.addEventListener("DOMContentLoaded", () => {
     sidebarContent.innerHTML = '';
     sidebarContent.innerHTML += `<button class="sidebar-button"><i class="fas fa-home"></i> الصفحة الرئيسية</button>`;
 
-    if (isUserLoggedIn()) {
-      sidebarContent.innerHTML += `
-        <div class="sidebar-user-info">
-          <span>أهلاً ${getUserName()}</span>
-        </div>
-        <button class="sidebar-button"><i class="fas fa-users"></i> منتدى الطلبة</button>
-        <button class="sidebar-button"><i class="fas fa-user-circle"></i> حسابي</button>
-        <button class="sidebar-button"><i class="fas fa-book-open"></i> كورساتي</button>
-        <button class="sidebar-button" id="logoutButton"><i class="fas fa-sign-out-alt"></i> تسجيل خروج</button>
-      `;
+sidebarContent.innerHTML += `
+  <div class="sidebar-user-info">
+    <span>أهلاً ${getUserName()}</span>
+  </div>
+  <button class="sidebar-button" onclick="window.location.href='forum.html'">
+    <i class="fas fa-users"></i> منتدى الطلبة
+  </button>
+  <button class="sidebar-button" onclick="window.location.href='profile.html'">
+    <i class="fas fa-user-circle"></i> حسابي
+  </button>
+  <button class="sidebar-button" id="myCoursesBtn">
+    <i class="fas fa-book-open"></i> كورساتي
+  </button>
+  <button class="sidebar-button" id="logoutButton">
+    <i class="fas fa-sign-out-alt"></i> تسجيل خروج
+  </button>
+`;
+setTimeout(() => {
+  const myCoursesBtn = document.getElementById("myCoursesBtn");
+  if (myCoursesBtn) {
+    myCoursesBtn.addEventListener("click", async () => {
+      const user = auth.currentUser;
+      if (!user) {
+        alert("يرجى تسجيل الدخول أولاً.");
+        window.location.href = "login.html";
+        return;
+      }
+
+      try {
+        const userDoc = await getDoc(doc(db, "userdata", user.uid));
+        if (userDoc.exists()) {
+          const grade = userDoc.data()?.grade;
+          switch (grade) {
+            case "first-secondary":
+              window.location.href = "years1.html";
+              break;
+            case "second-secondary":
+              window.location.href = "years2.html";
+              break;
+            case "third-secondary":
+              window.location.href = "years3.html";
+              break;
+            default:
+              alert("الصف الدراسي غير محدد.");
+              break;
+          }
+        } else {
+          alert("لا يوجد بيانات لهذا المستخدم.");
+        }
+      } catch (error) {
+        console.error("خطأ أثناء جلب البيانات:", error);
+        alert("حدث خطأ أثناء التوجيه.");
+      }
+    });
+  }
+}, 0);
+
 
       document.getElementById("logoutButton").addEventListener("click", () => {
         firebaseLogout();
