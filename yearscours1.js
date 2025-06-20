@@ -1,6 +1,5 @@
 // استيراد Firebase Core & Auth & Firestore
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-console.log("Firebase تم تحميلها بنجاح");
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
@@ -83,8 +82,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const renderBannerButtons = () => {
     if (!bannerButtonsContainer) return;
     bannerButtonsContainer.innerHTML = '';
-
-
+    // أزرار إضافية لو حبيت
+  };
 
   const updateUI = () => {
     renderSidebarContent();
@@ -114,13 +113,14 @@ document.addEventListener("DOMContentLoaded", () => {
     updateUI();
   });
 
+  // التحكم في الوضع الليلي
   const applyTheme = (theme) => {
     if (theme === 'dark') {
       body.classList.add('dark-mode');
-      themeToggle.checked = true;
+      if (themeToggle) themeToggle.checked = true;
     } else {
       body.classList.remove('dark-mode');
-      themeToggle.checked = false;
+      if (themeToggle) themeToggle.checked = false;
     }
   };
 
@@ -131,21 +131,26 @@ document.addEventListener("DOMContentLoaded", () => {
     applyTheme('dark');
   }
 
-  themeToggle.addEventListener("change", () => {
-    const mode = themeToggle.checked ? 'dark' : 'light';
-    applyTheme(mode);
-    localStorage.setItem('theme', mode);
-  });
+  if (themeToggle) {
+    themeToggle.addEventListener("change", () => {
+      const mode = themeToggle.checked ? 'dark' : 'light';
+      applyTheme(mode);
+      localStorage.setItem('theme', mode);
+    });
+  }
 
-  userIcon.addEventListener("click", () => {
-    sidebar.classList.add("show");
-    sidebarContent.innerHTML = '';
-    updateUI();
-  });
+  if (userIcon) {
+    userIcon.addEventListener("click", () => {
+      sidebar.classList.add("show");
+      updateUI();
+    });
+  }
 
-  closeSidebarButton.addEventListener("click", () => {
-    sidebar.classList.remove("show");
-  });
+  if (closeSidebarButton) {
+    closeSidebarButton.addEventListener("click", () => {
+      sidebar.classList.remove("show");
+    });
+  }
 
   document.addEventListener("click", (e) => {
     if (!sidebar.contains(e.target) && !userIcon.contains(e.target) && sidebar.classList.contains("show")) {
@@ -153,11 +158,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
 // الحماية من الدخول بدون تسجيل أو بدون تفعيل الكورس
 document.addEventListener("DOMContentLoaded", () => {
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
-      // مش مسجل دخول
       alert("يجب تسجيل الدخول أولاً.");
       window.location.href = "login.html";
       return;
@@ -168,13 +173,11 @@ document.addEventListener("DOMContentLoaded", () => {
       if (userDoc.exists()) {
         const status = userDoc.data()?.courses?.course1?.status;
         if (status !== 'active') {
-          // مش مفعل الكورس
           alert("أنت غير مشترك في هذا الكورس.");
           window.location.href = "index.html";
         }
-        // لو الحالة active، هيكمل عادي ويشوف الصفحة
       } else {
-        alert("حدث خطأ: لا يوجد بيانات لهذا المستخدم.");
+        alert("لا يوجد بيانات لهذا المستخدم.");
         window.location.href = "index.html";
       }
     } catch (err) {
