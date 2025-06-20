@@ -20,7 +20,8 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 let currentUserName = "زائر";
-let isFirebaseReady = false;
+
+
 
 document.addEventListener("DOMContentLoaded", () => {
   const sidebar = document.getElementById("sidebar");
@@ -43,25 +44,59 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  const renderSidebarContent = () => {
+  const renderSidebarContent = (user) => {
     sidebarContent.innerHTML = '';
     sidebarContent.innerHTML += `<button class="sidebar-button"><i class="fas fa-home"></i> الصفحة الرئيسية</button>`;
 
-    if (isUserLoggedIn()) {
+    if (user) {
       sidebarContent.innerHTML += `
-        <div class="sidebar-user-info">
-          <span>أهلاً ${getUserName()}</span>
-        </div>
-        <button class="sidebar-button"><i class="fas fa-users"></i> منتدى الطلبة</button>
-        <button class="sidebar-button"><i class="fas fa-user-circle"></i> حسابي</button>
-        <button class="sidebar-button"><i class="fas fa-book-open"></i> كورساتي</button>
+        <div class="sidebar-user-info"><span>أهلاً ${getUserName()}</span></div>
+        <button class="sidebar-button" onclick="window.location.href='index.html'"><i class="fas fa-users"></i> منتدى الطلبة</button>
+        <button class="sidebar-button" onclick="window.location.href='myaccount.html'"><i class="fas fa-user-circle"></i> حسابي</button>
+        <button class="sidebar-button" id="myCoursesBtn"><i class="fas fa-book-open"></i> كورساتي</button>
         <button class="sidebar-button" id="logoutButton"><i class="fas fa-sign-out-alt"></i> تسجيل خروج</button>
       `;
 
-      document.getElementById("logoutButton").addEventListener("click", () => {
-        firebaseLogout();
-        sidebar.classList.remove("show");
-      });
+      setTimeout(() => {
+        document.getElementById("logoutButton").addEventListener("click", () => {
+          firebaseLogout();
+          sidebar.classList.remove("show");
+        });
+
+        document.getElementById("myCoursesBtn").addEventListener("click", async () => {
+          const user = auth.currentUser;
+          if (!user) {
+            alert("يرجى تسجيل الدخول أولاً.");
+            window.location.href = "login.html";
+            return;
+          }
+
+          try {
+            const userDoc = await getDoc(doc(db, "userdata", user.uid));
+            if (userDoc.exists()) {
+              const grade = userDoc.data()?.grade;
+              switch (grade) {
+                case "first-secondary":
+                  window.location.href = "years1.html";
+                  break;
+                case "second-secondary":
+                  window.location.href = "yeasr2.html";
+                  break;
+                case "third-secondary":
+                  window.location.href = "yeasr3.html";
+                  break;
+                default:
+                  alert("الصف الدراسي غير محدد.");
+              }
+            } else {
+              alert("لا يوجد بيانات لهذا المستخدم.");
+            }
+          } catch (error) {
+            console.error("خطأ أثناء فتح كورساتي:", error);
+            alert("حدث خطأ أثناء التوجيه.");
+          }
+        });
+      }, 0);
 
     } else {
       sidebarContent.innerHTML += `
@@ -69,13 +104,15 @@ document.addEventListener("DOMContentLoaded", () => {
         <button class="sidebar-button" id="loginButton"><i class="fas fa-sign-in-alt"></i> تسجيل دخول</button>
       `;
 
-      document.getElementById("registerButton").addEventListener("click", () => {
-        window.location.href = "sign.html";
-      });
+      setTimeout(() => {
+        document.getElementById("registerButton").addEventListener("click", () => {
+          window.location.href = "sign.html";
+        });
 
-      document.getElementById("loginButton").addEventListener("click", () => {
-        window.location.href = "login.html";
-      });
+        document.getElementById("loginButton").addEventListener("click", () => {
+          window.location.href = "login.html";
+        });
+      }, 0);
     }
   };
 
@@ -83,40 +120,35 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!bannerButtonsContainer) return;
     bannerButtonsContainer.innerHTML = '';
 
-    if (isUserLoggedIn()) {
-      bannerButtonsContainer.innerHTML += `
-        <button onclick="window.location.href='منتدى الطلبة.html'">منتدى الطلبة</button>
-        <button onclick="window.location.href='حسابي.html'">حسابي</button>
-      `;
-    }
-  };
 
-  const updateUI = () => {
-    renderSidebarContent();
+  const updateUI = (user) => {
+    renderSidebarContent(user);
     renderBannerButtons();
   };
 
+  // التحقق من تسجيل الدخول
   onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      try {
+    try {
+      if (user) {
         const userDoc = await getDoc(doc(db, "userdata", user.uid));
         if (userDoc.exists()) {
-          currentUserName = userDoc.data().username || "مستخدم";
-          console.log("اسم المستخدم:", currentUserName);
+          currentUserName = userDoc.data()?.username || "مستخدم";
         } else {
           currentUserName = "مستخدم";
-          console.warn("لا يوجد بيانات لهذا المستخدم.");
+          console.warn("لا توجد بيانات لهذا المستخدم.");
         }
-      } catch (err) {
-        currentUserName = "مستخدم";
-        console.error("خطأ أثناء جلب البيانات:", err);
+      } else {
+        currentUserName = "زائر";
       }
-    } else {
+
+      updateUI(user);
+    } catch (err) {
+      console.error("خطأ أثناء جلب البيانات:", err);
       currentUserName = "زائر";
-      console.log("المستخدم غير مسجل الدخول");
+      updateUI(null);
+    } finally {
+      hideLoadingOverlay();
     }
-    isFirebaseReady = true;
-    updateUI();
   });
 
   const applyTheme = (theme) => {
@@ -144,8 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   userIcon.addEventListener("click", () => {
     sidebar.classList.add("show");
-    sidebarContent.innerHTML = '';
-    updateUI();
+    updateUI(auth.currentUser);
   });
 
   closeSidebarButton.addEventListener("click", () => {
