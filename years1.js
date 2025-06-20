@@ -74,7 +74,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-
+  const renderBannerButtons = () => {
+    if (!bannerButtonsContainer) return;
+    bannerButtonsContainer.innerHTML = `
+      <button class="banner-btn"></button>
+    `;
+  };
 
   const updateCourseStatus = async (user) => {
     if (!freeCourseBtn || !paidCourseStatus) return;
@@ -90,7 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
               <div class="enrollment-status">
                 <span class="status-badge"><i class="fas fa-check-circle"></i> أنت مشترك في هذا الكورس</span>
                 <a href="yearscours1.html" class="enroll-btn enrolled">
-                  <span class="btn-text"></span>
+                  <span class="btn-text">الدخول إلى الكورس</span>
                   <i class="fas fa-arrow-left"></i>
                 </a>
               </div>
