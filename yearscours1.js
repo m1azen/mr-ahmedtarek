@@ -22,6 +22,16 @@ const db = getFirestore(app);
 let currentUserName = "زائر";
 let isFirebaseReady = false;
 
+function hideLoadingOverlay() {
+  const loadingOverlay = document.getElementById("loadingOverlay");
+  if (loadingOverlay) {
+    loadingOverlay.style.opacity = '0';
+    setTimeout(() => {
+      loadingOverlay.style.display = 'none';
+    }, 500);
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const sidebar = document.getElementById("sidebar");
   const closeSidebarButton = document.getElementById("closeSidebarButton");
@@ -82,7 +92,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const renderBannerButtons = () => {
     if (!bannerButtonsContainer) return;
     bannerButtonsContainer.innerHTML = '';
-    // أزرار إضافية لو حبيت
   };
 
   const updateUI = () => {
@@ -91,29 +100,40 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      try {
-        const userDoc = await getDoc(doc(db, "userdata", user.uid));
-        if (userDoc.exists()) {
-          currentUserName = userDoc.data().username || "مستخدم";
-          console.log("اسم المستخدم:", currentUserName);
-        } else {
-          currentUserName = "مستخدم";
-          console.warn("لا يوجد بيانات لهذا المستخدم.");
-        }
-      } catch (err) {
-        currentUserName = "مستخدم";
-        console.error("خطأ أثناء جلب البيانات:", err);
-      }
-    } else {
-      currentUserName = "زائر";
-      console.log("المستخدم غير مسجل الدخول");
+    if (!user) {
+      alert("يجب تسجيل الدخول أولاً.");
+      window.location.href = "login.html";
+      return;
     }
+
+    try {
+      const userDoc = await getDoc(doc(db, "userdata", user.uid));
+      if (userDoc.exists()) {
+        const status = userDoc.data()?.courses?.course1?.status;
+        currentUserName = userDoc.data().username || "مستخدم";
+
+        if (status !== 'active') {
+          alert("أنت غير مشترك في هذا الكورس.");
+          window.location.href = "index.html";
+          return;
+        }
+      } else {
+        alert("لا توجد بيانات لهذا المستخدم.");
+        window.location.href = "index.html";
+        return;
+      }
+    } catch (err) {
+      console.error("فشل في التحقق من الكورس:", err);
+      alert("حدث خطأ غير متوقع.");
+      window.location.href = "index.html";
+      return;
+    }
+
     isFirebaseReady = true;
     updateUI();
+    hideLoadingOverlay();
   });
 
-  // التحكم في الوضع الليلي
   const applyTheme = (theme) => {
     if (theme === 'dark') {
       body.classList.add('dark-mode');
@@ -155,35 +175,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("click", (e) => {
     if (!sidebar.contains(e.target) && !userIcon.contains(e.target) && sidebar.classList.contains("show")) {
       sidebar.classList.remove("show");
-    }
-  });
-});
-
-// الحماية من الدخول بدون تسجيل أو بدون تفعيل الكورس
-document.addEventListener("DOMContentLoaded", () => {
-  onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-      alert("يجب تسجيل الدخول أولاً.");
-      window.location.href = "login.html";
-      return;
-    }
-
-    try {
-      const userDoc = await getDoc(doc(db, "userdata", user.uid));
-      if (userDoc.exists()) {
-        const status = userDoc.data()?.courses?.course1?.status;
-        if (status !== 'active') {
-          alert("أنت غير مشترك في هذا الكورس.");
-          window.location.href = "index.html";
-        }
-      } else {
-        alert("لا يوجد بيانات لهذا المستخدم.");
-        window.location.href = "index.html";
-      }
-    } catch (err) {
-      console.error("فشل في التحقق من الكورس:", err);
-      alert("حدث خطأ غير متوقع.");
-      window.location.href = "index.html";
     }
   });
 });
