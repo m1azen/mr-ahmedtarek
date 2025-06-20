@@ -20,8 +20,8 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 let currentUserName = "زائر";
-let isFirebaseReady = false;
 
+// 🌀 إخفاء شاشة التحميل
 function hideLoadingOverlay() {
   const loadingOverlay = document.getElementById("loadingOverlay");
   if (loadingOverlay) {
@@ -41,9 +41,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const themeToggle = document.getElementById("theme-toggle");
   const body = document.body;
 
-  const isUserLoggedIn = () => auth.currentUser !== null;
-  const getUserName = () => currentUserName;
-
   const firebaseLogout = async () => {
     try {
       await signOut(auth);
@@ -53,72 +50,71 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  const renderSidebarContent = () => {
-    sidebarContent.innerHTML = '';
-    sidebarContent.innerHTML += `<button class="sidebar-button"><i class="fas fa-home"></i> الصفحة الرئيسية</button>`;
+  const renderSidebarContent = (user) => {
+    sidebarContent.innerHTML = `
+      <button class="sidebar-button" onclick="window.location.href='index.html'">
+        <i class="fas fa-home"></i> الصفحة الرئيسية
+      </button>
+    `;
 
-sidebarContent.innerHTML += `
-  <div class="sidebar-user-info">
-    <span>أهلاً ${getUserName()}</span>
-  </div>
-  <button class="sidebar-button" onclick="window.location.href='forum.html'">
-    <i class="fas fa-users"></i> منتدى الطلبة
-  </button>
-  <button class="sidebar-button" onclick="window.location.href='profile.html'">
-    <i class="fas fa-user-circle"></i> حسابي
-  </button>
-  <button class="sidebar-button" id="myCoursesBtn">
-    <i class="fas fa-book-open"></i> كورساتي
-  </button>
-  <button class="sidebar-button" id="logoutButton">
-    <i class="fas fa-sign-out-alt"></i> تسجيل خروج
-  </button>
-`;
-setTimeout(() => {
-  const myCoursesBtn = document.getElementById("myCoursesBtn");
-  if (myCoursesBtn) {
-    myCoursesBtn.addEventListener("click", async () => {
-      const user = auth.currentUser;
-      if (!user) {
-        alert("يرجى تسجيل الدخول أولاً.");
-        window.location.href = "login.html";
-        return;
-      }
+    if (user) {
+      sidebarContent.innerHTML += `
+        <div class="sidebar-user-info">
+          <span>أهلاً ${currentUserName}</span>
+        </div>
+        <button class="sidebar-button" onclick="window.location.href='forum.html'">
+          <i class="fas fa-users"></i> منتدى الطلبة
+        </button>
+        <button class="sidebar-button" onclick="window.location.href='profile.html'">
+          <i class="fas fa-user-circle"></i> حسابي
+        </button>
+        <button class="sidebar-button" id="myCoursesBtn">
+          <i class="fas fa-book-open"></i> كورساتي
+        </button>
+        <button class="sidebar-button" id="logoutButton">
+          <i class="fas fa-sign-out-alt"></i> تسجيل خروج
+        </button>
+      `;
 
-      try {
-        const userDoc = await getDoc(doc(db, "userdata", user.uid));
-        if (userDoc.exists()) {
-          const grade = userDoc.data()?.grade;
-          switch (grade) {
-            case "first-secondary":
-              window.location.href = "years1.html";
-              break;
-            case "second-secondary":
-              window.location.href = "years2.html";
-              break;
-            case "third-secondary":
-              window.location.href = "years3.html";
-              break;
-            default:
-              alert("الصف الدراسي غير محدد.");
-              break;
-          }
-        } else {
-          alert("لا يوجد بيانات لهذا المستخدم.");
+      setTimeout(() => {
+        const myCoursesBtn = document.getElementById("myCoursesBtn");
+        if (myCoursesBtn) {
+          myCoursesBtn.addEventListener("click", async () => {
+            try {
+              const userDoc = await getDoc(doc(db, "userdata", user.uid));
+              if (userDoc.exists()) {
+                const grade = userDoc.data()?.grade;
+                switch (grade) {
+                  case "first-secondary":
+                    window.location.href = "years1.html";
+                    break;
+                  case "second-secondary":
+                    window.location.href = "years2.html";
+                    break;
+                  case "third-secondary":
+                    window.location.href = "years3.html";
+                    break;
+                  default:
+                    alert("الصف الدراسي غير محدد.");
+                }
+              } else {
+                alert("لا يوجد بيانات لهذا المستخدم.");
+              }
+            } catch (error) {
+              console.error("خطأ أثناء التوجيه:", error);
+              alert("حدث خطأ أثناء التوجيه.");
+            }
+          });
         }
-      } catch (error) {
-        console.error("خطأ أثناء جلب البيانات:", error);
-        alert("حدث خطأ أثناء التوجيه.");
-      }
-    });
-  }
-}, 0);
 
-
-      document.getElementById("logoutButton").addEventListener("click", () => {
-        firebaseLogout();
-        sidebar.classList.remove("show");
-      });
+        const logoutButton = document.getElementById("logoutButton");
+        if (logoutButton) {
+          logoutButton.addEventListener("click", () => {
+            firebaseLogout();
+            sidebar.classList.remove("show");
+          });
+        }
+      }, 0);
 
     } else {
       sidebarContent.innerHTML += `
@@ -126,61 +122,59 @@ setTimeout(() => {
         <button class="sidebar-button" id="loginButton"><i class="fas fa-sign-in-alt"></i> تسجيل دخول</button>
       `;
 
-      document.getElementById("registerButton").addEventListener("click", () => {
-        window.location.href = "sign.html";
-      });
-
-      document.getElementById("loginButton").addEventListener("click", () => {
-        window.location.href = "login.html";
-      });
+      setTimeout(() => {
+        document.getElementById("registerButton").addEventListener("click", () => {
+          window.location.href = "sign.html";
+        });
+        document.getElementById("loginButton").addEventListener("click", () => {
+          window.location.href = "login.html";
+        });
+      }, 0);
     }
   };
 
-  const renderBannerButtons = () => {
-    if (!bannerButtonsContainer) return;
-    bannerButtonsContainer.innerHTML = '';
+  const updateUI = (user) => {
+    renderSidebarContent(user);
+    if (bannerButtonsContainer) bannerButtonsContainer.innerHTML = '';
   };
 
-  const updateUI = () => {
-    renderSidebarContent();
-    renderBannerButtons();
-  };
-
+  // ✅ التحقق من تسجيل الدخول وتفعيل الكورس
   onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-      alert("يجب تسجيل الدخول أولاً.");
-      window.location.href = "login.html";
-      return;
-    }
-
     try {
-      const userDoc = await getDoc(doc(db, "userdata", user.uid));
-      if (userDoc.exists()) {
-        const status = userDoc.data()?.courses?.course1?.status;
-        currentUserName = userDoc.data().username || "مستخدم";
+      if (!user) {
+        alert("يجب تسجيل الدخول أولاً.");
+        window.location.href = "login.html";
+        return;
+      }
 
-        if (status !== 'active') {
-          alert("أنت غير مشترك في هذا الكورس.");
-          window.location.href = "index.html";
-          return;
-        }
-      } else {
+      const userDoc = await getDoc(doc(db, "userdata", user.uid));
+      if (!userDoc.exists()) {
         alert("لا توجد بيانات لهذا المستخدم.");
         window.location.href = "index.html";
         return;
       }
+
+      const status = userDoc.data()?.courses?.course1?.status;
+      currentUserName = userDoc.data()?.username || "مستخدم";
+
+      if (status !== 'active') {
+        alert("أنت غير مشترك في هذا الكورس.");
+        window.location.href = "index.html";
+        return;
+      }
+
+      updateUI(user);
+
     } catch (err) {
-      console.error("فشل في التحقق من الكورس:", err);
+      console.error("فشل التحقق:", err);
       alert("حدث خطأ غير متوقع.");
       window.location.href = "index.html";
-      return;
+    } finally {
+      hideLoadingOverlay();
     }
-
-    isFirebaseReady = true;
-    updateUI();
-    hideLoadingOverlay();
   });
 
+  // 💡 الوضع الداكن
   const applyTheme = (theme) => {
     if (theme === 'dark') {
       body.classList.add('dark-mode');
@@ -209,7 +203,6 @@ setTimeout(() => {
   if (userIcon) {
     userIcon.addEventListener("click", () => {
       sidebar.classList.add("show");
-      updateUI();
     });
   }
 
