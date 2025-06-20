@@ -89,8 +89,8 @@ document.addEventListener("DOMContentLoaded", () => {
             paidCourseStatus.innerHTML = `
               <div class="enrollment-status">
                 <span class="status-badge"><i class="fas fa-check-circle"></i> أنت مشترك في هذا الكورس</span>
-                <a href="coursyears1.html" class="enroll-btn enrolled">
-                  <span class="btn-text">الدخول إلى الكورس</span>
+                <a href="yearscours1.html" class="enroll-btn enrolled">
+                  <span class="btn-text"></span>
                   <i class="fas fa-arrow-left"></i>
                 </a>
               </div>
