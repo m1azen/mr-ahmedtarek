@@ -74,12 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  const renderBannerButtons = () => {
-    if (!bannerButtonsContainer) return;
-    bannerButtonsContainer.innerHTML = `
-      <button class="banner-btn">زر توضيحي</button>
-    `;
-  };
+
 
   const updateCourseStatus = async (user) => {
     if (!freeCourseBtn || !paidCourseStatus) return;
