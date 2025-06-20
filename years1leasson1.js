@@ -90,33 +90,32 @@ document.addEventListener("DOMContentLoaded", () => {
               return;
             }
 
-            try {
-              const userDoc = await getDoc(doc(db, "userdata", user.uid));
-              if (userDoc.exists()) {
-                const grade = userDoc.data()?.grade;
-                switch (grade) {
-                  case "first-secondary":
-                    window.location.href = "years1.html";
-                    break;
-                  case "second-secondary":
-                    window.location.href = "yeasr2.html";
-                    break;
-                  case "third-secondary":
-                    window.location.href = "years3.html";
-                    break;
-                  default:
-                    alert("الصف الدراسي غير محدد.");
-                    break;
-                }
-              } else {
-                alert("لا يوجد بيانات لهذا المستخدم.");
+          try {
+            const userDoc = await getDoc(doc(db, "userdata", user.uid));
+            if (userDoc.exists()) {
+              const grade = userDoc.data()?.grade;
+              switch (grade) {
+                case "first-secondary":
+                  window.location.href = "years1.html";
+                  break;
+                case "second-secondary":
+                  window.location.href = "yeasr2.html";
+                  break;
+                case "third-secondary":
+                  window.location.href = "yeasr3.html";
+                  break;
+                default:
+                  alert("الصف الدراسي غير محدد.");
               }
-            } catch (error) {
-              console.error("خطأ أثناء جلب البيانات:", error);
-              alert("حدث خطأ أثناء التوجيه.");
+            } else {
+              alert("لا يوجد بيانات لهذا المستخدم.");
             }
-          });
-        }
+          } catch (error) {
+            console.error("خطأ أثناء فتح كورساتي:", error);
+            alert("حدث خطأ أثناء التوجيه.");
+          }
+        });
+      }, 0);
 
         const logoutButton = document.getElementById("logoutButton");
         if (logoutButton) {
