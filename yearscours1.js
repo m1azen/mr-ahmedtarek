@@ -61,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
       sidebarContent.innerHTML += `
         <div class="sidebar-user-info">
           <span>أهلاً ${currentUserName}</span>
+        </div>
         <button class="sidebar-button" onclick="window.location.href='index.html'"><i class="fas fa-users"></i> منتدى الطلبة</button>
         <button class="sidebar-button" onclick="window.location.href='myaccount.html'"><i class="fas fa-user-circle"></i> حسابي</button>
         <button class="sidebar-button" id="myCoursesBtn"><i class="fas fa-book-open"></i> كورساتي</button>
@@ -71,32 +72,32 @@ document.addEventListener("DOMContentLoaded", () => {
         const myCoursesBtn = document.getElementById("myCoursesBtn");
         if (myCoursesBtn) {
           myCoursesBtn.addEventListener("click", async () => {
-          try {
-            const userDoc = await getDoc(doc(db, "userdata", user.uid));
-            if (userDoc.exists()) {
-              const grade = userDoc.data()?.grade;
-              switch (grade) {
-                case "first-secondary":
-                  window.location.href = "years1.html";
-                  break;
-                case "second-secondary":
-                  window.location.href = "yeasr2.html";
-                  break;
-                case "third-secondary":
-                  window.location.href = "yeasr3.html";
-                  break;
-                default:
-                  alert("الصف الدراسي غير محدد.");
+            try {
+              const userDoc = await getDoc(doc(db, "userdata", user.uid));
+              if (userDoc.exists()) {
+                const grade = userDoc.data()?.grade;
+                switch (grade) {
+                  case "first-secondary":
+                    window.location.href = "years1.html";
+                    break;
+                  case "second-secondary":
+                    window.location.href = "years2.html";
+                    break;
+                  case "third-secondary":
+                    window.location.href = "years3.html";
+                    break;
+                  default:
+                    alert("الصف الدراسي غير محدد.");
+                }
+              } else {
+                alert("لا يوجد بيانات لهذا المستخدم.");
               }
-            } else {
-              alert("لا يوجد بيانات لهذا المستخدم.");
+            } catch (error) {
+              console.error("خطأ أثناء فتح كورساتي:", error);
+              alert("حدث خطأ أثناء التوجيه.");
             }
-          } catch (error) {
-            console.error("خطأ أثناء فتح كورساتي:", error);
-            alert("حدث خطأ أثناء التوجيه.");
-          }
-        });
-      }, 0);
+          });
+        }
 
         const logoutButton = document.getElementById("logoutButton");
         if (logoutButton) {
