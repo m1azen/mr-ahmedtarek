@@ -84,13 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!bannerButtonsContainer) return;
     bannerButtonsContainer.innerHTML = '';
 
-    if (isUserLoggedIn()) {
-      bannerButtonsContainer.innerHTML += `
-        <button onclick="window.location.href='منتدى الطلبة.html'">منتدى الطلبة</button>
-        <button onclick="window.location.href='حسابي.html'">حسابي</button>
-      `;
-    }
-  };
+
 
   const updateUI = () => {
     renderSidebarContent();
