@@ -7,16 +7,19 @@
     <meta name="description" content="منصة القائد التعليمية للأستاذ أحمد طارق، كورسات الصف الأول الثانوي في الكيمياء.">
     <link rel="icon" type="image/png" sizes="2000" href="5926948237783189215.png">
 
-    <!-- ملف الأنماط العامة -->
     <link rel="stylesheet" href="years1.css">
 
-    <!-- Font Awesome للأيقونات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <a href="https://wa.me/201006473018" class="whatsapp-support" target="_blank">
+        <i class="fab fa-whatsapp"></i> الدعم الفني
+    </a>
     <header class="header-banner">
         <div class="website-title">
-            <a href="javascript:location.reload()">Ahmed Tareek</a>
+            <a href="index.html">
+                <img src="5926948237783189215.png" alt="Logo" class="logo-image">
+            </a>
         </div>
 
         <div class="header-controls">
@@ -28,6 +31,7 @@
                     <span class="icon-dark"><i class="fas fa-moon"></i></span>
                 </label>
             </div>
+
             <img src="https://cdn-icons-png.flaticon.com/512/9131/9131529.png" alt="User Icon" class="user-icon-clickable" id="userIcon">
         </div>
     </header>
@@ -37,89 +41,78 @@
         <div id="sidebarContent"></div>
     </aside>
 
-    
-
     <main class="main-content">
         <div id="bannerButtons"></div>
     </main>
 
     <div class="courses-section">
-    <div class="section-header">
-        <h2 class="section-title">الكورسات التعليمية</h2>
-        <p class="section-subtitle">
-            (الدفع فودافون كاش 
-            <a href="https://wa.me/201006473018" target="_blank" style="color: #007bff; text-decoration: underline;">
-                تواصل مع الدعم الفني
-            </a>)
-        </p>
-        <div class="timeline">
-            <span class="timeline-date" id="current-date"></span>
+        <div class="section-header">
+            <h2 class="section-title">الكورسات التعليمية</h2>
+            <p class="section-subtitle">
+                (الدفع فودافون كاش 
+                <a href="https://wa.me/201006473018" target="_blank" style="color: #007bff; text-decoration: underline;">
+                    تواصل مع الدعم الفني
+                </a>)
+            </p>
+            <div class="timeline">
+                <span class="timeline-date" id="current-date"></span>
+            </div>
         </div>
     </div>
-</div>
-<!-- زر واتساب الدعم الفني -->
-<a href="https://wa.me/201006473018" class="whatsapp-support" target="_blank" title="تواصل مع الدعم الفني">
-    <i class="fab fa-whatsapp"></i>
-    <span>الدعم الفني</span>
-</a>
-
-
-        <div class="courses-grid">
-            <!-- كورس مجاني -->
-            <div class="course-card free-course">
-                <div class="course-badge">تجريبي</div>
-                <div class="course-image-container">
-                    <img src="Copilot_20250618_234449.png" alt="كورس تجريبي" class="course-image">
-                    <div class="image-overlay"></div>
+    <div class="courses-grid">
+        <div class="course-card free-course">
+            <div class="course-badge">تجريبي</div>
+            <div class="course-image-container">
+                <img src="Copilot_20250618_234449.png" alt="كورس تجريبي" class="course-image">
+                <div class="image-overlay"></div>
+            </div>
+            <div class="course-content">
+                <div class="course-meta">
+                    <span class="course-duration"><i class="far fa-clock"></i> 0 ساعات</span>
+                    <span class="course-level"><i class="fas fa-signal"></i> اونلاين</span>
                 </div>
-                <div class="course-content">
-                    <div class="course-meta">
-                        <span class="course-duration"><i class="far fa-clock"></i> 0 ساعات</span>
-                        <span class="course-level"><i class="fas fa-signal"></i> اونلاين</span>
+                <h3 class="course-title">كورس تجريبي للمنصة</h3>
+                <p class="course-description">تفاصيل الكورس</p>
+                <div class="course-footer">
+                    <div class="course-price">
+                        <span class="original-price">مجاناً</span>
                     </div>
-                    <h3 class="course-title">كورس تجريبي للمنصة</h3>
-                    <p class="course-description">تفاصيل الكورس</p>
-                    <div class="course-footer">
-                        <div class="course-price">
-                            <span class="original-price">مجاناً</span>
-                        </div>
-                        <a href="#" class="enroll-btn" id="free-course-btn">
+                    <a href="#" class="enroll-btn" id="free-course-btn">
+                        <span class="btn-text">جاري التحقق من الاشتراك....</span>
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="course-card premium-course">
+            <div class="course-badge">تجريبي</div>
+            <div class="course-image-container">
+                <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1422&q=80" alt="كورس مدفوع" class="course-image">
+                <div class="image-overlay"></div>
+            </div>
+            <div class="course-content">
+                <div class="course-meta">
+                    <span class="course-duration"><i class="far fa-clock"></i> 0 ساعة</span>
+                    <span class="course-level"><i class="fas fa-signal"></i> اونلاين</span>
+                </div>
+                <h3 class="course-title">كورس مدفوع تجريبي للمنصة</h3>
+                <p class="course-description">تفاصيل الكورس</p>
+                <div class="course-footer">
+                    <div class="course-price">
+                        <span class="original-price">100 جنيه</span>
+                        <span class="discount-price">150 جنيه</span>
+                    </div>
+                    <div id="paid-course-status">
+                        <a href="#" class="enroll-btn" id="paid-course-btn">
                             <span class="btn-text">جاري التحقق من الاشتراك....</span>
                             <i class="fas fa-arrow-left"></i>
                         </a>
                     </div>
                 </div>
             </div>
-
-            <!-- كورس مدفوع -->
-            <div class="course-card premium-course">
-                <div class="course-badge">تجريبي</div>
-                <div class="course-image-container">
-                    <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1422&q=80" alt="كورس مدفوع" class="course-image">
-                    <div class="image-overlay"></div>
-                </div>
-                <div class="course-content">
-                    <div class="course-meta">
-                        <span class="course-duration"><i class="far fa-clock"></i> 0 ساعة</span>
-                        <span class="course-level"><i class="fas fa-signal"></i> اونلاين</span>
-                    </div>
-                    <h3 class="course-title">كورس مدفوع تجريبي للمنصة</h3>
-                    <p class="course-description">تفاصيل الكورس</p>
-                    <div class="course-footer">
-                        <div class="course-price">
-                            <span class="original-price">100 جنيه</span>
-                            <span class="discount-price">150 جنيه</span>
-                        </div>
-                        <div id="paid-course-status">
-                            <a href="#" class="enroll-btn" id="paid-course-btn">
-                                <span class="btn-text">جاري التحقق من الاشتراك....</span>
-                                <i class="fas fa-arrow-left"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
+    </div>
     </div>
 
     <footer class="footer">
@@ -128,21 +121,19 @@
                 <h4>عن منصة القائد</h4>
                 <p>منصتنا توفر شروحات مميزة في الكيمياء والعلوم لطلاب الثانوية العامة، مع دعم فني متواصل وامتحانات لضمان أعلى مستوى من الاستيعاب.</p>
             </div>
-            <div class="footer-section links">
-                <h4>روابط سريعة</h4>
-                <ul>
-                    <li><a href="#">الرئيسية</a></li>
-                    <li><a href="#">كورساتنا</a></li>
-                    <li><a href="#">الأسئلة الشائعة</a></li>
-                    <li><a href="#">سياسة الخصوصية</a></li>
-                </ul>
-            </div>
+
             <div class="footer-section contact">
                 <h4>تواصل معنا</h4>
                 <div class="social-links">
-                    <a href="https://wa.me/qr/CZO3X7WAZOEEE1" target="_blank"><i class="fab fa-whatsapp"></i></a>
-                    <a href="https://youtube.com/@chemist9666" target="_blank"><i class="fab fa-youtube"></i></a>
-                    <a href="https://www.facebook.com/share/19ZDKvKrUm/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://wa.me/qr/CZO3X7WAZOEEE1" target="_blank" aria-label="تواصل معنا عبر واتساب">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="https://youtube.com/@chemist9666?si=c7n0aOCyxp1l9WYs" target="_blank" aria-label="تابعنا على يوتيوب">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                    <a href="https://www.facebook.com/share/19ZDKvKrUm/" target="_blank" aria-label="تابعنا على فيسبوك">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
                 </div>
                 <a href="https://wa.me/201006473018" target="_blank" class="support-number-link">
                     <i class="fab fa-whatsapp"></i> <span>الدعم الفني: 01006473018</span>
@@ -150,23 +141,25 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>© 2025 منصة القائد. جميع الحقوق محفوظة. تم التطوير بواسطة <a href="https://wa.me/qr/CZO3X7WAZOEEE1" target="_blank">Mazen</a>.</p>
+            <p class="credit-text">
+                © 2025 منصة القائد. جميع الحقوق محفوظة. تم التطوير بواسطة <a href="https://wa.me/qr/CZO3X7WAZOEEE1" target="_blank">Mazen</a>.
+            </p>
         </div>
     </footer>
-<script>
-setInterval(() => {
-  const btn = document.querySelector('.whatsapp-support');
-  if (btn) {
-    btn.classList.add('super-flashy');
-    setTimeout(() => btn.classList.remove('super-flashy'), 1200); // نفس مدة الأنيميشن
-  }
-}, 2500); // كل 5 ثواني
-</script>
+    <script>
+    setInterval(() => {
+        const btn = document.querySelector('.whatsapp-support');
+        if (btn) {
+            btn.classList.add('super-flashy');
+            setTimeout(() => btn.classList.remove('super-flashy'), 1200); // نفس مدة الأنيميشن
+        }
+    }, 2500); // كل 2.5 ثواني
+    </script>
 
     <script type="module" src="years1.js"></script>
     <div id="loading-overlay" class="loading-overlay">
-  <div class="spinner"></div>
-</div>
+        <div class="spinner"></div>
+    </div>
 
 </body>
 </html>
