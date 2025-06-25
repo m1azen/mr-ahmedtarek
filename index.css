@@ -3,18 +3,18 @@
 /* ===================================== */
 body {
     width: 100%;
-    direction: rtl; /* لضمان دعم اللغة العربية من اليمين لليسار */
-    text-align: right; /* لمحاذاة النص لليمين افتراضيا */
+    /* direction: rtl;  هنا ممكن نشيلها لو بتعمل مشاكل في باقي الصفحة وعايز تتحكم في كل جزء لوحده */
+    /* لو لسه عايز الصفحة كلها RTL، سيبها، بس الهيدر هنعدله بخصائص flexbox */
+    text-align: right;
     box-sizing: border-box;
     line-height: 1.6;
-    overflow-x: hidden; /* لمنع ظهور شريط التمرير الأفقي غير المرغوب فيه */
-    color: #1A2E47; /* لون النص الأساسي */
-    background-color: #ffffff; /* لون الخلفية الأساسي */
-    transition: background-color 0.3s ease, color 0.3s ease; /* للانتقال السلس بين الثيمات */
-    position: relative; /* لتمكين استخدام العلامة المائية بشكل صحيح */
+    overflow-x: hidden;
+    color: #1A2E47;
+    background-color: #ffffff;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    position: relative;
 }
 
-/* تنسيقات الوضع الداكن */
 body.dark-mode {
     background-color: #1a2e47;
     color: #f8f9fa;
@@ -44,7 +44,7 @@ body.dark-mode a {
 }
 
 .section-title {
-    text-align: center; /* لسنترة العنوان */
+    text-align: center;
     font-size: 2.5em;
     color: #003F8A;
     margin-bottom: 50px;
@@ -52,6 +52,7 @@ body.dark-mode a {
     position: relative;
     padding-bottom: 10px;
 }
+
 .section-title::after {
     content: '';
     position: absolute;
@@ -63,14 +64,21 @@ body.dark-mode a {
     background-color: #007bff;
     border-radius: 2px;
 }
+
 body.dark-mode .section-title {
     color: #E3F2FD;
 }
+
 body.dark-mode .section-title::after {
     background-color: #90CAF9;
 }
 
-
+/* ===================================== */
+/* ✅ 2. Header Banner (الشريط العلوي) - التعديل الرئيسي هنا */
+/* ===================================== */
+/* ===================================== */
+/* Header Banner (الشريط العلوي) - التعديل الرئيسي هنا */
+/* ===================================== */
 /* ===================================== */
 /* ✅ 2. Header Banner (الشريط العلوي) */
 /* ===================================== */
@@ -78,40 +86,46 @@ body.dark-mode .section-title::after {
     position: fixed;
     top: 0;
     left: 0;
+    right: 0;
     width: 100%;
-    height: 70px;
+    height: 60px;
     background-color: #1A2E47;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0px 0px; /* تم إصلاح البادينج هنا */
+    padding: 10px 20px; /* مسافة 20 بكسل من الجانبين و10 بكسل من الأعلى والأسفل */
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
     z-index: 1000;
+    direction: ltr; /* اتجاه العناصر من اليسار لليمين */
 }
+
 
 .website-title {
-    max-width: 200px; /* تحديد عرض ثابت للعنوان */
+    max-width: 200px;
     overflow: hidden;
-    text-overflow: ellipsis; /* إظهار نقاط ... إذا كان النص طويلاً */
+    /* هذا العنصر سيكون على أقصى اليسار بسبب direction: ltr في header-banner */
 }
 
-.website-title a {
-    font-size: 1.8em;
-    font-weight: bold;
-    color: #F8F9FA;
-    text-decoration: none;
-    transition: color 0.3s ease;
-    white-space: nowrap;
+.logo-image {
+    height: 60px;
+    width: auto;
     display: block;
-    width: 100%;
+    transition: transform 0.3s ease, filter 0.3s ease;
+    padding-left: 40px;
 }
-.website-title a:hover {
-    color: #BBDEFB;
+
+.website-title a:hover img {
+    transform: scale(1.05);
+    filter: brightness(1.2);
 }
 
 .header-controls {
     display: flex;
-    gap: 15px;
+    /* هنا التغيير الأساسي: ترتيب العناصر هو "العكسي للصف" */
+    /* هذا يعني أن أول عنصر في الـ HTML (أيقونة اليوزر) سيتم وضعه على أقصى اليمين، */
+    /* وثاني عنصر (زر تبديل الوضع) سيأتي على يساره. */
+    flex-direction: row; /* التأكد من أن الترتيب الطبيعي من اليسار لليمين */
+    gap: 15px; /* مسافة 15 بكسل بين أيقونة اليوزر وزر تبديل الوضع */
     align-items: center;
 }
 
@@ -130,556 +144,8 @@ body.dark-mode .section-title::after {
     box-shadow: 0 0 12px rgba(187, 222, 251, 0.7);
 }
 
-
 /* ===================================== */
-/* ✅ 3. Main Content Banner (Hero Section) */
-/* ===================================== */
-.main-content-banner {
-    background-color: #E0F2F7;
-    height: 500px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 30px 5%;
-    position: relative;
-    overflow: hidden;
-    color: #1A2E47;
-    text-align: right;
-    margin-top: 70px; /* لترك مساحة للشريط العلوي الثابت */
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-body.dark-mode .main-content-banner {
-    background-color: #2a415a;
-    color: #f8f9fa;
-}
-
-.main-content-banner .banner-content {
-    max-width: 50%;
-    text-align: right;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    padding-left: 50px;
-    padding-right: 0;
-}
-
-.main-content-banner h1 {
-    font-size: 3.8em;
-    font-weight: 900;
-    color: #007bff;
-    margin-bottom: 12px;
-    line-height: 1.2;
-}
-
-body.dark-mode .main-content-banner h1 {
-    color: #90CAF9;
-}
-
-.main-content-banner h2 {
-    font-size: 2em;
-    color: #0056b3;
-    margin-top: 0;
-    margin-bottom: 10px;
-}
-
-body.dark-mode .main-content-banner h2 {
-    color: #BBDEFB;
-}
-
-.main-content-banner h3 {
-    font-size: 1.6em;
-    color: #003F8A;
-    margin-bottom: 30px;
-}
-
-body.dark-mode .main-content-banner h3 {
-    color: #E3F2FD;
-}
-
-.main-content-banner .centered-image {
-    width: 80px;
-    height: auto;
-    margin-bottom: 20px;
-    align-self: flex-end;
-}
-
-/* حاوية الأزرار في البانر */
-.main-content-banner .banner-buttons {
-    display: flex;
-    gap: 20px;
-    margin-top: 20px;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-}
-
-/* أزرار البانر بتصميم حلو */
-.main-content-banner .banner-buttons button {
-    background: linear-gradient(45deg, #007bff, #0056b3);
-    color: white;
-    border: none;
-    padding: 15px 40px;
-    border-radius: 30px;
-    font-size: 1.3em;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    display: inline-block;
-    white-space: nowrap;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
-}
-
-body.dark-mode .main-content-banner .banner-buttons button {
-    background: linear-gradient(45deg, #90CAF9, #64B5F6);
-    box-shadow: 0 8px 20px rgba(144, 202, 249, 0.3);
-}
-
-.main-content-banner .banner-buttons button::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    transition: width 0.4s ease-out, height 0.4s ease-out, top 0.4s ease-out, left 0.4s ease-out;
-    transform: translate(-50%, -50%);
-}
-
-.main-content-banner .banner-buttons button:hover::before {
-    width: 250%;
-    height: 250%;
-}
-
-.main-content-banner .banner-buttons button:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 28px rgba(0, 123, 255, 0.4);
-}
-
-body.dark-mode .main-content-banner .banner-buttons button:hover {
-    box-shadow: 0 12px 28px rgba(144, 202, 249, 0.4);
-}
-
-/* الصورة الشخصية للأستاذ أحمد طارق */
-.main-content-banner .teacher-image-container {
-    width: 35%;
-    height: 100%;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    overflow: hidden;
-}
-
-.main-content-banner .teacher-image-container img {
-    max-width: 100%;
-    height: auto;
-    object-fit: contain;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    transform: scale(1.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-body.dark-mode .main-content-banner .teacher-image-container img {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-}
-
-/* ===================================== */
-/* ✅ 4. Sidebar (القائمة الجانبية)        */
-/* ===================================== */
-.sidebar {
-    display: block;
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 250px;
-    height: 100vh;
-    background: rgba(26, 46, 71, 0.95);
-    padding: 80px 20px 20px 20px;
-    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(10px);
-    z-index: 9999;
-    overflow-y: auto;
-    border-right: 2px solid #007bff;
-    transform: translateX(100%);
-    transition: transform 0.4s ease-out;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    text-align: right;
-}
-
-.sidebar.show {
-    transform: translateX(0%);
-}
-
-.sidebar-button {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    text-align: right;
-    margin: 8px 0;
-    background: transparent;
-    color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    padding: 10px 12px;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    direction: rtl;
-    justify-content: flex-end;
-    gap: 10px;
-}
-
-.sidebar-button i {
-    font-size: 20px;
-    color: #ffffff;
-}
-
-.sidebar-button:hover {
-    background-color: rgba(0, 123, 255, 0.15);
-    border-color: #007bff;
-    transform: scale(1.02);
-}
-
-.sidebar-user-info {
-    color: #fff;
-    font-size: 1.2em;
-    font-weight: bold;
-    margin: 20px 0;
-    text-align: right;
-    width: 100%;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-    padding-bottom: 15px;
-}
-
-.close-sidebar-button {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1.1em;
-    z-index: 10000;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-.close-sidebar-button:hover {
-    background-color: #c82333;
-    transform: scale(1.05);
-}
-
-#sidebarContent {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-}
-
-
-/* ===================================== */
-/* ✅ 5. Feature Boxes (صناديق المميزات) */
-/* ===================================== */
-.custom-features {
-    display: flex;
-    flex-direction: column; /* لترتيب العنوان ثم المربعات عموديا */
-    align-items: center; /* لسنترة العنوان والمربعات */
-    padding: 40px 20px;
-    margin-top: 30px;
-}
-
-.features-wrapper { /* الحاوية الجديدة للمربعات */
-    display: flex;
-    justify-content: center; /* لسنترة المربعات داخل الحاوية */
-    gap: 25px;
-    flex-wrap: wrap; /* للسماح بالمربعات بالانتقال لسطر جديد */
-}
-
-.feature-box {
-    background-color: #EBF5FF;
-    border-radius: 15px;
-    width: 290px;
-    padding: 35px 25px;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 123, 255, 0.1);
-    transition: transform 0.4s ease, box-shadow 0.4s ease, background-color 0.3s ease, border-color 0.3s ease;
-    opacity: 0;
-    transform: translateY(50px) scale(0.98);
-    border: 1px solid #C5E1FC;
-}
-
-body.dark-mode .feature-box {
-    background-color: #2c4763;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    border-color: #4A6C8C;
-}
-
-.feature-box:hover {
-    transform: translateY(-5px) scale(1.03);
-    box-shadow: 0 18px 45px rgba(0, 123, 255, 0.25);
-    cursor: pointer;
-}
-
-body.dark-mode .feature-box:hover {
-    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
-}
-
-.icon-wrapper {
-    background-color: #A9D5FF;
-    width: 65px;
-    height: 65px;
-    margin: 0 auto 15px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-body.dark-mode .icon-wrapper {
-    background-color: #557AA7;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-}
-
-.icon-wrapper img {
-    width: 35px;
-    height: 35px;
-}
-
-.line {
-    display: block;
-    width: 3px;
-    height: 35px;
-    background-color: #007bff;
-    margin: 15px auto;
-    transition: background-color 0.3s ease;
-}
-body.dark-mode .line {
-    background-color: #90CAF9;
-}
-
-.feature-box p {
-    color: #1A2E47;
-    font-size: 17px;
-    line-height: 1.7;
-    font-weight: 500;
-    transition: color 0.3s ease;
-}
-body.dark-mode .feature-box p {
-    color: #f8f9fa;
-}
-
-/* Animations for feature boxes (will be triggered by JS with a class) */
-.feature-box.animate {
-    animation: fadeUp 0.8s forwards;
-    animation-delay: var(--delay);
-}
-
-@keyframes fadeUp {
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-/* ===================================== */
-/* ✅ 6. Chemistry Section (قسم الكيمياء) */
-/* ===================================== */
-.chem-section {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 80px 30px;
-    gap: 50px;
-    flex-wrap: wrap;
-    background-color: #F0F8FF;
-    margin-top: 50px;
-    transition: background-color 0.3s ease;
-}
-
-body.dark-mode .chem-section {
-    background-color: #34495e;
-}
-
-.chem-text {
-    max-width: 550px;
-    background-color: #ffffff;
-    padding: 30px 35px;
-    border-radius: 15px;
-    border: 1px solid #B0D7FF;
-    box-shadow: 0 10px 30px rgba(0, 119, 204, 0.15);
-    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-    /* تمت إزالة opacity و transform الأوليين هنا لجعلها مرئية دائمًا */
-}
-
-body.dark-mode .chem-text {
-    background-color: #4a6c8c;
-    border-color: #7AAADF;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-}
-
-.chem-text:hover {
-    transform: scale(1.02);
-    box-shadow: 0 15px 40px rgba(0, 119, 204, 0.25);
-}
-
-body.dark-mode .chem-text:hover {
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-}
-
-.chem-text h2 {
-    font-size: 38px;
-    font-weight: bold;
-    color: #003F8A;
-    margin-bottom: 25px;
-    transition: color 0.3s ease;
-}
-
-body.dark-mode .chem-text h2 {
-    color: #E3F2FD;
-}
-
-.chem-text h2 span {
-    color: #007bff;
-    transition: color 0.3s ease;
-}
-body.dark-mode .chem-text h2 span {
-    color: #90CAF9;
-}
-
-.chem-text p {
-    font-size: 19px;
-    line-height: 1.9;
-    color: #34495E;
-    transition: color 0.3s ease;
-}
-body.dark-mode .chem-text p {
-    color: #CFD8DC;
-}
-
-.chem-img {
-    display: flex; /* للتأكد أن الصورة في المنتصف داخل الـ div */
-    justify-content: center;
-    align-items: center;
-}
-
-.chem-img img {
-    max-width: 320px;
-    height: auto;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 119, 204, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    /* تمت إزالة opacity و transform الأوليين هنا لجعلها مرئية دائمًا */
-}
-
-body.dark-mode .chem-img img {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-}
-
-.chem-img img:hover {
-    transform: scale(1.05);
-}
-
-/* تمت إزالة قواعد animate و keyframes slideRight و slideLeft لأن العناصر ستكون مرئية دائمًا */
-
-
-/* ===================================== */
-/* ✅ 7. Cards Section (بطاقات الدورات/المحتوى) */
-/* ===================================== */
-.cards-section {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    padding: 50px 20px;
-    flex-wrap: wrap;
-    margin-top: 50px;
-}
-
-.card {
-    display: block;
-    text-decoration: none;
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(0, 123, 255, 0.1);
-    overflow: hidden;
-    width: 300px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
-    border: 1px solid #CCE0FF;
-    opacity: 0;
-    transform: translateY(30px);
-}
-
-body.dark-mode .card {
-    background-color: #2c4763;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
-    border-color: #4A6C8C;
-}
-
-
-.card:hover {
-    transform: translateY(-5px) scale(1.03);
-    box-shadow: 0 12px 30px rgba(0, 123, 255, 0.2);
-}
-
-body.dark-mode .card:hover {
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
-}
-
-.card img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-}
-
-.text {
-    padding: 20px;
-    text-align: center;
-}
-
-.text h2 {
-    margin: 0;
-    font-size: 22px;
-    color: #003F8A;
-    margin-bottom: 8px;
-    transition: color 0.3s ease;
-}
-
-body.dark-mode .text h2 {
-    color: #E3F2FD;
-}
-
-.text p {
-    margin: 10px 0 0;
-    font-size: 16px;
-    color: #495C70;
-    transition: color 0.3s ease;
-}
-body.dark-mode .text p {
-    color: #CFD8DC;
-}
-
-/* Animations for cards (will be triggered by JS with a class) */
-.card.animate {
-    animation: fadeInUp 0.6s forwards;
-    animation-delay: var(--delay);
-}
-
-@keyframes fadeInUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* ===================================== */
-/* ✅ 8. Footer (الفوتر/تذييل الصفحة)  */
+/* Footer (الفوتر/تذييل الصفحة)  */
 /* ===================================== */
 .footer {
     background-color: #1A2E47;
@@ -711,7 +177,7 @@ body.dark-mode .text p {
 }
 
 .footer-section.contact {
-    text-align: center; /* سنترة قسم التواصل بشكل كامل */
+    text-align: center; 
 }
 
 .footer-section h4 {
@@ -721,23 +187,23 @@ body.dark-mode .text p {
     position: relative;
     padding-bottom: 10px;
 }
-.footer-section.contact h4 { /* لسنترة العنوان في قسم التواصل */
+.footer-section.contact h4 { 
     text-align: center;
 }
 .footer-section h4::after {
     content: '';
     position: absolute;
     bottom: 0;
-    right: 0;
+    right: 0; /* ليكون الخط على اليمين في النص العادي */
     width: 50px;
     height: 2px;
     background-color: #007bff;
     border-radius: 1px;
 }
-.footer-section.contact h4::after { /* لسنترة الخط تحت العنوان في قسم التواصل */
-    left: 50%;
+.footer-section.contact h4::after { 
+    left: 50%; /* للخط في النص اللي في المنتصف */
     transform: translateX(-50%);
-    right: unset;
+    right: unset; /* لإلغاء الخاصية اللي فوقها */
 }
 
 .footer-section p {
@@ -771,13 +237,13 @@ body.dark-mode .text p {
     margin-top: 15px;
     display: flex;
     gap: 15px;
-    justify-content: center; /* لسنترة أيقونات التواصل الاجتماعي */
-    flex-wrap: wrap; /* للسماح بالانتقال لسطر جديد إذا كانت كثيرة */
+    justify-content: center; 
+    flex-wrap: wrap; 
 }
 
 .social-links a {
     display: inline-flex;
-    width: 45px; /* حجم أكبر قليلاً */
+    width: 45px; 
     height: 45px;
     border-radius: 50%;
     background-color: #007bff;
@@ -785,7 +251,7 @@ body.dark-mode .text p {
     justify-content: center;
     transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
     box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
-    text-decoration: none; /* إزالة الخط السفلي من الروابط */
+    text-decoration: none; 
 }
 .social-links a:hover {
     transform: translateY(-3px);
@@ -794,7 +260,7 @@ body.dark-mode .text p {
 }
 
 .social-links a i {
-    font-size: 24px; /* حجم أكبر للأيقونات */
+    font-size: 24px; 
     color: white;
 }
 
@@ -807,7 +273,7 @@ body.dark-mode .text p {
     font-size: 1.1em;
     font-weight: 500;
     transition: color 0.3s ease;
-    justify-content: center; /* لسنترة رقم الدعم الفني */
+    justify-content: center; 
     width: 100%;
 }
 
@@ -825,7 +291,7 @@ body.dark-mode .text p {
 .footer-bottom {
     width: 100%;
     max-width: 1200px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: none; /* إزالة الخط العلوي للفوتر */
     padding-top: 20px;
     margin-top: 20px;
     text-align: center;
@@ -845,14 +311,13 @@ body.dark-mode .text p {
     text-decoration: underline;
 }
 
-
 /* ===================================== */
-/* ✅ 9. Professional Dark Mode Switch UI */
+/* Professional Dark Mode Switch UI */
 /* ===================================== */
 .theme-switch-wrapper {
     display: flex;
     align-items: center;
-    margin-left: 15px;
+    /* تم إزالة margin-left هنا لأن الـ gap في .header-controls هو اللي هيتحكم في المسافة */
     position: relative;
     width: 60px;
     height: 34px;
@@ -954,26 +419,864 @@ input:checked + .slider + .icon-light + .icon-dark {
     opacity: 1;
 }
 
+/* باقي الـ CSS (Main Content, Sidebar, Features, Chemistry, Cards, Watermark, Responsive) كما هو بدون تغيير. */
+/* للتأكد من الصورة الكاملة، يمكنني إرفاق الكود بالكامل إذا أردت. */
+/* ===================================== */
+/* ✅ 3. Main Content Banner (Hero Section) */
+/* ===================================== */
+.main-content-banner {
+    background-color: #E0F2F7;
+    height: 500px;
+    width:100% ; 
+    display: flex; 
+    flex-direction: row; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 4px 6%; 
+    position: relative; 
+    
+    color: #1A2E47;
+    text-align: right; /* محاذاة المحتوى داخل البانر لليمين */
+    transition: background-color 0.3s ease, color 0.3s ease;
+    gap: 40px; 
+}
+
+body.dark-mode .main-content-banner {
+    background-color: #2a415a;
+    color: #f8f9fa;
+}
+
+.main-content-banner .banner-content {
+    flex: 1; 
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* محاذاة محتوى البانر لليسار داخل الـ flex container الخاص به */
+    z-index: 1;
+    max-width: 60%; 
+}
+
+.banner-title {
+    font-size: 3.2em;
+    font-weight: 900;
+    color: #007bff;
+    margin-bottom: 12px;
+    line-height: 1.2;
+}
+
+body.dark-mode .banner-title {
+    color: #90CAF9;
+}
+
+.banner-subtitle {
+    font-size: 1.8em;
+    color: #0056b3;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+body.dark-mode .banner-subtitle {
+    color: #BBDEFB;
+}
+
+.banner-description {
+    font-size: 1.4em;
+    color: #003F8A;
+    margin-bottom: 30px;
+}
+
+body.dark-mode .banner-description {
+    color: #E3F2FD;
+}
+
+.main-content-banner .banner-buttons {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    justify-content: flex-start; 
+}
+
+.main-content-banner .banner-buttons button {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    border-radius: 30px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
+}
+
+body.dark-mode .main-content-banner .banner-buttons button {
+    background: linear-gradient(45deg, #90CAF9, #64B5F6);
+    box-shadow: 0 8px 20px rgba(144, 202, 249, 0.3);
+}
+
+.main-content-banner .banner-buttons button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transition: width 0.4s ease-out, height 0.4s ease-out, top 0.4s ease-out, left 0.4s ease-out;
+    transform: translate(-50%, -50%);
+}
+
+.main-content-banner .banner-buttons button:hover::before {
+    width: 250%;
+    height: 250%;
+}
+
+.main-content-banner .banner-buttons button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 28px rgba(0, 123, 255, 0.4);
+}
+
+body.dark-mode .main-content-banner .banner-buttons button:hover {
+    box-shadow: 0 12px 28px rgba(144, 202, 249, 0.4);
+}
+
+.main-content-banner .teacher-image-container {
+    flex: 0 0 35%; 
+    height: 100%;
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    padding: 10%;
+    z-index: 0;
+}
+
+.main-content-banner .teacher-image-container img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 50%; 
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transform: scale(1.05); 
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+body.dark-mode .main-content-banner .teacher-image-container img {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* ===================================== */
+/* ✅ 4. Sidebar (القائمة الجانبية) */
+/* ===================================== */
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: -300px; 
+    width: 280px;
+    height: 100%;
+    background-color: #1A2E47; 
+    color: #f8f9fa;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+    transition: right 0.4s ease-out, visibility 0s linear 0.4s;
+    z-index: 1001; 
+    padding-top: 70px; 
+    overflow-y: auto; 
+    visibility: hidden; 
+    direction: rtl; /* أعدها RTL هنا لأنها قائمة جانبية في الغالب تكون بهذا الاتجاه */
+}
+
+body.dark-mode .sidebar {
+    background-color: #0d1e31;
+}
+
+.sidebar.open {
+    right: 0; 
+    visibility: visible; 
+    transition: right 0.4s ease-out;
+}
+
+.close-sidebar-button {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: none;
+    border: none;
+    font-size: 1.8em;
+    color: #f8f9fa;
+    cursor: pointer;
+    z-index: 1002;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.close-sidebar-button:hover {
+    transform: rotate(90deg);
+    color: #FF6B6B;
+}
+
+#sidebarContent {
+    padding: 20px;
+    font-size: 1.1em;
+    line-height: 2;
+}
+
+/* ===================================== */
+/* ✅ Sidebar Buttons (أزرار القائمة الجانبية) - التعديلات هنا */
+/* ===================================== */
+.sidebar-button {
+    width: 100%;
+    text-align: right; 
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    background-color: #007bff; 
+    color: white;
+    border: none;
+    border-radius: 8px; 
+    cursor: pointer;
+    font-size: 1.1em;
+    display: flex; 
+    align-items: center;
+    gap: 10px; 
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+}
+
+body.dark-mode .sidebar-button {
+    background-color: #64B5F6; 
+    box-shadow: 0 4px 10px rgba(144, 202, 249, 0.2);
+}
+
+.sidebar-button:hover {
+    background-color: #0056b3; 
+    transform: translateY(-2px); 
+    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3);
+}
+
+body.dark-mode .sidebar-button:hover {
+    background-color: #42A5F5;
+    box-shadow: 0 6px 15px rgba(144, 202, 249, 0.3);
+}
+
+.sidebar-button i { 
+    font-size: 1.2em;
+    margin-left: 8px; 
+}
+
+#sidebarContent a {
+    color: #BBDEFB;
+    text-decoration: none;
+    display: block;
+    padding: 8px 0;
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+/* ===================================== */
+/* ✅ 5. Feature Boxes (صناديق المميزات) */
+/* ===================================== */
+.custom-features {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    margin-top: 30px;
+}
+
+.features-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.feature-box {
+    background-color: #EBF5FF;
+    border-radius: 15px;
+    width: 290px;
+    padding: 35px 25px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 123, 255, 0.1);
+    transition: transform 0.4s ease, box-shadow 0.4s ease, background-color 0.3s ease, border-color 0.3s ease;
+    opacity: 0;
+    transform: translateY(50px) scale(0.98);
+    border: 1px solid #C5E1FC;
+    cursor: default;
+}
+
+body.dark-mode .feature-box {
+    background-color: #2c4763;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border-color: #4A6C8C;
+}
+
+.feature-box:hover {
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 0 18px 45px rgba(0, 123, 255, 0.25);
+}
+
+body.dark-mode .feature-box:hover {
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
+}
+
+.icon-wrapper {
+    background-color: #A9D5FF;
+    width: 65px;
+    height: 65px;
+    margin: 0 auto 15px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    cursor: default;
+}
+
+body.dark-mode .icon-wrapper {
+    background-color: #557AA7;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.icon-wrapper img {
+    width: 35px;
+    height: 35px;
+    cursor: default;
+}
+
+.line {
+    display: block;
+    width: 3px;
+    height: 35px;
+    background-color: #007bff;
+    margin: 15px auto;
+    transition: background-color 0.3s ease;
+    cursor: default;
+}
+
+body.dark-mode .line {
+    background-color: #90CAF9;
+}
+
+.feature-box p {
+    color: #1A2E47;
+    font-size: 17px;
+    line-height: 1.7;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    cursor: default;
+}
+
+body.dark-mode .feature-box p {
+    color: #f8f9fa;
+}
+
+/* Animations for feature boxes (will be triggered by JS with a class) */
+.feature-box.animate {
+    animation: fadeUp 0.8s forwards;
+    animation-delay: var(--delay);
+}
+
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ===================================== */
+/* ✅ 6. Chemistry Section (قسم الكيمياء) */
+/* ===================================== */
+.chem-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 30px;
+    gap: 50px;
+    flex-wrap: wrap;
+    background-color: #F0F8FF;
+    margin-top: 50px;
+    transition: background-color 0.3s ease;
+}
+
+body.dark-mode .chem-section {
+    background-color: #34495e;
+}
+
+.chem-text {
+    max-width: 550px;
+    background-color: #ffffff;
+    padding: 30px 35px;
+    border-radius: 15px;
+    border: 1px solid #B0D7FF;
+    box-shadow: 0 10px 30px rgba(0, 119, 204, 0.15);
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+body.dark-mode .chem-text {
+    background-color: #4a6c8c;
+    border-color: #7AAADF;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.chem-text:hover {
+    transform: scale(1.02);
+    box-shadow: 0 15px 40px rgba(0, 119, 204, 0.25);
+}
+
+body.dark-mode .chem-text:hover {
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+.chem-text h2 {
+    font-size: 38px;
+    font-weight: bold;
+    color: #003F8A;
+    margin-bottom: 25px;
+    transition: color 0.3s ease;
+}
+
+body.dark-mode .chem-text h2 {
+    color: #E3F2FD;
+}
+
+.chem-text h2 span {
+    color: #007bff;
+    transition: color 0.3s ease;
+}
+body.dark-mode .chem-text h2 span {
+    color: #90CAF9;
+}
+
+.chem-text p {
+    font-size: 19px;
+    line-height: 1.9;
+    color: #34495E;
+    transition: color 0.3s ease;
+}
+body.dark-mode .chem-text p {
+    color: #CFD8DC;
+}
+
+.chem-img {
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+}
+
+.chem-img img {
+    max-width: 320px;
+    height: auto;
+    border-radius: 15px;
+    
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+body.dark-mode .chem-img img {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.chem-img img:hover {
+    transform: scale(1.05);
+}
+
+/* ===================================== */
+/* ✅ 7. Cards Section (بطاقات الدورات/المحتوى) */
+/* ===================================== */
+.cards-section {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    padding: 50px 20px;
+    flex-wrap: wrap;
+    margin-top: 50px;
+}
+
+.card {
+    display: block;
+    text-decoration: none;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 123, 255, 0.1);
+    overflow: hidden;
+    width: 300px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+    border: 1px solid #CCE0FF;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+body.dark-mode .card {
+    background-color: #2c4763;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+    border-color: #4A6C8C;
+}
+
+
+.card:hover {
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 0 12px 30px rgba(0, 123, 255, 0.2);
+}
+
+body.dark-mode .card:hover {
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.text {
+    padding: 20px;
+    text-align: center;
+}
+
+.text h2 {
+    margin: 0;
+    font-size: 22px;
+    color: #003F8A;
+    margin-bottom: 8px;
+    transition: color 0.3s ease;
+}
+
+body.dark-mode .text h2 {
+    color: #E3F2FD;
+}
+
+.text p {
+    margin: 10px 0 0;
+    font-size: 16px;
+    color: #495C70;
+    transition: color 0.3s ease;
+}
+body.dark-mode .text p {
+    color: #CFD8DC;
+}
+
+/* Animations for cards (will be triggered by JS with a class) */
+.card.animate {
+    animation: fadeInUp 0.6s forwards;
+    animation-delay: var(--delay);
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===================================== */
+/* ✅ 8. Footer (الفوتر/تذييل الصفحة)  */
+/* ===================================== */
+.footer {
+    background-color: #1A2E47;
+    color: #f8f9fa;
+    padding: 40px 20px;
+    font-size: 16px;
+    margin-top: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 1200px;
+    margin-bottom: 30px;
+    gap: 30px;
+}
+
+.footer-section {
+    flex: 1;
+    min-width: 250px;
+    margin-bottom: 20px;
+    text-align: right;
+}
+
+.footer-section.contact {
+    text-align: center; 
+}
+
+.footer-section h4 {
+    font-size: 1.3em;
+    color: #BBDEFB;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 10px;
+}
+.footer-section.contact h4 { 
+    text-align: center;
+}
+.footer-section h4::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0; /* ليكون الخط على اليمين في النص العادي */
+    width: 50px;
+    height: 2px;
+    background-color: #007bff;
+    border-radius: 1px;
+}
+.footer-section.contact h4::after { 
+    left: 50%; /* للخط في النص اللي في المنتصف */
+    transform: translateX(-50%);
+    right: unset; /* لإلغاء الخاصية اللي فوقها */
+}
+
+.footer-section p {
+    font-size: 0.95em;
+    line-height: 1.8;
+    color: #CFD8DC;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-section ul li {
+    margin-bottom: 10px;
+}
+
+.footer-section ul li a {
+    color: #CFD8DC;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-section ul li a:hover {
+    color: #90CAF9;
+    text-decoration: underline;
+}
+
+.social-links {
+    margin-top: 15px;
+    display: flex;
+    gap: 15px;
+    justify-content: center; 
+    flex-wrap: wrap; 
+}
+
+.social-links a {
+    display: inline-flex;
+    width: 45px; 
+    height: 45px;
+    border-radius: 50%;
+    background-color: #007bff;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+    text-decoration: none; 
+}
+.social-links a:hover {
+    transform: translateY(-3px);
+    background-color: #0056b3;
+    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
+}
+
+.social-links a i {
+    font-size: 24px; 
+    color: white;
+}
+
+.support-number-link {
+    display: flex;
+    align-items: center;
+    color: #F8F9FA;
+    text-decoration: none;
+    margin-top: 20px;
+    font-size: 1.1em;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    justify-content: center; 
+    width: 100%;
+}
+
+.support-number-link i {
+    font-size: 22px;
+    color: #4CAF50;
+    margin-left: 10px;
+}
+
+.support-number-link:hover {
+    color: #90CAF9;
+    text-decoration: underline;
+}
+
+.footer-bottom {
+    width: 100%;
+    max-width: 1200px;
+    border-top: none; /* تم إزالة الخط العلوي هنا */
+    padding-top: 20px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.credit-text {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9em;
+}
+
+.credit-text a {
+    color: #90CAF9;
+    font-weight: bold;
+    text-decoration: none;
+}
+.credit-text a:hover {
+    text-decoration: underline;
+}
+
+/* ===================================== */
+/* ✅ 9. Professional Dark Mode Switch UI */
+/* ===================================== */
+.theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+    margin-left: 15px; /* مسافة بين الزر والأيقونة التالية له (أيقونة اليوزر) */
+    position: relative;
+    width: 60px;
+    height: 34px;
+}
+
+.theme-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.theme-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+body.dark-mode .slider {
+    background-color: #333;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+body.dark-mode .slider:before {
+    background-color: #90CAF9;
+}
+
+input:checked + .slider {
+    background-color: #007bff;
+}
+
+body.dark-mode input:checked + .slider {
+    background-color: #3f51b5;
+}
+
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #007bff;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+.theme-switch .icon-light{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #ffc107;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+}
+
+.theme-switch .icon-dark {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #343a40;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+}
+
+.theme-switch .icon-light {
+    right: 8px;
+    opacity: 1;
+}
+
+.theme-switch .icon-dark {
+    left: 8px;
+    opacity: 0;
+}
+
+input:checked + .slider + .icon-light {
+    opacity: 0;
+}
+
+input:checked + .slider + .icon-light + .icon-dark {
+    opacity: 1;
+}
+
 /* ===================================== */
 /* ✅ 10. Background Watermark */
 /* ===================================== */
 .watermark {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(-30deg);
-    font-size: 15vw;
-    color: rgba(0, 0, 0, 0.03);
-    font-weight: bold;
-    pointer-events: none;
-    z-index: -1;
-    text-transform: uppercase;
-    white-space: nowrap;
-    transition: color 0.3s ease;
+    position: fixed; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    
+    pointer-events: none; 
+    z-index: -1; 
 }
 
-body.dark-mode .watermark {
-    color: rgba(255, 255, 255, 0.03);
+.watermark img {
+    width: 50vw; 
+    height: 50vh; 
+    object-fit: cover; 
+    
+    filter: brightness(60%) opacity(0.1); 
+    display: block; 
+}
+
+body.dark-mode .watermark img {
+    filter: brightness(40%) opacity(0.05); 
 }
 
 /* ===================================== */
@@ -1076,7 +1379,7 @@ body.dark-mode .watermark {
     .custom-features {
         padding: 20px 10px;
     }
-    .features-wrapper { /* Ensure wrapper handles responsiveness */
+    .features-wrapper { 
         flex-direction: column;
         align-items: center;
     }
@@ -1168,4 +1471,70 @@ body.dark-mode .watermark {
     .section-title {
         font-size: 2em;
     }
+}
+.whatsapp-support {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background-color: #25d366;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.whatsapp-support:hover {
+    background-color: #1ebe5d;
+    transform: scale(1.05);
+}
+
+.whatsapp-support i {
+    font-size: 20px;
+}
+@keyframes flashPulseShake {
+  0% {
+    transform: scale(1) rotate(0deg);
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6);
+    filter: brightness(1);
+  }
+  10% {
+    transform: scale(1.05) rotate(-2deg);
+    box-shadow: 0 0 10px 3px rgba(37, 211, 102, 0.6);
+    filter: brightness(1.2);
+  }
+  20% {
+    transform: scale(1.08) rotate(2deg);
+    box-shadow: 0 0 14px 5px rgba(37, 211, 102, 0.5);
+    filter: brightness(1.4);
+  }
+  30% {
+    transform: scale(0.98) rotate(-3deg);
+  }
+  40% {
+    transform: scale(1.04) rotate(2deg);
+  }
+  60% {
+    transform: scale(1.02) rotate(-1deg);
+    filter: brightness(1.1);
+  }
+  80% {
+    transform: scale(1) rotate(0deg);
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.0);
+    filter: brightness(1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.super-flashy {
+  animation: flashPulseShake 1.2s ease-in-out;
 }
