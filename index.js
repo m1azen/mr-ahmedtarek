@@ -7,13 +7,13 @@ import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11
 
 // إعدادات Firebase الخاصة بتطبيقك (تأكد من مطابقتها لتلك الموجودة في sign.js و login.js)
 const firebaseConfig = {
-  apiKey: "AIzaSyCV_AIVs3JAeVnIkGTievQdKO_RKVTMNtk",
-  authDomain: "mrahmedtarek-ffdac.firebaseapp.com",
-  projectId: "mrahmedtarek-ffdac",
-  storageBucket: "mrahmedtarek-ffdac.firebasestorage.app",
-  messagingSenderId: "660123002704",
-  appId: "1:660123002704:web:15b96f9d407042df412e55",
-  measurementId: "G-98B9X9J60E"
+    apiKey: "AIzaSyCV_AIVs3JAeVnIkGTievQdKO_RKVTMNtk",
+    authDomain: "mrahmedtarek-ffdac.firebaseapp.com",
+    projectId: "mrahmedtarek-ffdac",
+    storageBucket: "mrahmedtarek-ffdac.firebasestorage.app",
+    messagingSenderId: "660123002704",
+    appId: "1:660123002704:web:15b96f9d407042df412e55",
+    measurementId: "G-98B9X9J60E"
 };
 
 // تهيئة Firebase
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
         homeButton.innerHTML = `<i class="fas fa-home"></i> الصفحة الرئيسية`;
         homeButton.addEventListener('click', () => {
             window.location.href = 'index.html';
-            sidebar.classList.remove('show');
+            sidebar.classList.remove('open'); // تم التعديل هنا: 'show' إلى 'open'
         });
         sidebarContent.appendChild(homeButton);
 
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
             coursesSidebarButton.innerHTML = `<i class="fas fa-book-open"></i> كورساتي`;
             coursesSidebarButton.addEventListener('click', () => {
                 window.location.href = 'my_courses.html';
-                sidebar.classList.remove('show');
+                sidebar.classList.remove('open'); // تم التعديل هنا: 'show' إلى 'open'
             });
             sidebarContent.appendChild(coursesSidebarButton);
 
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
             forumButton.innerHTML = `<i class="fas fa-users"></i> منتدى الطلبة`;
             forumButton.addEventListener('click', () => {
                 window.location.href = 'student_forum.html';
-                sidebar.classList.remove('show');
+                sidebar.classList.remove('open'); // تم التعديل هنا: 'show' إلى 'open'
             });
             sidebarContent.appendChild(forumButton);
 
@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
             accountButton.innerHTML = `<i class="fas fa-user-circle"></i> حسابي`;
             accountButton.addEventListener('click', () => {
                 window.location.href = 'myaccount.html';
-                sidebar.classList.remove('show');
+                sidebar.classList.remove('open'); // تم التعديل هنا: 'show' إلى 'open'
             });
             sidebarContent.appendChild(accountButton);
 
@@ -157,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
             logoutButton.innerHTML = `<i class="fas fa-sign-out-alt"></i> تسجيل خروج`;
             logoutButton.addEventListener('click', () => {
                 firebaseLogout();
-                sidebar.classList.remove('show');
+                sidebar.classList.remove('open'); // تم التعديل هنا: 'show' إلى 'open'
             });
             sidebarContent.appendChild(logoutButton);
 
@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
             registerButton.innerHTML = `<i class="fas fa-user-plus"></i> تسجيل جديد`;
             registerButton.addEventListener('click', () => {
                 window.location.href = 'sign.html';
-                sidebar.classList.remove('show');
+                sidebar.classList.remove('open'); // تم التعديل هنا: 'show' إلى 'open'
             });
             sidebarContent.appendChild(registerButton);
 
@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
             loginButton.innerHTML = `<i class="fas fa-sign-in-alt"></i> تسجيل دخول`;
             loginButton.addEventListener('click', () => {
                 window.location.href = 'login.html';
-                sidebar.classList.remove('show');
+                sidebar.classList.remove('open'); // تم التعديل هنا: 'show' إلى 'open'
             });
             sidebarContent.appendChild(loginButton);
         }
@@ -265,10 +265,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (userIcon) {
         userIcon.addEventListener('click', (event) => {
             event.stopPropagation();
-            sidebar.classList.toggle('show');
-            if (sidebar.classList.contains('show')) {
+            sidebar.classList.toggle('open'); // تم التعديل هنا: 'show' إلى 'open'
+            if (sidebar.classList.contains('open')) { // تم التعديل هنا: 'show' إلى 'open'
                 if (isFirebaseReady) {
-                   updateUI();
+                    updateUI();
                 }
             }
         });
@@ -279,7 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // معالج حدث النقر على زر إغلاق الشريط الجانبي
     if (closeSidebarBtn) {
         closeSidebarBtn.addEventListener('click', () => {
-            sidebar.classList.remove('show');
+            sidebar.classList.remove('open'); // تم التعديل هنا: 'show' إلى 'open'
         });
     } else {
         console.error("العنصر ذو الـ ID 'closeSidebarButton' غير موجود في HTML.");
@@ -288,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // إغلاق الشريط الجانبي عند النقر خارج الشريط أو أيقونة المستخدم
     document.addEventListener('click', (event) => {
         if (sidebar && userIcon && !sidebar.contains(event.target) && !userIcon.contains(event.target)) {
-            sidebar.classList.remove('show');
+            sidebar.classList.remove('open'); // تم التعديل هنا: 'show' إلى 'open'
         }
     });
 
@@ -298,7 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
             event.stopPropagation();
         });
     } else {
-           console.error("العنصر ذو الـ ID 'sidebar' غير موجود في HTML.");
+            console.error("العنصر ذو الـ ID 'sidebar' غير موجود في HTML.");
     }
 
     // =====================================
@@ -319,4 +319,12 @@ document.addEventListener('DOMContentLoaded', () => {
     animateElements.forEach(element => {
         observer.observe(element);
     });
+
+    // إضافة: ضبط margin-top لـ main-content-banner بناءً على ارتفاع الهيدر
+    const headerBanner = document.querySelector('.header-banner');
+    const mainContentBanner = document.querySelector('.main-content-banner');
+    if (headerBanner && mainContentBanner) {
+        const headerHeight = headerBanner.offsetHeight;
+        mainContentBanner.style.marginTop = `${headerHeight}px`;
+    }
 });
