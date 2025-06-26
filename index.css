@@ -1538,3 +1538,192 @@ body.dark-mode .watermark img {
 .super-flashy {
   animation: flashPulseShake 1.2s ease-in-out;
 }
+/* ===================================== */
+/* ✅ Mobile Screen Specific Adjustments (Smallest Screens) */
+/* ===================================== */
+@media (max-width: 375px) {
+    /* Header Banner Adjustments */
+    .header-banner {
+        height: 50px; /* Smaller height for the header */
+        padding: 8px 15px; /* Adjust padding */
+    }
+
+    .logo-image {
+        height: 45px; /* Smaller logo */
+        padding-left: 20px;
+    }
+
+    .user-icon-clickable {
+        width: 35px; /* Smaller user icon */
+        height: 35px;
+    }
+
+    .theme-switch-wrapper {
+        width: 45px; /* Smaller switch */
+        height: 25px;
+    }
+
+    .theme-switch .slider {
+        border-radius: 25px;
+    }
+
+    .theme-switch .slider:before {
+        height: 18px; /* Smaller slider circle */
+        width: 18px;
+        left: 3px;
+        bottom: 3.5px;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(19px); /* Adjust transform for smaller switch */
+    }
+
+    .theme-switch .icon-light,
+    .theme-switch .icon-dark {
+        font-size: 14px; /* Smaller icons */
+    }
+
+    .theme-switch .icon-light { right: 5px; }
+    .theme-switch .icon-dark { left: 5px; }
+
+
+    /* Main Content Banner (Hero Section) Adjustments */
+    .main-content-banner {
+        padding: 40px 15px;
+    }
+
+    .banner-title {
+        font-size: 1.6em; /* Smaller title */
+        margin-bottom: 8px;
+    }
+
+    .banner-subtitle {
+        font-size: 1em; /* Smaller subtitle */
+        margin-bottom: 8px;
+    }
+
+    .banner-description {
+        font-size: 0.85em; /* Smaller description */
+        margin-bottom: 20px;
+    }
+
+    .main-content-banner .banner-buttons button {
+        padding: 12px 30px; /* Smaller buttons */
+        font-size: 1em;
+    }
+
+    .main-content-banner .teacher-image-container {
+        margin-bottom: 20px;
+    }
+
+    .main-content-banner .teacher-image-container img {
+        width: 80%; /* Slightly smaller image */
+    }
+
+    /* Section Title Adjustments */
+    .section-title {
+        font-size: 1.8em; /* Smaller section titles */
+        margin-top: 40px;
+        margin-bottom: 30px;
+    }
+
+    /* Feature Boxes Adjustments */
+    .custom-features {
+        padding: 15px 10px;
+    }
+    .feature-box {
+        width: calc(100% - 30px); /* Adjust width */
+        padding: 20px 10px;
+    }
+    .icon-wrapper {
+        width: 55px; /* Smaller icon wrapper */
+        height: 55px;
+    }
+    .icon-wrapper img {
+        width: 30px; /* Smaller icons */
+        height: 30px;
+    }
+    .feature-box p {
+        font-size: 15px; /* Smaller text */
+    }
+
+    /* Chemistry Section Adjustments */
+    .chem-section {
+        padding: 40px 15px;
+        gap: 20px;
+    }
+    .chem-text {
+        padding: 25px 20px;
+    }
+    .chem-text h2 {
+        font-size: 28px; /* Smaller heading */
+        margin-bottom: 15px;
+    }
+    .chem-text p {
+        font-size: 16px; /* Smaller paragraph text */
+    }
+    .chem-img img {
+        max-width: 200px; /* Even smaller image */
+    }
+
+    /* Cards Section Adjustments */
+    .cards-section {
+        padding: 30px 15px;
+        gap: 20px;
+    }
+    .card {
+        width: calc(100% - 30px);
+        max-width: 280px;
+    }
+    .card img {
+        height: 150px; /* Smaller card images */
+    }
+    .text h2 {
+        font-size: 18px; /* Smaller card title */
+    }
+    .text p {
+        font-size: 14px; /* Smaller card description */
+    }
+
+    /* Footer Adjustments */
+    .footer {
+        padding: 15px 10px;
+        font-size: 14px;
+    }
+    .footer-section h4 {
+        font-size: 1em;
+        margin-bottom: 15px;
+    }
+    .footer-section p,
+    .footer-section ul li a {
+        font-size: 0.85em;
+    }
+    .social-links a {
+        width: 30px; /* Smaller social icons */
+        height: 30px;
+    }
+    .social-links a i {
+        font-size: 18px;
+    }
+    .support-number-link {
+        font-size: 0.9em;
+    }
+    .support-number-link i {
+        font-size: 18px;
+    }
+    .credit-text {
+        font-size: 0.8em;
+    }
+
+    /* WhatsApp Support Button */
+    .whatsapp-support {
+        bottom: 15px;
+        left: 15px;
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+    .whatsapp-support i {
+        font-size: 18px;
+    }
+
+    }
