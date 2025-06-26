@@ -1563,10 +1563,11 @@ html, body {
 /* تعديل خاص بالشاشات الصغيرة */
 @media (max-width: 768px) {
   /* ✅ الشريط العلوي */
-  .header-banner {
-    direction: rtl;
+  .header-banner {    
     width: 100vw;
     overflow-x: hidden;
+}
+
   }
 
   .header-controls {
