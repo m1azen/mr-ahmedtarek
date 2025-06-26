@@ -196,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isUserLoggedIn()) {
             // زر "اشتراكاتي" - للمستخدمين المسجلين دخوله
             const subscriptionsButton = document.createElement('button');
-            subscriptionsButton.textContent = 'اشتراكاتي';
+            subscriptionsButton.textContent = '  اشتراكاتي';
             subscriptionsButton.onclick = () => window.location.href = 'my_subscriptions.html';
             bannerButtonsContainer.appendChild(subscriptionsButton);
         } else {
