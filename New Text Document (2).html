@@ -1,63 +1,84 @@
-<!DOCTYPE html><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <title>مشغل فيديو محمي</title>
-
-  <!-- Video.js -->
-  <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
-  <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
-
+  <title>فيديو الطالب</title>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <style>
     body {
-      margin: 0;
-      padding: 0;
-      background: #f2f2f2;
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      margin: 0;
     }
 
-    .video-container {
+    #video-section {
       width: 90%;
       max-width: 800px;
-      position: relative;
+      display: none;
     }
 
-    .watermark {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      font-size: 14px;
-      color: rgba(255, 255, 255, 0.7);
-      background: rgba(0,0,0,0.4);
-      padding: 5px 10px;
-      border-radius: 5px;
-      pointer-events: none;
+    #error-message {
+      background: #fff3f3;
+      border: 1px solid #f5c2c2;
+      padding: 20px;
+      border-radius: 10px;
+      color: #d9534f;
+      font-size: 18px;
+      display: none;
+      text-align: center;
+    }
+
+    iframe {
+      width: 100%;
+      height: 450px;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
     }
   </style>
 </head>
-<body oncontextmenu="return false">
+<body>
 
-<div class="video-container">
-  <div class="watermark">اسم الطالب: Mazen</div>
-
-  <video
-    id="my-video"
-    class="video-js"
-    controls
-    preload="auto"
-    width="100%"
-    height="400"
-    data-setup="{}"
-  >
-    <source src="https://drive.google.com/uc?export=download&id=15uJIh_nL4Ki8y3_ggsxSqSVvj2jXIvQK" type="video/mp4" />
-    متصفحك لا يدعم تشغيل الفيديو.
-  </video>
+<div id="video-section">
+  <iframe 
+    src="https://drive.google.com/file/d/15uJIh_nL4Ki8y3_ggsxSqSVvj2jXIvQK/preview" 
+    allow="autoplay">
+  </iframe>
 </div>
 
-</body>
-</html>
+<div id="error-message">يجب تسجيل الدخول لمشاهدة هذا الفيديو.</div>
 
+<script>
+  // إعدادات Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyCV_AIVs3JAeVnIkGTievQdKO_RKVTMNtk",
+    authDomain: "mrahmedtarek-ffdac.firebaseapp.com",
+    projectId: "mrahmedtarek-ffdac",
+    storageBucket: "mrahmedtarek-ffdac.firebasestorage.app",
+    messagingSenderId: "660123002704",
+    appId: "1:660123002704:web:15b96f9d407042df412e55",
+    measurementId: "G-98B9X9J60E"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+
+  // التحقق من تسجيل الدخول
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      // مسجل دخول
+      document.getElementById("video-section").style.display = "block";
+    } else {
+      // مش مسجل
+      document.getElementById("error-message").style.display = "block";
+    }
+  });
+</script>
+
+</body>
 </html>
