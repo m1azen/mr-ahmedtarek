@@ -78,6 +78,23 @@
       document.getElementById("error-message").style.display = "block";
     }
   });
+  <script>
+  // منع كليك يمين
+  document.addEventListener("contextmenu", e => e.preventDefault());
+
+  // منع F12 وCtrl+Shift+I وCtrl+U وCtrl+S
+  document.onkeydown = function (e) {
+    if (
+      e.keyCode == 123 || // F12
+      (e.ctrlKey && e.shiftKey && e.keyCode == 73) || // Ctrl+Shift+I
+      (e.ctrlKey && e.keyCode == 85) || // Ctrl+U
+      (e.ctrlKey && e.keyCode == 83) // Ctrl+S
+    ) {
+      return false;
+    }
+  };
+</script>
+
 </script>
 
 </body>
