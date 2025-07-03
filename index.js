@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
             coursesSidebarButton.className = 'sidebar-button';
             coursesSidebarButton.innerHTML = `<i class="fas fa-book-open"></i> كورساتي`;
             coursesSidebarButton.addEventListener('click', () => {
-                window.location.href = 'my_courses.html';
+              //  window.location.href = 'my_courses.html';
                 sidebar.classList.remove('open'); // تم التعديل هنا: 'show' إلى 'open'
             });
             sidebarContent.appendChild(coursesSidebarButton);
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
             forumButton.className = 'sidebar-button';
             forumButton.innerHTML = `<i class="fas fa-users"></i> منتدى الطلبة`;
             forumButton.addEventListener('click', () => {
-                window.location.href = 'student_forum.html';
+             //   window.location.href = 'student_forum.html';
                 sidebar.classList.remove('open'); // تم التعديل هنا: 'show' إلى 'open'
             });
             sidebarContent.appendChild(forumButton);
@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
             accountButton.className = 'sidebar-button';
             accountButton.innerHTML = `<i class="fas fa-user-circle"></i> حسابي`;
             accountButton.addEventListener('click', () => {
-                window.location.href = 'myaccount.html';
+              //  window.location.href = 'myaccount.html';
                 sidebar.classList.remove('open'); // تم التعديل هنا: 'show' إلى 'open'
             });
             sidebarContent.appendChild(accountButton);
@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
             registerButton.id = 'registerButton';
             registerButton.innerHTML = `<i class="fas fa-user-plus"></i> تسجيل جديد`;
             registerButton.addEventListener('click', () => {
-                window.location.href = 'sign.html';
+            //    window.location.href = 'sign.html';
                 sidebar.classList.remove('open'); // تم التعديل هنا: 'show' إلى 'open'
             });
             sidebarContent.appendChild(registerButton);
@@ -181,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
             loginButton.id = 'loginButtonSidebar'; 
             loginButton.innerHTML = `<i class="fas fa-sign-in-alt"></i> تسجيل دخول`;
             loginButton.addEventListener('click', () => {
-                window.location.href = 'login.html';
+          //      window.location.href = 'login.html';
                 sidebar.classList.remove('open'); // تم التعديل هنا: 'show' إلى 'open'
             });
             sidebarContent.appendChild(loginButton);
